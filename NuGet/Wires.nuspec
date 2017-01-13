@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+   <metadata minClientVersion="2.8.1">
+       <id>Wires</id>
+       <version>$version$</version>
+       <title>Wires : data binding</title>
+       <authors>Aloïs Deniel</authors>
+       <owners>Aloïs Deniel</owners>
+     <licenseUrl>https://github.com/aloisdeniel/Wires/blob/master/LICENSE</licenseUrl>
+     <projectUrl>https://github.com/aloisdeniel/Wires</projectUrl>
+     <iconUrl>https://raw.githubusercontent.com/aloisdeniel/Wires/master/Documentation/Logo.png</iconUrl>
+       <requireLicenseAcceptance>false</requireLicenseAcceptance>
+       <description>Basic data binding for Xamarin.iOS and Xamarin.Android.</description>
+       <summary>Wire is a simple binding library for frameworks that doesn't have built-in binding mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also package for Xamarin.iOS and Xamarin.Android.</summary>
+     <tags>iOS, Android, Xamarin, binding, databinding, bind, wire, wires</tags>
+   </metadata>
+   <files>
+     <!-- Portable -->
+     <file src="..\Sources\Wires\bin\Release\Wires.dll" target="lib\portable-net45+win8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Wires.dll" />
+     <file src="..\Sources\Wires\bin\Release\Wires.dll" target="lib\netstandard1.1\Wires.dll" />
+
+     <!-- iOS -->
+     <file src="..\Sources\Wires.iOS\bin\Release\Wires.dll" target="lib\Xamarin.iOS10\Wires.dll" />
+     <file src="..\Sources\Wires.iOS\bin\Release\Wires.iOS.dll" target="lib\Xamarin.iOS10\Wires.iOS.dll" />
+
+     <!-- Android -->
+     <file src="..\Sources\Wires.Droid\bin\Release\Wires.dll" target="lib\MonoAndroid10\Wires.dll" />
+     <file src="..\Sources\Wires.Droid\bin\Release\Wires.Droid.dll" target="lib\MonoAndroid10\Wires.Droid.dll" />
+   </files>
+</package>
