@@ -1,10 +1,16 @@
-# Wires
+![Logo](./Documentation/Logo.png)
 
 Wires is a simple binding library for frameworks that doesn't have built-in binding mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also package for Xamarin.iOS and Xamarin.Android.
 
 ## Why ?
 
 Several other solutions exists, but I've experienced a **lot** of memory issues with those because they are mainly based on lambda expressions. That's why Wire keeps basic concepts at its core and limits usag of lambda expressions.
+
+## Install
+
+Available on NuGet
+
+[![NuGet](https://img.shields.io/nuget/v/Wires.svg?label=NuGet)](https://www.nuget.org/packages/Wires/)
 
 ## Quickstart
 
@@ -42,6 +48,9 @@ For more advanced options see : [./Sources/Wires/Bindings.cs](./Sources/Wires/Bi
 
 * Improve architecture
 * Improve tests
+* MORE extensions
+* Bindable TableView, CollectionView sources on iOS
+* Bindable adapters on Android
 
 ### Contributions
 
