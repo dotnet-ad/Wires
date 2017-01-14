@@ -40,7 +40,6 @@
     <Compile Include="Bindings.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Conversions\RelayConverter.cs" />
-    <Compile Include="PropertyBindings\PropertyBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

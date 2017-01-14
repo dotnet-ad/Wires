@@ -7,29 +7,45 @@ namespace Wires
 	/// <summary>
 	/// Very basic helper for simple data binding.
 	/// </summary>
-	public abstract class Binding<TSource,TTarget, TSourceProperty, TTargetProperty> : IBinding
+	public abstract class Binding<TSource,TTarget, TSourceProperty, TTargetProperty> : IBinding 
+		where TSource : class 
+		where TTarget : class
 	{
-		public Binding(TSource source, string sourceProperty, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter)
+		private Binding(TSource source, string sourceProperty, TTarget target, IConverter<TSourceProperty, TTargetProperty> converter)
 		{
-			this.SourceReference = new WeakReference(source);
-			this.TargetReference = new WeakReference(target);
-			this.SourceProperty = sourceProperty;
-			this.TargetProperty = targetProperty;
-			var sourcePropertyInfo = source.GetType().GetRuntimeProperty(sourceProperty);
-			var targetPropertyInfo = target.GetType().GetRuntimeProperty(targetProperty);
 			this.Converter = converter;
+
+			this.SourceReference = new WeakReference<TSource>(source);
+			this.TargetReference = new WeakReference<TTarget>(target);
+
+			// Source property
+			this.SourceProperty = sourceProperty;
+			var sourcePropertyInfo = source.GetType().GetRuntimeProperty(sourceProperty);
 
 			if (sourcePropertyInfo.PropertyType != typeof(TSourceProperty))
 				throw new ArgumentException($"The given source property should be of type {typeof(TSourceProperty)}", nameof(sourceProperty));
 
+			this.sourceGetter = sourcePropertyInfo.BuildGetExpression();
+			this.sourceSetter = sourcePropertyInfo.BuildSetExpression();
+		}
+
+		public Binding(TSource source, string sourceProperty, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter) : this(source, sourceProperty, target, converter)
+		{
+			this.targetGetter = (i => targetGetter((TTarget)i)) ;
+			this.targetSetter = ((i, v) => targetSetter((TTarget)i, (TTargetProperty)v));
+		}
+
+		public Binding(TSource source, string sourceProperty, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter) : this(source,sourceProperty,target, converter)
+		{
+			// Target property
+			this.TargetProperty = targetProperty;
+			var targetPropertyInfo = target.GetType().GetRuntimeProperty(targetProperty);
+
 			if (targetPropertyInfo.PropertyType != typeof(TTargetProperty))
 				throw new ArgumentException($"The given target property should be of type {typeof(TTargetProperty)}", nameof(targetProperty));
 
-			this.sourceGetter = sourcePropertyInfo.BuildGetExpression();
-			this.sourceSetter = sourcePropertyInfo.BuildSetExpression();
 			this.targetGetter = targetPropertyInfo.BuildGetExpression();
 			this.targetSetter = targetPropertyInfo.BuildSetExpression();
-
 		}
 
 		#region Fields
@@ -52,35 +68,22 @@ namespace Wires
 
 		public string SourceProperty { get; private set; }
 
-		public WeakReference TargetReference { get; private set; }
+		public WeakReference<TTarget> TargetReference { get; private set; }
 
-		public WeakReference SourceReference { get; private set; }
+		public WeakReference<TSource> SourceReference { get; private set; }
 
 		public IConverter<TSourceProperty,TTargetProperty> Converter { get; private set; }
 
-		public TTarget Target
+		public bool IsAlive
 		{
 			get
 			{
-				if(this.TargetReference.IsAlive)
-					return (TTarget)this.TargetReference.Target;
+				TSource source;
+				TTarget target;
 
-				throw new InvalidOperationException($"{nameof(Target)} has been garbage collected and can't be used anymore");
+				return this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target) && !this.isDisposed;
 			}
 		}
-
-		public TSource Source
-		{
-			get
-			{
-				if (this.SourceReference.IsAlive)
-					return (TSource)this.SourceReference.Target;
-
-				throw new InvalidOperationException($"{nameof(Source)} has been garbage collected and can't be used anymore");
-			}
-		}
-
-		public bool IsAlive => TargetReference.IsAlive && SourceReference.IsAlive && !this.isDisposed;
 
 		#endregion
 
@@ -88,28 +91,34 @@ namespace Wires
 
 		public void UpdateSource()
 		{
-			if (IsAlive)
+			TSource source;
+			TTarget target;
+
+			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
 			{
-				var sourceValue = (TSourceProperty)this.sourceGetter(SourceReference.Target);
-				var targetValue = this.Converter.ConvertBack((TTargetProperty)this.targetGetter(TargetReference.Target));
+				var sourceValue = (TSourceProperty)this.sourceGetter(source);
+				var targetValue = this.Converter.ConvertBack((TTargetProperty)this.targetGetter(target));
 				if (!object.Equals(sourceValue, targetValue))
 				{
-					this.sourceSetter(SourceReference.Target, targetValue);
-					Debug.WriteLine($"[Bindings]({Source.GetType().Name}:{Source.GetHashCode()}) ~={{{targetValue}}}=> ({Target.GetType().Name}:{Target.GetHashCode()})");
+					this.sourceSetter(source, targetValue);
+					Debug.WriteLine($"[Bindings]({source.GetType().Name}:{source.GetHashCode()}) ~={{{targetValue}}}=> ({target.GetType().Name}:{target.GetHashCode()})");
 				}
 			}
 		}
 
 		public void UpdateTarget()
 		{
-			if (IsAlive)
+			TSource source;
+			TTarget target;
+
+			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
 			{
-				var sourceValue = this.Converter.Convert((TSourceProperty)this.sourceGetter(SourceReference.Target));
-				var targetValue = (TTargetProperty)this.targetGetter(TargetReference.Target);
+				var sourceValue = this.Converter.Convert((TSourceProperty)this.sourceGetter(source));
+				var targetValue = (TTargetProperty)this.targetGetter(target);
 				if (!object.Equals(sourceValue, targetValue))
 				{
-					this.targetSetter(TargetReference.Target, sourceValue);
-					Debug.WriteLine($"[Bindings]({Source.GetType().Name}:{Source.GetHashCode()}) <={{{sourceValue}}}=~ ({Target.GetType().Name}:{Target.GetHashCode()})");
+					this.targetSetter(target, sourceValue);
+					Debug.WriteLine($"[Bindings]({source.GetType().Name}:{source.GetHashCode()}) <={{{sourceValue}}}=~ ({target.GetType().Name}:{target.GetHashCode()})");
 				}
 			}
 		}

@@ -5,16 +5,19 @@ namespace Wires
 
 
 	public class CommandBinding<TTarget,TTargetEventArgs> : IBinding where TTargetEventArgs : EventArgs
+		where TTarget : class
 	{
 		public CommandBinding(ICommand command, TTarget target, string targetEvent, Action<TTarget, bool> onExecuteChanged)
 		{
-			this.SourceReference = new WeakReference(command);
-			this.TargetReference = new WeakReference(target);
+			this.SourceReference = new WeakReference<ICommand>(command);
+			this.TargetReference = new WeakReference<TTarget>(target);
 			UpdateCanExecute();
 			this.onExecuteEvent = onExecuteChanged;
 			this.targetEvent = target.AddWeakHandler<TTargetEventArgs>(targetEvent, this.OnClick);
 			this.commandEvent = command.AddWeakHandler<EventArgs>(nameof(command.CanExecuteChanged), this.OnCanExecuteChanged);
 		}
+
+		bool isDisposed;
 
 		readonly Action<TTarget, bool> onExecuteEvent;
 
@@ -26,40 +29,28 @@ namespace Wires
 
 		public string SourceProperty { get; private set; }
 
-		public WeakReference TargetReference { get; private set; }
+		public WeakReference<TTarget> TargetReference { get; private set; }
 
-		public WeakReference SourceReference { get; private set; }
+		public WeakReference<ICommand> SourceReference { get; private set; }
 
-		public TTarget Target
+		public bool IsAlive
 		{
 			get
 			{
-				if (this.TargetReference.IsAlive)
-					return (TTarget)this.TargetReference.Target;
+				ICommand source;
+				TTarget target;
 
-				throw new InvalidOperationException($"{nameof(Target)} has been garbage collected and can't be used anymore");
+				return this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target) && !this.isDisposed;
 			}
 		}
-
-		public ICommand Command
-		{
-			get
-			{
-				if (this.SourceReference.IsAlive)
-					return (ICommand)this.SourceReference.Target;
-
-				throw new InvalidOperationException($"{nameof(Command)} has been garbage collected and can't be used anymore");
-			}
-		}
-
-		public bool IsAlive => TargetReference.IsAlive && SourceReference.IsAlive;
 
 		private void OnClick(object sender, TTargetEventArgs e)
 		{
-			if (this.SourceReference.IsAlive)
+			ICommand source;
+
+			if (this.SourceReference.TryGetTarget(out source))
 			{
-				var command = this.SourceReference.Target as ICommand;
-				command.Execute(null);
+				source.Execute(null);
 			}
 		}
 
@@ -67,9 +58,12 @@ namespace Wires
 
 		private void UpdateCanExecute()
 		{
-			if (this.IsAlive)
+			ICommand source;
+			TTarget target;
+
+			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
 			{
-				this.onExecuteEvent(this.Target, this.Command.CanExecute(null));
+				this.onExecuteEvent(target, source.CanExecute(null));
 			}
 		}
 
@@ -77,6 +71,7 @@ namespace Wires
 		{
 			this.targetEvent.Unsubscribe();
 			this.commandEvent.Unsubscribe();
+			this.isDisposed = true;
 		}
 	}
 }

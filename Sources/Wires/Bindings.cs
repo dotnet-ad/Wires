@@ -50,6 +50,8 @@ namespace Wires
 
 		public static IBinding BindOneWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null)
 			where TSourceChangedEventArgs : EventArgs
+			where TSource : class
+			where TTarget : class
 		{
 			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, converter, sourceEventFilter);
 			bindings.Add(b);
@@ -57,8 +59,25 @@ namespace Wires
 		}
 
 		public static IBinding BindOneWay<TTarget, TSourceProperty, TTargetProperty>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter)
+			where TTarget : class
 		{
 			return source.BindOneWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetProperty, converter, (arg) => (arg.PropertyName == sourceProperty));
+		}
+
+		public static IBinding BindOneWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null)
+			where TSourceChangedEventArgs : EventArgs
+			where TSource : class
+			where TTarget : class
+		{
+			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter);
+			bindings.Add(b);
+			return b;
+		}
+
+		public static IBinding BindOneWay<TTarget, TSourceProperty, TTargetProperty>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter)
+			where TTarget : class
+		{
+			return source.BindOneWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetGetter, targetSetter, converter, (arg) => (arg.PropertyName == sourceProperty));
 		}
 
 		#endregion
@@ -68,6 +87,8 @@ namespace Wires
 		public static IBinding BindTwoWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, string targetUpdateEvent, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null, Func<TTargetChangedEventArgs, bool> targetEventFilter = null)
 			where TSourceChangedEventArgs : EventArgs
 			where TTargetChangedEventArgs : EventArgs
+			where TSource : class
+			where TTarget : class
 		{
 			var b = new TwoWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, targetUpdateEvent, converter, sourceEventFilter, targetEventFilter);
 			bindings.Add(b);
@@ -76,6 +97,7 @@ namespace Wires
 
 		public static IBinding BindTwoWay<TTarget, TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, string targetProperty, string targetEvent, IConverter<TSourceProperty, TTargetProperty> converter)
 			where TTargetChangedEventArgs : EventArgs
+			where TTarget : class
 		{
 			return source.BindTwoWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs, TTargetChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetProperty, targetEvent, converter, (arg) => (arg.PropertyName == sourceProperty));
 		}
@@ -91,6 +113,7 @@ namespace Wires
 
 		public static IBinding Bind<TTarget, TTargetEventArgs>(this ICommand command, TTarget target, string targetEvent, Action<TTarget, bool> onExecuteChanged)
 			where TTargetEventArgs : EventArgs
+			where TTarget : class
 		{
 			var b = new CommandBinding<TTarget, TTargetEventArgs>(command, target, targetEvent, onExecuteChanged);
 			bindings.Add(b);

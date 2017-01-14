@@ -5,8 +5,19 @@ namespace Wires
 	/// <summary>
 	/// A binding that 
 	/// </summary>
-	public class OneWayBinding<TSource,TTarget,TSourceProperty, TTargetProperty,TSourceChangedEventArgs> : Binding<TSource, TTarget, TSourceProperty, TTargetProperty> where TSourceChangedEventArgs : EventArgs
+	public class OneWayBinding<TSource,TTarget,TSourceProperty, TTargetProperty,TSourceChangedEventArgs> : Binding<TSource, TTarget, TSourceProperty, TTargetProperty> 
+		where TSourceChangedEventArgs : EventArgs
+		where TSource : class
+		where TTarget : class
 	{
+		public OneWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target,Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceProperty, target, targetGetter, targetSetter, converter)
+		{
+			this.sourceEventFilter = sourceEventFilter;
+			this.sourceEvent = source.AddWeakHandler<TSourceChangedEventArgs>(sourceUpdateEvent, this.OnSourceChanged);
+
+			this.UpdateTarget(); // Affect initial source value to target on binding
+		}
+
 		public OneWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceProperty, target, targetProperty, converter)
 		{
 			this.sourceEventFilter = sourceEventFilter;
@@ -28,6 +39,7 @@ namespace Wires
 		public override void Dispose()
 		{
 			this.sourceEvent.Unsubscribe();
+			base.Dispose();
 		}
 
 	}
