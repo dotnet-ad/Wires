@@ -11,60 +11,38 @@ namespace Wires
 		where TSource : class 
 		where TTarget : class
 	{
-		private Binding(TSource source, string sourceProperty, TTarget target, IConverter<TSourceProperty, TTargetProperty> converter)
+		#region Constructors
+
+		public Binding(TSource source, Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter) 
 		{
 			this.Converter = converter;
 
 			this.SourceReference = new WeakReference<TSource>(source);
 			this.TargetReference = new WeakReference<TTarget>(target);
 
-			// Source property
-			this.SourceProperty = sourceProperty;
-			var sourcePropertyInfo = source.GetType().GetRuntimeProperty(sourceProperty);
-
-			if (sourcePropertyInfo.PropertyType != typeof(TSourceProperty))
-				throw new ArgumentException($"The given source property should be of type {typeof(TSourceProperty)}", nameof(sourceProperty));
-
-			this.sourceGetter = sourcePropertyInfo.BuildGetExpression();
-			this.sourceSetter = sourcePropertyInfo.BuildSetExpression();
+			this.sourceGetter = sourceGetter;
+			this.sourceSetter = sourceSetter;
+			this.targetGetter = targetGetter;
+			this.targetSetter = targetSetter;
 		}
 
-		public Binding(TSource source, string sourceProperty, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter) : this(source, sourceProperty, target, converter)
-		{
-			this.targetGetter = (i => targetGetter((TTarget)i)) ;
-			this.targetSetter = ((i, v) => targetSetter((TTarget)i, (TTargetProperty)v));
-		}
-
-		public Binding(TSource source, string sourceProperty, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter) : this(source,sourceProperty,target, converter)
-		{
-			// Target property
-			this.TargetProperty = targetProperty;
-			var targetPropertyInfo = target.GetType().GetRuntimeProperty(targetProperty);
-
-			if (targetPropertyInfo.PropertyType != typeof(TTargetProperty))
-				throw new ArgumentException($"The given target property should be of type {typeof(TTargetProperty)}", nameof(targetProperty));
-
-			this.targetGetter = targetPropertyInfo.BuildGetExpression();
-			this.targetSetter = targetPropertyInfo.BuildSetExpression();
-		}
+		#endregion
 
 		#region Fields
 
-		readonly Action<object, object> targetSetter;
+		protected Action<TTarget, TTargetProperty> targetSetter;
 
-		readonly Func<object, object> targetGetter;
+		protected Func<TTarget, TTargetProperty> targetGetter;
 
-		readonly Action<object, object> sourceSetter;
+		protected readonly Action<TSource, TSourceProperty> sourceSetter;
 
-		readonly Func<object, object> sourceGetter;
+		protected readonly Func<TSource, TSourceProperty> sourceGetter;
 
 		bool isDisposed;
 
 		#endregion
 
 		#region Properties
-
-		public string TargetProperty { get; private set; }
 
 		public string SourceProperty { get; private set; }
 
@@ -96,8 +74,8 @@ namespace Wires
 
 			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
 			{
-				var sourceValue = (TSourceProperty)this.sourceGetter(source);
-				var targetValue = this.Converter.ConvertBack((TTargetProperty)this.targetGetter(target));
+				var sourceValue = this.sourceGetter(source);
+				var targetValue = this.Converter.ConvertBack(this.targetGetter(target));
 				if (!object.Equals(sourceValue, targetValue))
 				{
 					this.sourceSetter(source, targetValue);
@@ -113,8 +91,8 @@ namespace Wires
 
 			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
 			{
-				var sourceValue = this.Converter.Convert((TSourceProperty)this.sourceGetter(source));
-				var targetValue = (TTargetProperty)this.targetGetter(target);
+				var sourceValue = this.Converter.Convert(this.sourceGetter(source));
+				var targetValue = this.targetGetter(target);
 				if (!object.Equals(sourceValue, targetValue))
 				{
 					this.targetSetter(target, sourceValue);
