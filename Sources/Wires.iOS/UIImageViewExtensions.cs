@@ -1,26 +1,17 @@
 namespace Wires
 {
 	using System;
-	using System.ComponentModel;
+	using System.Linq.Expressions;
 	using UIKit;
 
-	public static class UIImageViewExtensions
+	public static partial class UIExtensions
 	{
 		#region Image property
 
-		public static IBinding BindImage(this INotifyPropertyChanged observable, UIImageView label, string propertyName)
+		public static IBinding Image<TSource, TPropertyType>(this Binder<TSource,UIImageView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIImage> converter = null)
+			where TSource : class
 		{
-			return observable.BindImage(label, propertyName, PlatformConverters.StringToImage);
-		}
-
-		public static IBinding BindImage<TPropertyType>(this INotifyPropertyChanged observable, UIImageView label, string propertyName, Func<TPropertyType, UIImage> converter)
-		{
-			return observable.BindImage(label, propertyName, new RelayConverter<TPropertyType, UIImage>(converter));
-		}
-
-		public static IBinding BindImage<TPropertyType>(this INotifyPropertyChanged observable, UIImageView label, string propertyName, IConverter<TPropertyType,UIImage> converter)
-		{
-			return observable.BindOneWay(propertyName, label, nameof(UIImageView.Image), converter);
+			return binder.Property(property, b => b.Image, converter);
 		}
 
 		#endregion

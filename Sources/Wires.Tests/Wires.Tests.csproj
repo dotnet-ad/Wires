@@ -34,6 +34,7 @@
     <Compile Include="WeakEventHandlerTests.cs" />
     <Compile Include="BindingTests.cs" />
     <Compile Include="Helpers\WeakHelpers.cs" />
+    <Compile Include="BindableCollectionSourceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

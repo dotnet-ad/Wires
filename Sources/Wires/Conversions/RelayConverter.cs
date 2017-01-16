@@ -23,5 +23,6 @@ namespace Wires
 		public TTarget Convert(TSource value) => sourceToTarget(value);
 
 		public TSource ConvertBack(TTarget value) => targetToSource(value);
+
 	}
 }

@@ -2,54 +2,41 @@ namespace Wires
 {
 	using System;
 	using System.ComponentModel;
+	using System.Linq.Expressions;
 	using System.Windows.Input;
 	using UIKit;
 
-	public static class UIButtonExtensions
+	public static partial class UIExtensions
 	{
 		#region TouchUpInside command
 
-		public static IBinding BindTouchUpInside(this ICommand command, UIButton button)
+		public static IBinding TouchUpInside(this Binder<ICommand,UIButton> binder)
 		{
-			return command.Bind<UIButton, EventArgs>(button, nameof(UIButton.TouchUpInside), (b, canExecute) => b.Enabled = canExecute);
+			return binder.Command<UIButton,EventArgs>(nameof(UIButton.TouchUpInside), (b, canExecute) => b.Enabled = canExecute);
 		}
 
 		#endregion
 
 		#region Title property
 
-		public static IBinding BindTitle(this INotifyPropertyChanged observable, UIButton label, string propertyName)
+		public static IBinding Title<TSource, TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
+			where TSource : class
 		{
-			return observable.BindTitle(label, propertyName, Converters.Identity<string>());
-		}
-
-		public static IBinding BindTitle<TPropertyType>(this INotifyPropertyChanged observable, UIButton label, string propertyName, Func<TPropertyType, string> converter)
-		{
-			return observable.BindTitle(label, propertyName, new RelayConverter<TPropertyType, string>(converter));
-		}
-
-		public static IBinding BindTitle<TPropertyType>(this INotifyPropertyChanged observable, UIButton label, string propertyName, IConverter<TPropertyType, string> converter)
-		{
-			return observable.BindOneWay(propertyName, label, (b) => b.Title(UIControlState.Normal), (b,v) => b.SetTitle(v, UIControlState.Normal) , converter);
+			Action<UIButton, string> setter = (b, v) => b.SetTitle(v, UIControlState.Normal);
+			Func<UIButton, string> getter = (b) => b.Title(UIControlState.Normal);
+			return binder.Property(property, getter, setter, converter);
 		}
 
 		#endregion
 
 		#region Image property
 
-		public static IBinding BindImage(this INotifyPropertyChanged observable, UIButton label, string propertyName)
+		public static IBinding Image<TSource,TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource,TPropertyType>> property, IConverter<TPropertyType, UIImage> converter = null)
+			where TSource : class
 		{
-			return observable.BindImage(label, propertyName, PlatformConverters.StringToImage);
-		}
-
-		public static IBinding BindImage<TPropertyType>(this INotifyPropertyChanged observable, UIButton label, string propertyName, Func<TPropertyType, UIImage> converter)
-		{
-			return observable.BindImage(label, propertyName, new RelayConverter<TPropertyType, UIImage>(converter));
-		}
-
-		public static IBinding BindImage<TPropertyType>(this INotifyPropertyChanged observable, UIButton label, string propertyName, IConverter<TPropertyType, UIImage> converter)
-		{
-			return observable.BindOneWay(propertyName, label, (b) => b.CurrentImage, (b, v) => b.SetImage(v, UIControlState.Normal), converter);
+			Action<UIButton, UIImage> setter = (b, v) => b.SetImage(v, UIControlState.Normal);
+			Func<UIButton, UIImage> getter = (b) => b.CurrentImage;
+			return binder.Property(property, getter, setter, converter);
 		}
 
 		#endregion

@@ -1,26 +1,24 @@
 namespace Wires
 {
 	using System;
-	using System.ComponentModel;
+	using System.Linq.Expressions;
 	using UIKit;
 
-	public static class UIViewExtensions
+	public static partial class UIExtensions
 	{
 		#region Hidden property
 
-		public static IBinding BindHidden(this INotifyPropertyChanged observable, UIView view, string propertyName)
+		public static IBinding Visible<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+			where TSource : class
 		{
-			return observable.BindHidden(view, propertyName, Converters.Identity<bool>());
+			converter = converter ?? Converters.Default<TPropertyType, bool>();
+			return binder.Hidden(property, converter.Chain(Converters.Invert));
 		}
 
-		public static IBinding BindHidden<TPropertyType>(this INotifyPropertyChanged observable, UIView label, string propertyName, Func<TPropertyType, bool> converter)
+		public static IBinding Hidden<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+			where TSource : class
 		{
-			return observable.BindHidden(label, propertyName, new RelayConverter<TPropertyType, bool>(converter));
-		}
-
-		public static IBinding BindHidden<TPropertyType>(this INotifyPropertyChanged observable, UIView label, string propertyName, IConverter<TPropertyType, bool> converter)
-		{
-			return observable.BindOneWay(propertyName, label, nameof(UIView.Hidden), converter);
+			return binder.Property(property, b => b.Hidden, converter);
 		}
 
 		#endregion
