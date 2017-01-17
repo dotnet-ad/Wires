@@ -29,6 +29,7 @@ namespace Wires.Sample.iOS
 			this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
 			this.progressView.Bind(this.ViewModel).Progress(vm => vm.Amount);
 			this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
+			this.segmented.Bind(this.ViewModel).Titles(vm => vm.Sections);
 			this.button.Bind(this.ViewModel.LoadCommand).TouchUpInside();
 		}
 

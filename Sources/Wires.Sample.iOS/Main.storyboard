@@ -37,29 +37,36 @@
                                                 <rect key="frame" x="0.0" y="29" width="487" height="128"/>
                                             </imageView>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Field" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sGd-HG-zZO">
-                                                <rect key="frame" x="0.0" y="157" width="487" height="314"/>
+                                                <rect key="frame" x="0.0" y="157" width="487" height="286"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="71I-e2-ok2">
-                                                <rect key="frame" x="0.0" y="471" width="487" height="216"/>
+                                                <rect key="frame" x="0.0" y="443" width="487" height="216"/>
                                                 <date key="date" timeIntervalSinceReferenceDate="506290191.47248">
                                                     <!--2017-01-16 20:09:51 +0000-->
                                                 </date>
                                             </datePicker>
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="h72-0B-K3e">
-                                                <rect key="frame" x="0.0" y="687" width="487" height="2"/>
+                                                <rect key="frame" x="0.0" y="659" width="487" height="2"/>
                                             </progressView>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="7wP-xN-t8h">
-                                                <rect key="frame" x="0.0" y="689" width="487" height="20"/>
+                                                <rect key="frame" x="0.0" y="661" width="487" height="20"/>
                                             </activityIndicatorView>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="H0f-WQ-ycv">
-                                                <rect key="frame" x="-2" y="709" width="491" height="31"/>
+                                                <rect key="frame" x="-2" y="681" width="491" height="31"/>
                                             </slider>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PdE-Gh-CtN">
-                                                <rect key="frame" x="0.0" y="739" width="489" height="31"/>
+                                                <rect key="frame" x="0.0" y="711" width="489" height="31"/>
                                             </switch>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="YhC-rR-d2s">
+                                                <rect key="frame" x="0.0" y="742" width="487" height="29"/>
+                                                <segments>
+                                                    <segment title="First"/>
+                                                    <segment title="Second"/>
+                                                </segments>
+                                            </segmentedControl>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWw-qB-gSa">
                                                 <rect key="frame" x="0.0" y="770" width="487" height="30"/>
                                                 <state key="normal" title="Load"/>
@@ -113,6 +120,7 @@
                         <outlet property="image" destination="Z42-mK-ySt" id="fzr-zf-0QL"/>
                         <outlet property="label" destination="dBT-00-RSb" id="ntl-pk-Ab0"/>
                         <outlet property="progressView" destination="h72-0B-K3e" id="EGw-FW-RQe"/>
+                        <outlet property="segmented" destination="YhC-rR-d2s" id="MRy-CB-Kfd"/>
                         <outlet property="slider" destination="H0f-WQ-ycv" id="a84-Hn-1SL"/>
                         <outlet property="toggleSwitch" destination="PdE-Gh-CtN" id="sMP-ze-fH5"/>
                     </connections>

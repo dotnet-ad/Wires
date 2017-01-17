@@ -1,27 +1,35 @@
 ﻿namespace Wires
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
+	using Foundation;
 	using UIKit;
 
-	public class CollectionViewSourceBinding<TOwner, TItem, TCellView> : UICollectionViewSource
+	public class CollectionViewSourceBinding<TOwner, TCollection, TSection, TItem, TCellView, THeaderCellView> : UICollectionViewSource
 		where TCellView : UICollectionViewCell
+		where THeaderCellView : UICollectionReusableView
+		where TCollection : class
 		where TOwner : class
 	{
+
 		#region Constructors
 
-		public CollectionViewSourceBinding(TOwner source, Expression<Func<TOwner, IEnumerable<TItem>>> sourceProperty, UICollectionView view, bool fromNib, Action<TItem, int, TCellView> prepareCell = null)
+		public CollectionViewSourceBinding(BindableCollectionSource<TOwner, TCollection, TSection, TItem, UICollectionView, TCellView, THeaderCellView> source, bool fromNib)
 		{
-			this.source = new BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView>(source,sourceProperty,view,(c) => c.ReloadData(), prepareCell);
+			this.source = source;
+
+			var view = this.source.View;
+			cellIdentifier = typeof(TCellView).Name;
+			headerIdentifier = typeof(THeaderCellView).Name;
 
 			if (fromNib)
 			{
-				view.RegisterNibForCell(NibLocator<TCellView>.Nib, this.source.CellIdentifer);
+				view.RegisterNibForCell(NibLocator<TCellView>.Nib, cellIdentifier);
+				view.RegisterNibForSupplementaryView(NibLocator<THeaderCellView>.Nib, UICollectionElementKindSection.Header, headerIdentifier);
 			}
 			else
 			{
-				view.RegisterClassForCell(typeof(TCellView), this.source.CellIdentifer);
+				view.RegisterClassForCell(typeof(TCellView), cellIdentifier);
+				view.RegisterClassForSupplementaryView(typeof(THeaderCellView), UICollectionElementKindSection.Header, headerIdentifier);
 			}
 		}
 
@@ -29,24 +37,33 @@
 
 		#region Fields
 
-		private readonly BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView> source;
+		private readonly string cellIdentifier, headerIdentifier;
+
+		readonly BindableCollectionSource<TOwner, TCollection, TSection, TItem, UICollectionView, TCellView, THeaderCellView> source;
 
 		#endregion
 
 		#region Implementation
 
-		public override UICollectionViewCell GetCell(UICollectionView collectionView, Foundation.NSIndexPath indexPath)
+		public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
 		{
-			var view = (UICollectionViewCell)collectionView.DequeueReusableCell(this.source.CellIdentifer, indexPath);
-			this.source.PrepareCell(indexPath.Row, (TCellView)view);
+			var view = (TCellView)collectionView.DequeueReusableCell(cellIdentifier, indexPath);
+			this.source.PrepareCell(indexPath.ToIndex(), view);
 			return view;
 		}
 
-		public override nint NumberOfSections(UICollectionView collectionView) => 1;
+		public override UICollectionReusableView GetViewForSupplementaryElement(UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
+		{
+			var view = (THeaderCellView)collectionView.DequeueReusableSupplementaryView(UICollectionElementKindSection.Header, headerIdentifier, indexPath);
+			this.source.PrepareHeader(indexPath.Section, view);
+			return view;
+		}
 
-		public override nint GetItemsCount(UICollectionView collectionView, nint section) => this.source?.Count ?? 0;
+		public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath) => this.source?.Select(indexPath.ToIndex());
 
-		public override bool ShouldHighlightItem(UICollectionView collectionView, Foundation.NSIndexPath indexPath) => false;
+		public override nint NumberOfSections(UICollectionView collectionView) => this.source?.SectionsCount ?? 0;
+
+		public override nint GetItemsCount(UICollectionView collectionView, nint section)=> this.source?.ItemsCount((int)section) ?? 0;
 
 		#endregion
 	}
