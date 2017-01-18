@@ -22,15 +22,25 @@
 			cellIdentifier = typeof(TCellView).Name;
 			headerIdentifier = typeof(THeaderCellView).Name;
 
+			if (source.HasHeaders)
+			{
+				if (fromNib)
+				{
+					view.RegisterNibForHeaderFooterViewReuse(NibLocator<THeaderCellView>.Nib, headerIdentifier);
+				}
+				else
+				{
+					view.RegisterClassForHeaderFooterViewReuse(typeof(THeaderCellView), headerIdentifier);
+				}
+			}
+
 			if (fromNib)
 			{
 				view.RegisterNibForCellReuse(NibLocator<TCellView>.Nib, cellIdentifier);
-				view.RegisterNibForHeaderFooterViewReuse(NibLocator<THeaderCellView>.Nib, headerIdentifier);
 			}
 			else
 			{
 				view.RegisterClassForCellReuse(typeof(TCellView), cellIdentifier);
-				view.RegisterClassForHeaderFooterViewReuse(typeof(THeaderCellView), headerIdentifier);
 			}
 		}
 
@@ -59,6 +69,9 @@
 
 		public override UIView GetViewForHeader(UITableView tableView, nint section)
 		{
+			if (!this.source.HasHeaders)
+				return null;
+			
 			var view = tableView.DequeueReusableHeaderFooterView(headerIdentifier);
 			this.source.PrepareHeader((int)section, (THeaderCellView)view);
 			return view;
@@ -72,7 +85,7 @@
 
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) => this.heightForItem(indexPath.ToIndex());
 
-		public override nfloat GetHeightForHeader(UITableView tableView, nint section) => this.heightForHeader((int)section);
+		public override nfloat GetHeightForHeader(UITableView tableView, nint section) => this.source.HasHeaders ? this.heightForHeader((int)section) : 0;
 
 		#endregion
 	}

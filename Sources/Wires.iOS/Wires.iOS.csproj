@@ -97,6 +97,12 @@
     <Compile Include="UISegmentedControlExtensions.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
+    <Compile Include="UIStepperExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIRefreshControlExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">
