@@ -8,7 +8,7 @@ namespace Wires
 	{
 		#region Selected property
 
-		public static IBinding Selected<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, int> converter = null)
+		public static Binder<TSource, UISegmentedControl> Selected<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, int> converter = null)
 			where TSource : class
 		{
 			converter = converter ?? Converters.Default<TPropertyType, int>();
@@ -19,7 +19,7 @@ namespace Wires
 
 		#region Titles property
 
-		public static IBinding Titles<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string[]> converter = null)
+		public static Binder<TSource, UISegmentedControl> Titles<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string[]> converter = null)
 			where TSource : class
 		{
 			return binder.Property(property, b => 

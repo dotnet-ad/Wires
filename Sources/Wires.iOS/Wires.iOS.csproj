@@ -73,8 +73,8 @@
     <Compile Include="UIViewExtensions.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
-    <Compile Include="Sources\TableViewSourceBinding.cs" />
-    <Compile Include="Sources\CollectionViewSourceBinding.cs" />
+    <Compile Include="Sources\GroupedTableViewSourceBinding.cs" />
+    <Compile Include="Sources\GroupedCollectionViewSourceBinding.cs" />
     <Compile Include="Sources\NibLocator.cs" />
     <Compile Include="UISwitchExtensions.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
@@ -103,6 +103,11 @@
     <Compile Include="UIRefreshControlExtensions.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
+    <Compile Include="UIViewControllerExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Sources\TableViewSourceBinding.cs" />
+    <Compile Include="Sources\CollectionViewSourceBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

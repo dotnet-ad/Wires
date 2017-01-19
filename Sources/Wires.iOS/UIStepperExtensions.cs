@@ -8,7 +8,7 @@
 	{
 		#region Value property
 
-		public static IBinding Value<TSource, TPropertyType>(this Binder<TSource, UIStepper> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, double> converter = null)
+		public static Binder<TSource, UIStepper> Value<TSource, TPropertyType>(this Binder<TSource, UIStepper> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, double> converter = null)
 			where TSource : class
 		{
 			return binder.Property<TPropertyType, double, EventArgs>(property, b => b.Value, nameof(UIStepper.ValueChanged), converter);

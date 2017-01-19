@@ -20,10 +20,10 @@ namespace Wires.Sample.iOS
 
 			this.ViewModel = new HomeViewModel();
 
-			this.label.Bind(this.ViewModel).Text(vm => vm.Title);
+			this.label.Bind(this.ViewModel).Text(vm => vm.Title, Converters.Uppercase);
 			this.field.Bind(this.ViewModel).Text(vm => vm.Title);
-			this.image.Bind(this.ViewModel).Image(vm => vm.Illustration);
-			this.image.Bind(this.ViewModel).As<UIView>().Visible(vm => vm.IsActive);
+			this.image.Bind(this.ViewModel).ImageAsync(vm => vm.Illustration)
+			    .As<UIView>().Alpha(vm => vm.Amount).Visible(vm => vm.IsActive);
 			this.toggleSwitch.Bind(this.ViewModel).On(vm => vm.IsActive);
 			this.slider.Bind(this.ViewModel).Value(vm => vm.Amount);
 			this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
@@ -31,12 +31,6 @@ namespace Wires.Sample.iOS
 			this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
 			this.segmented.Bind(this.ViewModel).Titles(vm => vm.Sections);
 			this.button.Bind(this.ViewModel.LoadCommand).TouchUpInside();
-		}
-
-		public override void DidReceiveMemoryWarning()
-		{
-			base.DidReceiveMemoryWarning();
-			// Release any cached data, images, etc that aren't in use.
 		}
 	}
 }
