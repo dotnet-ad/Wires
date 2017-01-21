@@ -1,7 +1,6 @@
 namespace Wires
 {
 	using System;
-	using System.ComponentModel;
 	using System.Linq.Expressions;
 	using System.Windows.Input;
 	using UIKit;

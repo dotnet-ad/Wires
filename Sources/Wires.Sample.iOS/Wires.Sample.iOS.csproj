@@ -95,10 +95,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="ViewControllers\" />
+    <Folder Include="Cells\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="Cells\PostTableCell.xib" />
+    <InterfaceDefinition Include="Cells\PostCollectionCell.xib" />
+    <InterfaceDefinition Include="Cells\PostTableHeader.xib" />
+    <InterfaceDefinition Include="Cells\PostCollectionHeader.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -110,6 +116,30 @@
     <Compile Include="ViewController.cs" />
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\TableViewController.cs" />
+    <Compile Include="ViewControllers\TableViewController.designer.cs">
+      <DependentUpon>TableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\CollectionViewController.cs" />
+    <Compile Include="ViewControllers\CollectionViewController.designer.cs">
+      <DependentUpon>CollectionViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostTableCell.cs" />
+    <Compile Include="Cells\PostTableCell.designer.cs">
+      <DependentUpon>PostTableCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostCollectionCell.cs" />
+    <Compile Include="Cells\PostCollectionCell.designer.cs">
+      <DependentUpon>PostCollectionCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostTableHeader.cs" />
+    <Compile Include="Cells\PostTableHeader.designer.cs">
+      <DependentUpon>PostTableHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostCollectionHeader.cs" />
+    <Compile Include="Cells\PostCollectionHeader.designer.cs">
+      <DependentUpon>PostCollectionHeader.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

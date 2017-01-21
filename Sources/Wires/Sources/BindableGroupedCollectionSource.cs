@@ -79,7 +79,7 @@
 
 				if (items is INotifyCollectionChanged)
 				{
-					this.collectionChangedEvent = items.AddWeakHandler<NotifyCollectionChangedEventArgs>(nameof(INotifyPropertyChanged.PropertyChanged), this.OnCollectionChanged);
+					this.collectionChangedEvent = items.AddWeakHandler<NotifyCollectionChangedEventArgs>(nameof(INotifyCollectionChanged.CollectionChanged), this.OnCollectionChanged);
 				}
 			}
 

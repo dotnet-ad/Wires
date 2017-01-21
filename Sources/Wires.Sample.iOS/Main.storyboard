@@ -12,7 +12,7 @@
         <!--Table-->
         <scene sceneID="0E6-ke-AY1">
             <objects>
-                <viewController id="a7e-zH-BDL" sceneMemberID="viewController">
+                <viewController id="a7e-zH-BDL" customClass="TableViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="HjK-1E-X4Y"/>
                         <viewControllerLayoutGuide type="bottom" id="Jyi-WZ-QKz"/>
@@ -21,14 +21,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-lj-biW">
-                                <rect key="frame" x="0.0" y="87" width="375" height="531"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-lj-biW">
+                                <rect key="frame" x="0.0" y="98" width="375" height="520"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ebK-Aa-8dD">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ebK-Aa-8dD">
                                 <rect key="frame" x="120" y="41" width="135" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="mEA-gq-sI8"/>
+                                </constraints>
                                 <segments>
                                     <segment title="Simple"/>
                                     <segment title="Grouped"/>
@@ -36,8 +37,20 @@
                             </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="8ye-lj-biW" secondAttribute="trailing" id="FbN-Sr-e5h"/>
+                            <constraint firstItem="ebK-Aa-8dD" firstAttribute="top" secondItem="HjK-1E-X4Y" secondAttribute="bottom" constant="32" id="PUr-iX-l4Z"/>
+                            <constraint firstItem="8ye-lj-biW" firstAttribute="top" secondItem="ebK-Aa-8dD" secondAttribute="bottom" constant="18" id="T51-nx-je9"/>
+                            <constraint firstItem="Jyi-WZ-QKz" firstAttribute="top" secondItem="8ye-lj-biW" secondAttribute="bottom" id="gGB-UF-8Kk"/>
+                            <constraint firstItem="8ye-lj-biW" firstAttribute="leading" secondItem="3wH-g2-TsH" secondAttribute="leading" id="nLx-6D-9uF"/>
+                            <constraint firstItem="ebK-Aa-8dD" firstAttribute="centerX" secondItem="3wH-g2-TsH" secondAttribute="centerX" id="yPs-7G-I2O"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Table" id="3ki-CA-daD"/>
+                    <connections>
+                        <outlet property="segmented" destination="ebK-Aa-8dD" id="IXR-ig-yr7"/>
+                        <outlet property="tableView" destination="8ye-lj-biW" id="WtN-IS-V9f"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U10-dJ-JrB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
