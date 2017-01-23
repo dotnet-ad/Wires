@@ -43,21 +43,6 @@ namespace Wires
 
 		public IConverter<TSourceProperty,TTargetProperty> Converter { get; private set; }
 
-		/// <summary>
-		/// Gets a value indicating whether this <see cref="T:Wires.Binding`4"/> is still alive.
-		/// </summary>
-		/// <value><c>true</c> if is alive; otherwise, <c>false</c>.</value>
-		public bool IsAlive
-		{
-			get
-			{
-				TSource source;
-				TTarget target;
-
-				return this.TryGet(out source, out target);
-			}
-		}
-
 		#endregion
 
 		#region Updates

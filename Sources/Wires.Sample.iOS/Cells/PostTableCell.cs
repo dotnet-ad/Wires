@@ -22,15 +22,17 @@ namespace Wires.Sample.iOS
 			// Note: this .ctor should not contain any initialization logic.
 		}
 
-		private Post viewModel;
+		private RedditViewModel.ItemViewModel viewModel;
 
-		public Post ViewModel
+		public RedditViewModel.ItemViewModel ViewModel
 		{
 			get { return this.viewModel; }
 			set 
 			{
 				if (this.viewModel != value)
 				{
+					this.ViewModel?.Unbind(this.title, this.author, this.illustration);
+
 					this.viewModel = value;
 					this.title.Bind(value).Text(vm => vm.Title);
 					this.author.Bind(value).Text(vm => vm.Author);

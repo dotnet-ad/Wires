@@ -4,13 +4,11 @@ namespace Wires
 	using System.Windows.Input;
 
 
-	public class CommandBinding<TTarget,TTargetEventArgs> : IBinding where TTargetEventArgs : EventArgs
+	public class CommandBinding<TTarget,TTargetEventArgs> : WeakPair<ICommand,TTarget>, IBinding where TTargetEventArgs : EventArgs
 		where TTarget : class
 	{
-		public CommandBinding(ICommand command, TTarget target, string targetEvent, Action<TTarget, bool> onExecuteChanged)
+		public CommandBinding(ICommand command, TTarget target, string targetEvent, Action<TTarget, bool> onExecuteChanged): base(command,target)
 		{
-			this.SourceReference = new WeakReference<ICommand>(command);
-			this.TargetReference = new WeakReference<TTarget>(target);
 			this.onExecuteEvent = onExecuteChanged;
 			this.targetEvent = target.AddWeakHandler<TTargetEventArgs>(targetEvent, this.OnClick);
 			this.commandEvent = command.AddWeakHandler<EventArgs>(nameof(command.CanExecuteChanged), this.OnCanExecuteChanged);
@@ -28,21 +26,6 @@ namespace Wires
 		public string TargetProperty { get; private set; }
 
 		public string SourceProperty { get; private set; }
-
-		public WeakReference<TTarget> TargetReference { get; private set; }
-
-		public WeakReference<ICommand> SourceReference { get; private set; }
-
-		public bool IsAlive
-		{
-			get
-			{
-				ICommand source;
-				TTarget target;
-
-				return this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target) && !this.isDisposed;
-			}
-		}
 
 		private void OnClick(object sender, TTargetEventArgs e)
 		{
@@ -67,11 +50,11 @@ namespace Wires
 			}
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			this.targetEvent.Unsubscribe();
 			this.commandEvent.Unsubscribe();
-			this.isDisposed = true;
+			base.Dispose();
 		}
 	}
 }

@@ -1,10 +1,29 @@
 ﻿namespace Wires.Sample.ViewModel
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
 	public class RedditViewModel : ViewModelBase
 	{
+		public class ItemViewModel : ViewModelBase // To test subview-models
+		{
+			public ItemViewModel(Post model)
+			{
+				this.model = model;
+			}
+
+			readonly Post model;
+
+			public string Title => model.Title;
+
+			public string Author => model.Author;
+
+			public DateTime Datetime => model.Datetime;
+
+			public string Thumbnail => model.Thumbnail;
+		}
+
 		public RedditViewModel()
 		{
 			this.api = new RedditApi();
@@ -13,7 +32,7 @@
 
 		#region Fields
 
-		private IEnumerable<Post> simple;
+		private IEnumerable<ItemViewModel> simple;
 
 		readonly RedditApi api;
 
@@ -35,7 +54,7 @@
 			}
 		}
 
-		public IEnumerable<Post> Simple
+		public IEnumerable<ItemViewModel> Simple
 		{
 			get { return simple; }
 			set 
@@ -47,17 +66,17 @@
 			}
 		}
 
-		public Collection<string,Post> Grouped
+		public Collection<string,ItemViewModel> Grouped
 		{
 			get
 			{
 				var sections = this.Simple.GroupBy(p => p.Datetime.DayOfYear).OrderByDescending(a => a.Key);
 
-				var result = new Collection<string, Post>();
+				var result = new Collection<string, ItemViewModel>();
 
 				foreach (var section in sections)
 				{
-					result.Add(new Collection<string, Post>.Section($"Day n°{section.Key}", section.ToArray()));
+					result.Add(new Collection<string, ItemViewModel>.Section($"Day n°{section.Key}", section.ToArray()));
 				}
 
 				return result;
@@ -77,7 +96,7 @@
 			try
 			{
 				this.IsUpdating = true;
-				this.Simple = await this.api.GetTopicAsync("earthporn");
+				this.Simple = (await this.api.GetTopicAsync("earthporn")).Select(p => new ItemViewModel(p));
 			}
 			catch (System.Exception ex)
 			{

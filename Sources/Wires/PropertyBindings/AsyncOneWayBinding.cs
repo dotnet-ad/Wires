@@ -12,10 +12,12 @@
 		where TSource : class
 		where TTarget : class
 	{
-		public AsyncOneWayBinding(TSource source, Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter, string sourceUpdateEvent, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, Task<TTargetProperty>> asyncConverter, TTargetProperty loadingValue, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceGetter, sourceSetter, sourceUpdateEvent, target, targetGetter, targetSetter, null, sourceEventFilter)
+		public AsyncOneWayBinding(TSource source, Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter, string sourceUpdateEvent, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, Task<TTargetProperty>> asyncConverter, TTargetProperty loadingValue, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(false,source, sourceGetter, sourceSetter, sourceUpdateEvent, target, targetGetter, targetSetter, null, sourceEventFilter)
 		{
 			this.asyncConverter = asyncConverter;
 			this.loadingValue = loadingValue;
+
+			this.UpdateTarget();
 		}
 
 		readonly TTargetProperty loadingValue;

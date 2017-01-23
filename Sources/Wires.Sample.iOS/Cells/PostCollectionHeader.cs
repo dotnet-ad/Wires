@@ -20,5 +20,19 @@ namespace Wires.Sample.iOS
 		{
 			// Note: this .ctor should not contain any initialization logic.
 		}
+		private string viewModel;
+
+		public string ViewModel
+		{
+			get { return this.viewModel; }
+			set
+			{
+				if (this.viewModel != value)
+				{
+					this.viewModel = value;
+					this.title.Bind(value).Text(vm => vm);
+				}
+			}
+		}
 	}
 }

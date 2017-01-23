@@ -3,6 +3,8 @@ namespace Wires
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Diagnostics;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Windows.Input;
 
@@ -23,18 +25,30 @@ namespace Wires
 		/// <summary>
 		/// Removes all bindings that are not alive anymore from the global binding list.
 		/// </summary>
-		public static void Purge()
+		public static int Purge(TimeSpan? checkInterval = null)
 		{
-			for (int i = 0; i < bindings.Count;)
+			int purged = 0;
+
+			if ((checkInterval == null) || (lastPurge + checkInterval < DateTime.Now))
 			{
-				var b = bindings[i];
-				if (!b.IsAlive)
+				for (int i = 0; i < bindings.Count;)
 				{
-					b.Dispose();
-					bindings.RemoveAt(i);
+					var b = bindings[i];
+					if (!b.IsAlive)
+					{
+						b.Dispose();
+						bindings.RemoveAt(i);
+						purged++;
+					}
+					else i++;
 				}
-				else i++;
+
+				lastPurge = DateTime.Now;
+
+				Debug.WriteLine($"[Bindings](Purge) {purged} removed, {bindings.Count} remaining");
 			}
+
+			return purged;
 		}
 
 		/// <summary>
@@ -45,12 +59,32 @@ namespace Wires
 			bindings = new List<IBinding>();
 		}
 
+		private static DateTime lastPurge;
+
+
+		public static void Unbind<TSource>(this TSource source, params object[] targets)
+		{
+			var toDispose = bindings.Where(c =>
+			{
+				object s, t;
+				return c.TryGetSourceAndTarget(out s, out t) && (s == (object)source) && targets.Contains(t);
+			}).ToArray();
+
+			foreach (var item in toDispose)
+			{
+				item.Dispose();
+			}
+		}
+
 		#endregion
 
 		#region Binder
 
+		public static TimeSpan PurgeInterval = TimeSpan.FromSeconds(15);
+
 		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TTarget target, TSource source) where TSource : class where TTarget : class
 		{
+			Purge(PurgeInterval);
 			var binder = new Binder<TSource, TTarget>(source, target);
 			bindings.Add(binder);
 			return binder;
@@ -64,6 +98,7 @@ namespace Wires
 			where TTargetEventArgs : EventArgs
 			where TTarget : class
 		{
+			Purge(PurgeInterval);
 			var b = new CommandBinding<TTarget, TTargetEventArgs>(binder.Source, binder.Target, targetEvent, onExecuteChanged);
 			bindings.Add(b);
 			return b;
