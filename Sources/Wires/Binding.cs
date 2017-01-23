@@ -1,19 +1,21 @@
-﻿using System;
+﻿
 namespace Wires
 {
-	public class WeakPair<TSource,TTarget> : IDisposable
+	using System;
+
+	public abstract class Binding<TSource,TTarget> : IDisposable, IBinding
 		where TSource : class
 		where TTarget : class
 	{
-		public WeakPair(TSource source, TTarget target)
+		public Binding(TSource source, TTarget target)
 		{
 			this.SourceReference = new WeakReference<TSource>(source);
 			this.TargetReference = new WeakReference<TTarget>(target);
 		}
 
-		public WeakReference<TTarget> TargetReference { get; private set; }
+		public WeakReference<TTarget> TargetReference { get; }
 
-		public WeakReference<TSource> SourceReference { get; private set; }
+		public WeakReference<TSource> SourceReference { get; }
 
 		public bool IsDisposed { get; protected set; }
 
@@ -21,7 +23,7 @@ namespace Wires
 		/// Gets a value indicating whether this <see cref="T:Wires.Binding`4"/> is still alive.
 		/// </summary>
 		/// <value><c>true</c> if is alive; otherwise, <c>false</c>.</value>
-		public bool IsAlive
+		public virtual bool IsAlive
 		{
 			get
 			{

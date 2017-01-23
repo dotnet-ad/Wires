@@ -111,6 +111,13 @@
     <Compile Include="UIWebViewExtensions.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
+    <Compile Include="Converters\CGConverters.cs" />
+    <Compile Include="UITableViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UICollectionViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

@@ -1,6 +1,8 @@
 ﻿namespace Wires.Sample.iOS
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	using UIKit;
 	using Wires.Sample.ViewModel;
 
@@ -23,6 +25,10 @@
 
 			this.ViewModel = new RedditViewModel();
 
+			this.indicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsUpdating)
+				.As<UIView>().Visible(vm => vm.IsUpdating);
+			this.collectionView.Bind(this.ViewModel).As<UIView>().Hidden(vm => vm.IsUpdating);
+
 			this.UpdateSource();
 
 			this.ViewModel.UpdateCommand.Execute(null);
@@ -34,13 +40,11 @@
 		{
 			if (this.segmented.SelectedSegment == 0)
 			{
-				var source = new BindableCollectionSource<RedditViewModel, RedditViewModel.ItemViewModel, UICollectionView, PostCollectionCell>(this.ViewModel, vm => vm.Simple, this.collectionView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post);
-				this.collectionView.Source = new CollectionViewSourceBinding<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(source, true);
+				this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
 			}
 			else
 			{
-				var source = new BindableGroupedCollectionSource<RedditViewModel, string, RedditViewModel.ItemViewModel, UICollectionView, PostCollectionCell, PostCollectionHeader>(this.ViewModel, vm => vm.Grouped, this.collectionView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post, (section, index, cell) => cell.ViewModel = section);
-				this.collectionView.Source = new GroupedCollectionViewSourceBinding<RedditViewModel, Collection<string, RedditViewModel.ItemViewModel>, string, RedditViewModel.ItemViewModel, PostCollectionCell, PostCollectionHeader>(source, true);
+				this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post);
 			}
 		}
 	}

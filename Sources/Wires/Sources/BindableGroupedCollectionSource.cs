@@ -1,24 +1,26 @@
 ﻿namespace Wires
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Collections.Specialized;
 	using System.ComponentModel;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Windows.Input;
 
-	public class BindableGroupedCollectionSource<TOwner, TSection, TItem, TView, TCellView, THeaderCellView> : BindableGroupedCollectionSource<TOwner, Collection<TSection, TItem>, TSection, TItem, TView, TCellView, THeaderCellView>
+	public class BindableGroupedCollectionSource<TOwner, TSection, TItem, TView, TCellView, THeaderCellView> : BindableGroupedCollectionSource<TOwner, IEnumerable<IGrouping<TSection, TItem>>, TSection, TItem, TView, TCellView, THeaderCellView>
 		where TOwner : class
 		where TView : class
 	{
-		public BindableGroupedCollectionSource(TOwner source, Expression<Func<TOwner, Collection<TSection, TItem>>> sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null) : base(source, sourceProperty, ((a, i) => a[i].Key), ((a) => a.Count), ((a, i) => a[i].Count), ((a, i) => a[i.Section][i.Item]), view, triggerReloading, prepareCell, prepareHeader, selectCommand) { }
+		public BindableGroupedCollectionSource(TOwner source, Expression<Func<TOwner, IEnumerable<IGrouping<TSection, TItem>>>> sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null) : base(source, sourceProperty, ((a, i) => a.ElementAt(i).Key), ((a) => a.Count()), ((a, i) => a.ElementAt(i).Count()), ((a, i) => a.ElementAt(i.Section).ElementAt(i.Item)), view, triggerReloading, prepareCell, prepareHeader, selectCommand) { }
 	}
 
-	public class BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, TView, TCellView, THeaderCellView> : IDisposable
+	public class BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, TView, TCellView, THeaderCellView> : Binding<TOwner,TView>
 		where TOwner : class
 		where TView : class
 		where TCollection : class
 	{
-		public BindableGroupedCollectionSource(TOwner source, Expression<Func<TOwner, TCollection>> sourceProperty, Func<TCollection, int, TSection> getSection, Func<TCollection, int> countSections, Func<TCollection, int, int> countItems, Func<TCollection, Index, TItem> getItem, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null)
+		public BindableGroupedCollectionSource(TOwner source, Expression<Func<TOwner, TCollection>> sourceProperty, Func<TCollection, int, TSection> getSection, Func<TCollection, int> countSections, Func<TCollection, int, int> countItems, Func<TCollection, Index, TItem> getItem, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null) : base(source,view)
 		{
 			var sourceAccessors = sourceProperty.BuildAccessors();
 
@@ -32,8 +34,6 @@
 			this.countItems = countItems;
 			this.countSections = countSections;
 			this.SelectCommand = selectCommand;
-			this.view = new WeakReference<TView>(view);
-			this.owner = new WeakReference<TOwner>(source);
 			this.triggerReloading = triggerReloading;
 			this.prepareCell = prepareCell;
 			this.prepareHeader = prepareHeader;
@@ -48,7 +48,7 @@
 		private void Reload()
 		{
 			TView view;
-			if (this.view.TryGetTarget(out view))
+			if (this.TryGetTarget(out view))
 			{
 				this.triggerReloading(view);
 			}
@@ -73,7 +73,7 @@
 			}
 
 			TOwner owner;
-			if (this.owner.TryGetTarget(out owner))
+			if (this.TryGetSource(out owner))
 			{
 				var items = getter(owner);
 
@@ -114,11 +114,7 @@
 
 		readonly Func<TCollection, int> countSections;
 
-		readonly WeakReference<TView> view;
-
 		readonly Action<TView> triggerReloading;
-
-		private readonly WeakReference<TOwner> owner;
 
 		readonly Action<TSection, int, THeaderCellView> prepareHeader;
 
@@ -134,35 +130,7 @@
 
 		public ICommand SelectCommand { get; private set; }
 
-		public TCollection Collection => getter(this.Owner);
-
-		public TView View
-		{
-			get
-			{
-				TView view;
-				if (this.view.TryGetTarget(out view))
-				{
-					return view;
-				}
-
-				throw new InvalidOperationException("View's owner has been garbage collected");
-			}
-		}
-
-		public TOwner Owner
-		{
-			get
-			{
-				TOwner owner;
-				if (this.owner.TryGetTarget(out owner))
-				{
-					return owner;
-				}
-
-				throw new InvalidOperationException("Source's owner has been garbage collected");
-			}
-		}
+		public TCollection Collection => getter(this.Source);
 
 		public int SectionsCount
 		{
@@ -213,10 +181,11 @@
 				this.prepareHeader(item, section, view);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			this.propertyChangedEvent.Unsubscribe();
 			this.collectionChangedEvent.Unsubscribe();
+			base.Dispose();
 		}
 	}
 }

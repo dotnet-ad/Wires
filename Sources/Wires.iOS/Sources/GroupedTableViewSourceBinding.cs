@@ -18,7 +18,7 @@
 			this.heightForItem = heightForItem;
 			this.heightForHeader = heightForHeader;
 
-			var view = this.source.View;
+			var view = this.source.Target;
 			cellIdentifier = typeof(TCellView).Name;
 			headerIdentifier = typeof(THeaderCellView).Name;
 

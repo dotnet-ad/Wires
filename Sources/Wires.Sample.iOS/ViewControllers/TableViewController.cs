@@ -3,7 +3,8 @@
 namespace Wires.Sample.iOS
 {
 	using System;
-
+	using System.Collections.Generic;
+	using System.Linq;
 	using UIKit;
 	using Wires.Sample.ViewModel;
 
@@ -22,6 +23,10 @@ namespace Wires.Sample.iOS
 
 			this.ViewModel = new RedditViewModel();
 
+			this.indicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsUpdating)
+				.As<UIView>().Visible(vm => vm.IsUpdating);
+			this.tableView.Bind(this.ViewModel).As<UIView>().Hidden(vm => vm.IsUpdating);
+
 			this.UpdateSource();
 
 			this.ViewModel.UpdateCommand.Execute(null);
@@ -33,13 +38,11 @@ namespace Wires.Sample.iOS
 		{
 			if (this.segmented.SelectedSegment == 0)
 			{
-				var source = new BindableCollectionSource<RedditViewModel, RedditViewModel.ItemViewModel, UITableView, PostTableCell>(this.ViewModel, vm => vm.Simple, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post);
-				this.tableView.Source = new TableViewSourceBinding<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(source, (arg) => 88, true);
+				this.tableView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
 			}
 			else
 			{
-				var source = new BindableGroupedCollectionSource<RedditViewModel, string, RedditViewModel.ItemViewModel, UITableView, PostTableCell, PostTableHeader>(this.ViewModel, vm => vm.Grouped, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post, (section, index, cell) => cell.ViewModel = section);
-				this.tableView.Source = new GroupedTableViewSourceBinding<RedditViewModel, Collection<string,RedditViewModel.ItemViewModel>, string,  RedditViewModel.ItemViewModel, PostTableCell, PostTableHeader>(source, (arg) => 88,(arg) => 68, true);
+				this.tableView.Bind(this.ViewModel).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped,(section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, null, (c) => 68, (c) => 88);
 			}
 		}
 

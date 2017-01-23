@@ -23,8 +23,10 @@ namespace Wires
 		public static IEnumerable<IBinding> All => bindings.ToArray();
 
 		/// <summary>
-		/// Removes all bindings that are not alive anymore from the global binding list.
+		/// Removes all bindings that are not alive anymore from the global binding list if the last purge 
+		/// is older than the given interval.
 		/// </summary>
+		/// <param name="checkInterval">Purge consecutive minimum interval (if null, then forces a purge).</param>
 		public static int Purge(TimeSpan? checkInterval = null)
 		{
 			int purged = 0;
@@ -56,11 +58,15 @@ namespace Wires
 		/// </summary>
 		public static void Reset()
 		{
+			foreach (var b in All)
+			{
+				b.Dispose();
+			}
+
 			bindings = new List<IBinding>();
 		}
 
 		private static DateTime lastPurge;
-
 
 		public static void Unbind<TSource>(this TSource source, params object[] targets)
 		{
@@ -88,20 +94,6 @@ namespace Wires
 			var binder = new Binder<TSource, TTarget>(source, target);
 			bindings.Add(binder);
 			return binder;
-		}
-
-		#endregion
-
-		#region Commands
-
-		public static IBinding Command<TTarget, TTargetEventArgs>(this Binder<ICommand,TTarget> binder, string targetEvent, Action<TTarget, bool> onExecuteChanged)
-			where TTargetEventArgs : EventArgs
-			where TTarget : class
-		{
-			Purge(PurgeInterval);
-			var b = new CommandBinding<TTarget, TTargetEventArgs>(binder.Source, binder.Target, targetEvent, onExecuteChanged);
-			bindings.Add(b);
-			return b;
 		}
 
 		#endregion

@@ -5,7 +5,7 @@ namespace Wires
 	using System.Diagnostics;
 	using System.Threading.Tasks;
 
-	public class AsyncOneTimeBinding<TSource, TTarget, TSourceProperty, TTargetProperty> : Binding<TSource, TTarget, TSourceProperty, TTargetProperty>
+	public class AsyncOneTimeBinding<TSource, TTarget, TSourceProperty, TTargetProperty> : PropertyBinding<TSource, TTarget, TSourceProperty, TTargetProperty>
 		where TSource : class
 		where TTarget : class
 	{
@@ -13,14 +13,14 @@ namespace Wires
 		{
 			this.asyncConverter = asyncConverter;
 			this.loadingValue = loadingValue;
-			this.UpdateTarget(); // Affect initial source value to target on binding
+			this.Update(); // Affect initial source value to target on binding
 		}
 
 		readonly TTargetProperty loadingValue;
 
 		readonly IConverter<TSourceProperty, Task<TTargetProperty>> asyncConverter;
 
-		public override async void UpdateTarget()
+		public override async void Update()
 		{
 			TSource source;
 			TTarget target;

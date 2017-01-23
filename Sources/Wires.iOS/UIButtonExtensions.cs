@@ -9,9 +9,10 @@ namespace Wires
 	{
 		#region TouchUpInside command
 
-		public static IBinding TouchUpInside(this Binder<ICommand,UIButton> binder)
+		public static Binder<TSource, UIButton> TouchUpInside<TSource>(this Binder<TSource, UIButton> binder, Expression<Func<TSource, ICommand>> property)
+			where TSource : class
 		{
-			return binder.Command<UIButton,EventArgs>(nameof(UIButton.TouchUpInside), (b, canExecute) => b.Enabled = canExecute);
+			return binder.Command<EventArgs>(property, nameof(UIButton.TouchUpInside),(b, v) => b.Enabled = v);
 		}
 
 		#endregion

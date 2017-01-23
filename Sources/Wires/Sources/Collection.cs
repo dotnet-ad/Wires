@@ -3,9 +3,12 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
-	public class Collection<TKey,TItem> : List<Collection<TKey, TItem>.Section>
+	/// <summary>
+	/// A list of items grouped into separated sections.
+	/// </summary>
+	public class Collection<TKey,TItem> : List<IGrouping<TKey, TItem>>
 	{
-		public class Section : List<TItem>
+		public class Section : List<TItem>, IGrouping<TKey, TItem>
 		{
 			public TKey Key { get; set; }
 

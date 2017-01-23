@@ -21,6 +21,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="PcN-EX-ffp">
+                                <rect key="frame" x="177.5" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8ye-lj-biW">
                                 <rect key="frame" x="0.0" y="98" width="375" height="520"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -38,9 +41,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="PcN-EX-ffp" firstAttribute="centerY" secondItem="3wH-g2-TsH" secondAttribute="centerY" id="4Dd-v7-MtS"/>
                             <constraint firstAttribute="trailing" secondItem="8ye-lj-biW" secondAttribute="trailing" id="FbN-Sr-e5h"/>
                             <constraint firstItem="ebK-Aa-8dD" firstAttribute="top" secondItem="HjK-1E-X4Y" secondAttribute="bottom" constant="32" id="PUr-iX-l4Z"/>
                             <constraint firstItem="8ye-lj-biW" firstAttribute="top" secondItem="ebK-Aa-8dD" secondAttribute="bottom" constant="18" id="T51-nx-je9"/>
+                            <constraint firstItem="PcN-EX-ffp" firstAttribute="centerX" secondItem="3wH-g2-TsH" secondAttribute="centerX" id="bVA-dv-x3k"/>
                             <constraint firstItem="Jyi-WZ-QKz" firstAttribute="top" secondItem="8ye-lj-biW" secondAttribute="bottom" id="gGB-UF-8Kk"/>
                             <constraint firstItem="8ye-lj-biW" firstAttribute="leading" secondItem="3wH-g2-TsH" secondAttribute="leading" id="nLx-6D-9uF"/>
                             <constraint firstItem="ebK-Aa-8dD" firstAttribute="centerX" secondItem="3wH-g2-TsH" secondAttribute="centerX" id="yPs-7G-I2O"/>
@@ -48,6 +53,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Table" id="3ki-CA-daD"/>
                     <connections>
+                        <outlet property="indicator" destination="PcN-EX-ffp" id="Jf4-Mz-UcI"/>
                         <outlet property="segmented" destination="ebK-Aa-8dD" id="IXR-ig-yr7"/>
                         <outlet property="tableView" destination="8ye-lj-biW" id="WtN-IS-V9f"/>
                     </connections>
@@ -68,6 +74,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Sqs-te-GzE">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="YtM-Oi-iYF">
                                 <rect key="frame" x="0.0" y="92" width="375" height="526"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -109,6 +118,8 @@
                             <constraint firstItem="BHp-j6-fYe" firstAttribute="centerX" secondItem="67r-Nn-K05" secondAttribute="centerX" id="OeD-k7-kuI"/>
                             <constraint firstItem="BHp-j6-fYe" firstAttribute="top" secondItem="ZqK-vX-hms" secondAttribute="bottom" constant="28" id="TnQ-T0-3cK"/>
                             <constraint firstItem="vqw-IH-4OM" firstAttribute="top" secondItem="YtM-Oi-iYF" secondAttribute="bottom" id="XGC-qs-vQP"/>
+                            <constraint firstItem="Sqs-te-GzE" firstAttribute="centerY" secondItem="67r-Nn-K05" secondAttribute="centerY" id="bFU-jf-CTT"/>
+                            <constraint firstItem="Sqs-te-GzE" firstAttribute="centerX" secondItem="67r-Nn-K05" secondAttribute="centerX" id="bUB-Ya-BN3"/>
                             <constraint firstAttribute="trailing" secondItem="YtM-Oi-iYF" secondAttribute="trailing" id="gpM-B5-HH0"/>
                             <constraint firstItem="YtM-Oi-iYF" firstAttribute="leading" secondItem="67r-Nn-K05" secondAttribute="leading" id="mea-Vf-Svg"/>
                         </constraints>
@@ -116,6 +127,7 @@
                     <tabBarItem key="tabBarItem" title="Collections" id="2CX-YM-LIz"/>
                     <connections>
                         <outlet property="collectionView" destination="YtM-Oi-iYF" id="FZb-9H-2Pr"/>
+                        <outlet property="indicator" destination="Sqs-te-GzE" id="zdM-T9-h0K"/>
                         <outlet property="segmented" destination="BHp-j6-fYe" id="Vfw-ci-Wcx"/>
                     </connections>
                 </viewController>
