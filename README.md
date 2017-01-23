@@ -19,23 +19,36 @@ Available on NuGet
 To bind data to components :
 
 ```csharp
-this.label.Bind(this.ViewModel).Text(vm => vm.Title);
-this.field.Bind(this.ViewModel).Text(vm => vm.Title);
-this.image.Bind(this.ViewModel).Image(vm => vm.Illustration)
-          .As<UIView>().Visible(vm => vm.IsActive);
-this.toggleSwitch.Bind(this.ViewModel).On(vm => vm.IsActive);
-this.slider.Bind(this.ViewModel).Value(vm => vm.Amount);
-this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
-this.progressView.Bind(this.ViewModel).Progress(vm => vm.Amount);
-this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
-this.segmented.Bind(this.ViewModel).Titles(vm => vm.Sections);
-this.button.Bind(this.ViewModel.LoadCommand).TouchUpInside();
+this.ViewModel
+		    .Bind(this.label)
+		    	.Text(vm => vm.Title, Converters.Uppercase)
+			.Bind(this.field)
+		    	.Text(vm => vm.Title)
+			.Bind(this.image)
+		    	.ImageAsync(vm => vm.Illustration)
+		    	.As<UIView>()
+		    		.Alpha(vm => vm.Amount)
+		    		.Visible(vm => vm.IsActive)
+			.Bind(this.toggleSwitch)
+		    	.On(vm => vm.IsActive)
+			.Bind(this.slider)
+		    	.Value(vm => vm.Amount)
+			.Bind(this.datePicker)
+		    	.Date(vm => vm.Birthday)
+			.Bind(this.progressView)
+		    	.Progress(vm => vm.Amount)
+			.Bind(this.activityIndicator)
+		    	.IsAnimating(vm => vm.IsLoading)
+			.Bind(this.segmented)
+		    	.Titles(vm => vm.Sections)
+			.Bind(this.button)
+		    	.TouchUpInside(vm => vm.LoadCommand);
 ```
 
 Value converters can also be used with an `IConverter<TSource,TTarget>` implementation, or a lambda expression :
 
 ```csharp
-this.label.Bind(this.ViewModel).TextColor(vm => vm.IsValid, x => x ? UIColor.Green : UIColor.Red);
+this.ViewModel.Bind(this.label).TextColor(vm => vm.IsValid, x => x ? UIColor.Green : UIColor.Red);
 ```
 
 ## Bindings
@@ -137,13 +150,13 @@ Specific converter can be used when binding, a several common converters are ava
 Wires provides also helpers for binding collection sources to `UITableView`*(iOS)*, `UICollectionView`*(iOS)* and `ListView`*(Android)*.
 
 ```csharp
-this.tableView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
-this.tableView.Bind(this.ViewModel).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand, (headerIndex) => 68, (cellIndex) => 88);
+this.ViewModel.Bind(this.tableView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
+this.ViewModel.Bind(this.tableView).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand, (headerIndex) => 68, (cellIndex) => 88);
 ```
 
 ```csharp
-this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
-this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand);
+this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
+this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand);
 ```
 
 Take a look at samples to see it in action.
@@ -168,6 +181,8 @@ this.viewmodel.Unbind(this.textfield, this.image, this.title)
 * Bindable adapters on Android
 * Cleaner code
 * More documentation
+* Trottling functiunalities
+* Command parameters
 
 ### Contributions
 

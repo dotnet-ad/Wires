@@ -30,7 +30,10 @@ namespace Wires.Sample.iOS
 				if (this.viewModel != value)
 				{
 					this.viewModel = value;
-					this.title.Bind(value).Text(vm => vm);
+
+					value
+						.Bind(title)
+							.Text(vm => vm);
 				}
 			}
 		}

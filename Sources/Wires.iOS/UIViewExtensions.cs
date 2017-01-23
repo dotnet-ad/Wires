@@ -9,14 +9,14 @@ namespace Wires
 	{
 		#region Hidden property
 
-		public static IBinding Visible<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+		public static Binder<TSource, UIView> Visible<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 		{
 			converter = converter ?? Converters.Default<TPropertyType, bool>();
 			return binder.Hidden(property, converter.Chain(Converters.Invert));
 		}
 
-		public static IBinding Hidden<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+		public static Binder<TSource, UIView> Hidden<TSource, TPropertyType>(this Binder<TSource,UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 		{
 			return binder.Property(property, b => b.Hidden, converter);
@@ -26,7 +26,7 @@ namespace Wires
 
 		#region TintColor property
 
-		public static IBinding TintColor<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIColor> converter = null)
+		public static Binder<TSource, UIView> TintColor<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIColor> converter = null)
 			where TSource : class
 		{
 			return binder.Property(property, b => b.TintColor, converter);

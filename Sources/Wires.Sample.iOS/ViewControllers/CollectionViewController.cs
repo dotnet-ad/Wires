@@ -25,9 +25,12 @@
 
 			this.ViewModel = new RedditViewModel();
 
-			this.indicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsUpdating)
-				.As<UIView>().Visible(vm => vm.IsUpdating);
-			this.collectionView.Bind(this.ViewModel).As<UIView>().Hidden(vm => vm.IsUpdating);
+			this.ViewModel
+			    	.Bind(this.indicator)
+			    		.IsAnimating(vm => vm.IsUpdating)
+						.As<UIView>().Visible(vm => vm.IsUpdating)
+					.Bind(this.collectionView)
+			    		.As<UIView>().Hidden(vm => vm.IsUpdating);
 
 			this.UpdateSource();
 
@@ -40,11 +43,11 @@
 		{
 			if (this.segmented.SelectedSegment == 0)
 			{
-				this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
+				this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
 			}
 			else
 			{
-				this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post);
+				this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post);
 			}
 		}
 	}

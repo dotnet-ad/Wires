@@ -20,17 +20,30 @@ namespace Wires.Sample.iOS
 
 			this.ViewModel = new HomeViewModel();
 
-			this.label.Bind(this.ViewModel).Text(vm => vm.Title, Converters.Uppercase);
-			this.field.Bind(this.ViewModel).Text(vm => vm.Title);
-			this.image.Bind(this.ViewModel).ImageAsync(vm => vm.Illustration)
-			    .As<UIView>().Alpha(vm => vm.Amount).Visible(vm => vm.IsActive);
-			this.toggleSwitch.Bind(this.ViewModel).On(vm => vm.IsActive);
-			this.slider.Bind(this.ViewModel).Value(vm => vm.Amount);
-			this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
-			this.progressView.Bind(this.ViewModel).Progress(vm => vm.Amount);
-			this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
-			this.segmented.Bind(this.ViewModel).Titles(vm => vm.Sections);
-			this.button.Bind(this.ViewModel).TouchUpInside(vm => vm.LoadCommand);
+			this.ViewModel
+			    .Bind(this.label)
+			    	.Text(vm => vm.Title, Converters.Uppercase)
+				.Bind(this.field)
+			    	.Text(vm => vm.Title)
+				.Bind(this.image)
+			    	.ImageAsync(vm => vm.Illustration)
+			    	.As<UIView>()
+			    		.Alpha(vm => vm.Amount)
+			    		.Visible(vm => vm.IsActive)
+				.Bind(this.toggleSwitch)
+			    	.On(vm => vm.IsActive)
+				.Bind(this.slider)
+			    	.Value(vm => vm.Amount)
+				.Bind(this.datePicker)
+			    	.Date(vm => vm.Birthday)
+				.Bind(this.progressView)
+			    	.Progress(vm => vm.Amount)
+				.Bind(this.activityIndicator)
+			    	.IsAnimating(vm => vm.IsLoading)
+				.Bind(this.segmented)
+			    	.Titles(vm => vm.Sections)
+				.Bind(this.button)
+			    	.TouchUpInside(vm => vm.LoadCommand);
 		}
 	}
 }
