@@ -2,7 +2,6 @@ namespace Wires
 {
 	using System;
 	using System.Diagnostics;
-	using System.Reflection;
 
 	/// <summary>
 	/// A data binding from a source to a target.
