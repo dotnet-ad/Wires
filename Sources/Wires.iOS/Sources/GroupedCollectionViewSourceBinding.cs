@@ -13,12 +13,13 @@
 
 		#region Constructors
 
-		public GroupedCollectionViewSourceBinding(BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, UICollectionView, TCellView, THeaderCellView> source, bool fromNib)
+		public GroupedCollectionViewSourceBinding(BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, UICollectionView, TCellView, THeaderCellView> source, bool fromNib, Action<float, float> onScroll = null)
 		{
 			this.source = source;
 
 			this.cellIdentifier = typeof(TCellView).Name;
 			this.headerIdentifier = typeof(THeaderCellView).Name;
+			this.onScroll = onScroll;
 
 			var view = this.source.Target;
 
@@ -37,6 +38,8 @@
 		#endregion
 
 		#region Fields
+
+		private Action<float, float> onScroll;
 
 		private readonly string cellIdentifier, headerIdentifier;
 
@@ -65,6 +68,8 @@
 		public override nint NumberOfSections(UICollectionView collectionView) => this.source?.SectionsCount ?? 0;
 
 		public override nint GetItemsCount(UICollectionView collectionView, nint section)=> this.source?.ItemsCount((int)section) ?? 0;
+
+		public override void Scrolled(UIScrollView scrollView) => this.onScroll?.Invoke((float)scrollView.ContentOffset.X, (float)scrollView.ContentOffset.Y);
 
 		#endregion
 	}
