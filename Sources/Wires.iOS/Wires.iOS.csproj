@@ -53,6 +53,7 @@
     <Folder Include="Resources\" />
     <Folder Include="Converters\" />
     <Folder Include="Sources\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UIButton.cs">
@@ -119,6 +120,7 @@
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
     <Compile Include="Linking.cs" />
+    <Compile Include="Utils\FileCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

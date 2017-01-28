@@ -8,7 +8,7 @@
 	{
 		#region Checked property
 
-		public static IBinding Checked<TSource, TPropertyType>(this Binder<TSource, Switch> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+		public static Binder<TSource, Switch> Checked<TSource, TPropertyType>(this Binder<TSource, Switch> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 		{
 			return binder.Property<TPropertyType, bool, CompoundButton.CheckedChangeEventArgs>(property, b => b.Checked, nameof(Switch.CheckedChange), converter);

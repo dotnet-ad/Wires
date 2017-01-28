@@ -17,6 +17,7 @@
 			Converters.Register(PlatformConverters.IntToColor);
 			Converters.Register(PlatformConverters.StringToColor);
 			Converters.Register(PlatformConverters.StringToImage);
+			Converters.Register(PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromDays(1)));
 			Converters.Register(PlatformConverters.DateTimeToNSDate);
 		}
 	}
