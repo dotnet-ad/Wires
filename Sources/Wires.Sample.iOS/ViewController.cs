@@ -41,6 +41,7 @@ namespace Wires.Sample.iOS
 			    	.IsAnimating(vm => vm.IsLoading)
 				.Bind(this.segmented)
 			    	.Titles(vm => vm.Sections)
+			    	.Selected(vm => vm.Selected)
 				.Bind(this.button)
 			    	.TouchUpInside(vm => vm.LoadCommand);
 		}
