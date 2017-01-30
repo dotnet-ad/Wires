@@ -12,7 +12,8 @@ namespace Wires
 			where TSource : class
 		{
 			converter = converter ?? Converters.Default<TPropertyType, int>();
-			return binder.Property(property, b => b.SelectedSegment, converter.Chain(Converters.Cast<int,nint>()));
+			var finalConverter = converter.Chain(Converters.Default<int, nint>());
+			return binder.Property(property, b => b.SelectedSegment, finalConverter);
 		}
 
 		#endregion
