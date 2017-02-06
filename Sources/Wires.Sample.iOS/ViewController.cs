@@ -21,29 +21,31 @@ namespace Wires.Sample.iOS
 			this.ViewModel = new HomeViewModel();
 
 			this.ViewModel
-			    .Bind(this.label)
-			    	.Text(vm => vm.Title, Converters.Uppercase)
+				.Bind(this.label)
+					.Text(vm => vm.Title, Converters.Uppercase)
 				.Bind(this.field)
-			    	.Text(vm => vm.Title)
+					.Text(vm => vm.Title)
+				.Bind(this.textView)
+					.Text(vm => vm.Title)
 				.Bind(this.image)
-			    	.ImageAsync(vm => vm.Illustration)
-			    	.Alpha(vm => vm.Amount)
-			    	.Visible(vm => vm.IsActive)
+					.ImageAsync(vm => vm.Illustration)
+					.Alpha(vm => vm.Amount)
+					.Visible(vm => vm.IsActive)
 				.Bind(this.toggleSwitch)
-			    	.On(vm => vm.IsActive)
+					.On(vm => vm.IsActive)
 				.Bind(this.slider)
-			    	.Value(vm => vm.Amount)
+					.Value(vm => vm.Amount)
 				.Bind(this.datePicker)
-			    	.Date(vm => vm.Birthday)
+					.Date(vm => vm.Birthday)
 				.Bind(this.progressView)
-			    	.Progress(vm => vm.Amount)
+					.Progress(vm => vm.Amount)
 				.Bind(this.activityIndicator)
-			    	.IsAnimating(vm => vm.IsLoading)
+					.IsAnimating(vm => vm.IsLoading)
 				.Bind(this.segmented)
-			    	.Titles(vm => vm.Sections)
-			    	.Selected(vm => vm.Selected)
+					.Titles(vm => vm.Sections)
+					.Selected(vm => vm.Selected)
 				.Bind(this.button)
-			    	.TouchUpInside(vm => vm.LoadCommand);
+					.TouchUpInside(vm => vm.LoadCommand);
 		}
 	}
 }
