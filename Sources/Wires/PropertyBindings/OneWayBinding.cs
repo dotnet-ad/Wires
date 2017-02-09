@@ -5,25 +5,17 @@ namespace Wires
 	/// <summary>
 	/// A binding that 
 	/// </summary>
-	public class OneWayBinding<TSource,TTarget,TSourceProperty, TTargetProperty,TSourceChangedEventArgs> : Binding<TSource, TTarget, TSourceProperty, TTargetProperty> 
+	public class OneWayBinding<TSource,TTarget,TSourceProperty, TTargetProperty,TSourceChangedEventArgs> : PropertyBinding<TSource, TTarget, TSourceProperty, TTargetProperty> 
 		where TSourceChangedEventArgs : EventArgs
 		where TSource : class
 		where TTarget : class
 	{
-		public OneWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target,Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceProperty, target, targetGetter, targetSetter, converter)
+		public OneWayBinding(TSource source, Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter, string sourceUpdateEvent, TTarget target,Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceGetter, sourceSetter, target, targetGetter, targetSetter, converter)
 		{
-			this.sourceEventFilter = sourceEventFilter;
+			this.sourceEventFilter = sourceEventFilter ?? ((a) => true);
 			this.sourceEvent = source.AddWeakHandler<TSourceChangedEventArgs>(sourceUpdateEvent, this.OnSourceChanged);
 
-			this.UpdateTarget(); // Affect initial source value to target on binding
-		}
-
-		public OneWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null) : base(source, sourceProperty, target, targetProperty, converter)
-		{
-			this.sourceEventFilter = sourceEventFilter;
-			this.sourceEvent = source.AddWeakHandler<TSourceChangedEventArgs>(sourceUpdateEvent, this.OnSourceChanged);
-
-			this.UpdateTarget(); // Affect initial source value to target on binding
+			this.Update(); // Affect initial source value to target on binding
 		}
 
 		readonly Func<TSourceChangedEventArgs, bool> sourceEventFilter;
@@ -33,7 +25,7 @@ namespace Wires
 		public void OnSourceChanged(object sender, TSourceChangedEventArgs args)
 		{
 			if (this.sourceEventFilter(args))
-				this.UpdateTarget();
+				this.Update();
 		}
 
 		public override void Dispose()
