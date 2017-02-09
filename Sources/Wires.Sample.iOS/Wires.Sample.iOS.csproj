@@ -24,7 +24,7 @@
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <IOSDebuggerPort>38101</IOSDebuggerPort>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchTlsProvider>Default</MtouchTlsProvider>
@@ -95,10 +95,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="ViewControllers\" />
+    <Folder Include="Cells\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="Cells\PostTableCell.xib" />
+    <InterfaceDefinition Include="Cells\PostCollectionCell.xib" />
+    <InterfaceDefinition Include="Cells\PostTableHeader.xib" />
+    <InterfaceDefinition Include="Cells\PostCollectionHeader.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -111,6 +117,44 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewControllers\TableViewController.cs" />
+    <Compile Include="ViewControllers\TableViewController.designer.cs">
+      <DependentUpon>TableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewControllers\CollectionViewController.cs" />
+    <Compile Include="ViewControllers\CollectionViewController.designer.cs">
+      <DependentUpon>CollectionViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostTableCell.cs" />
+    <Compile Include="Cells\PostTableCell.designer.cs">
+      <DependentUpon>PostTableCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostCollectionCell.cs" />
+    <Compile Include="Cells\PostCollectionCell.designer.cs">
+      <DependentUpon>PostCollectionCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostTableHeader.cs" />
+    <Compile Include="Cells\PostTableHeader.designer.cs">
+      <DependentUpon>PostTableHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cells\PostCollectionHeader.cs" />
+    <Compile Include="Cells\PostCollectionHeader.designer.cs">
+      <DependentUpon>PostCollectionHeader.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wires.Sample.ViewModel\Wires.Sample.ViewModel.csproj">
+      <Project>{393AF82A-554A-470E-94E2-712C19A27114}</Project>
+      <Name>Wires.Sample.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wires.iOS\Wires.iOS.csproj">
+      <Project>{B0343DA8-7002-4E66-872A-7F4AD157866C}</Project>
+      <Name>Wires.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wires\Wires.csproj">
+      <Project>{190C423F-A178-43DE-A8FE-955DBD12562B}</Project>
+      <Name>Wires</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
