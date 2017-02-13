@@ -1,6 +1,4 @@
-﻿
-
-namespace Wires
+﻿namespace Wires
 {
 	using System;
 	using System.Diagnostics;
@@ -20,7 +18,9 @@ namespace Wires
 
 		#endregion
 
-		public string Folder { get; set; } = "./.file-cache";
+		public string Folder { get; set; } = ".file-cache";
+
+		public string AbsoluteFolderPath => Path.Combine(Environment.SpecialFolder.MyDocuments.ToString(), Folder);
 
 		public Func<string, WebRequest> RequestFactory { get; set; } = (url) => HttpWebRequest.Create(url);
 
@@ -38,7 +38,7 @@ namespace Wires
 			}
 		}
 
-		public string GetCachePath(string url) => Path.Combine(Folder, $"{CreateHash(url)}");
+		public string GetCachePath(string url) => Path.Combine(AbsoluteFolderPath, $"{CreateHash(url)}");
 
 		public async Task<string> DownloadCachedFile(string url, TimeSpan expiration)
 		{
@@ -47,9 +47,9 @@ namespace Wires
 			DateTime lastWrite = DateTime.MinValue;
 			if (!File.Exists(cachePath) || (lastWrite = File.GetLastWriteTimeUtc(cachePath)) + expiration < DateTime.UtcNow)
 			{
-				if (!Directory.Exists(Folder))
+				if (!Directory.Exists(AbsoluteFolderPath))
 				{
-					Directory.CreateDirectory(Folder);
+					Directory.CreateDirectory(AbsoluteFolderPath);
 				}
 
 				try
