@@ -98,7 +98,7 @@
 				this.IsUpdating = true;
 				this.Simple = (await this.api.GetTopicAsync("earthporn")).Select(p => new ItemViewModel(p));
 			}
-			catch (System.Exception ex)
+			catch (System.Exception)
 			{
 
 			}

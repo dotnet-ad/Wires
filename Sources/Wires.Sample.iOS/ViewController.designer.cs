@@ -40,6 +40,9 @@ namespace Wires.Sample.iOS
 		UIKit.UISlider slider { get; set; }
 
 		[Outlet]
+		UIKit.UITextView textView { get; set; }
+
+		[Outlet]
 		UIKit.UISwitch toggleSwitch { get; set; }
 		
 		void ReleaseDesignerOutlets ()
@@ -79,6 +82,11 @@ namespace Wires.Sample.iOS
 				progressView = null;
 			}
 
+			if (segmented != null) {
+				segmented.Dispose ();
+				segmented = null;
+			}
+
 			if (slider != null) {
 				slider.Dispose ();
 				slider = null;
@@ -89,9 +97,9 @@ namespace Wires.Sample.iOS
 				toggleSwitch = null;
 			}
 
-			if (segmented != null) {
-				segmented.Dispose ();
-				segmented = null;
+			if (textView != null) {
+				textView.Dispose ();
+				textView = null;
 			}
 		}
 	}

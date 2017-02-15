@@ -32,6 +32,7 @@
 			x6.TintColor = x6.TintColor;
 			x6.BackgroundColor = x6.BackgroundColor;
 			x6.Alpha = x6.Alpha;
+			x6.UserInteractionEnabled = x6.UserInteractionEnabled;
 
 			var x7 = new UIViewController();
 			x7.Title = x7.Title;
@@ -66,6 +67,10 @@
 
 			var x15 = new UISwitch();
 			x15.On = x15.On;
+
+			var x16 = new UITextView();
+			x16.Text = x16.Text;
+			x16.Changed += (sender, e) => { };
 		}
 	}
 }
