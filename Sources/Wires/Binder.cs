@@ -170,6 +170,8 @@
 
 		#endregion
 
+		#region Observers
+
 		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
 		{
 			return this.ObserveProperty<TSourceProperty, TSourceProperty>(sourceProperty, action);
@@ -200,6 +202,8 @@
 
 			return this;
 		}
+
+		#endregion
 
 		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target) 
 			where TNewTarget : class
