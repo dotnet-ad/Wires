@@ -5,7 +5,6 @@
 	using System.Threading.Tasks;
 	using Android.Graphics;
 	using Android.Graphics.Drawables;
-	using Android.Text;
 	using Android.Widget;
 
 	public static partial class UIExtensions

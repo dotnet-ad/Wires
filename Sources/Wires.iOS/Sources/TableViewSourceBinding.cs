@@ -77,12 +77,34 @@
 			return size.Item2;
 		}
 
+		public override nfloat GetHeightForFooter(UITableView tableView, nint section)
+		{
+			var headerdata = datasource.Sections.ElementAt((int)section).Footer;
+			if (headerdata == null)
+				return 0;
+
+			var descriptor = this.datasource.GetFooterView(headerdata.ViewIdentifier);
+			var size = descriptor.GetSize(headerdata);
+			return size.Item2;
+		}
+
 		public override UIView GetViewForHeader(UITableView tableView, nint section)
 		{
 			var item = datasource.Sections.ElementAt((int)section).Header;
 			if (item == null)
 				return null;
 			
+			var view = tableView.DequeueReusableHeaderFooterView(item.ViewIdentifier) as IView;
+			view.ViewModel = item.Item;
+			return view as UIView;
+		}
+
+		public override UIView GetViewForFooter(UITableView tableView, nint section)
+		{
+			var item = datasource.Sections.ElementAt((int)section).Footer;
+			if (item == null)
+				return null;
+
 			var view = tableView.DequeueReusableHeaderFooterView(item.ViewIdentifier) as IView;
 			view.ViewModel = item.Item;
 			return view as UIView;
@@ -98,7 +120,7 @@
 		{
 			if (fromNibs)
 			{
-				foreach (var item in datasource.HeaderViews)
+				foreach (var item in datasource.HeaderViews.Union(datasource.FooterViews))
 				{
 					view.RegisterNibForHeaderFooterViewReuse(NibLocator.Nib(item.ViewType), item.Identifier);
 				}
@@ -110,7 +132,7 @@
 			}
 			else
 			{
-				foreach (var item in datasource.HeaderViews)
+				foreach (var item in datasource.HeaderViews.Union(datasource.FooterViews))
 				{
 					view.RegisterClassForHeaderFooterViewReuse(item.ViewType, item.Identifier);
 				}

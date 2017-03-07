@@ -17,7 +17,7 @@
 
 		private List<Func<TViewModel,IEnumerable<Section<TViewModel>>>> sections = new List<Func<TViewModel,IEnumerable<Section<TViewModel>>>>();
 
-		private List<CellDescriptor> cellViews = new List<CellDescriptor>(), headerViews = new List<CellDescriptor>();
+		private List<CellDescriptor> cellViews = new List<CellDescriptor>(), headerViews = new List<CellDescriptor>(), footerViews = new List<CellDescriptor>();
 
 		#endregion
 
@@ -40,6 +40,8 @@
 
 		public IEnumerable<CellDescriptor> HeaderViews => headerViews.ToArray();
 
+		public IEnumerable<CellDescriptor> FooterViews => footerViews.ToArray();
+
 		public IEnumerable<Section<TViewModel>> Sections => sections.Select(x => x(this.ViewModel)).Where(x => x != null).SelectMany(x => x);
 
 		public WeakReference<TViewModel> ViewModelReference { get; }
@@ -58,6 +60,8 @@
 
 		public CellDescriptor GetHeaderView(string identifier) => this.headerViews.FirstOrDefault(x => x.Identifier == identifier);
 
+		public CellDescriptor GetFooterView(string identifier) => this.footerViews.FirstOrDefault(x => x.Identifier == identifier);
+
 		public CollectionSource<TViewModel> RegisterCellView<T>(string identifier, float height = -1, float width = -1) where T : IView
 		{
 			this.cellViews.Add(new CellDescriptor(identifier, typeof(T), width, height));
@@ -67,6 +71,12 @@
 		public CollectionSource<TViewModel> RegisterHeaderView<T>(string identifier, float height = -1, float width = -1) where T : IView
 		{ 
 			this.headerViews.Add(new CellDescriptor(identifier, typeof(T), width, height));
+			return this;
+		}
+
+		public CollectionSource<TViewModel> RegisterFooterView<T>(string identifier, float height = -1, float width = -1) where T : IView
+		{
+			this.footerViews.Add(new CellDescriptor(identifier, typeof(T), width, height));
 			return this;
 		}
 

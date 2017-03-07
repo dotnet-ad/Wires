@@ -20,8 +20,6 @@
 			base.ViewDidLoad();
 
 			var layout = this.collectionView.CollectionViewLayout as UICollectionViewFlowLayout;
-			layout.ItemSize = new CoreGraphics.CGSize(60,60);
-			layout.HeaderReferenceSize = new CoreGraphics.CGSize(1000, 40);
 
 			this.ViewModel = new RedditViewModel();
 
@@ -34,8 +32,8 @@
 			    	.Bind(this.collectionView)
 						.Source(vm => vm.Items, (vm, v, c) =>
 						{
-							c.RegisterCellView<PostCollectionCell>("cell", 44);
-							c.RegisterHeaderView<PostCollectionHeader>("header", 88);
+							c.RegisterCellView<PostCollectionCell>("cell", 44, 44);
+							c.RegisterHeaderView<PostCollectionHeader>("header", 88, 100);
 						});
 
 			this.ViewModel.UpdateCommand.Execute(null);
