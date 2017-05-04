@@ -5,7 +5,7 @@ using UIKit;
 
 namespace Wires.Sample.iOS
 {
-	public partial class PostCollectionHeader : UICollectionReusableView
+	public partial class PostCollectionHeader : UICollectionReusableView, IView
 	{
 		public static readonly NSString Key = new NSString("PostCollectionHeader");
 
@@ -36,6 +36,12 @@ namespace Wires.Sample.iOS
 							.Text(vm => vm);
 				}
 			}
+		}
+
+		object IView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { this.ViewModel = value as string; }
 		}
 	}
 }

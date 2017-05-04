@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wires.Sample.ViewModel", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wires.Droid", "Wires.Droid\Wires.Droid.csproj", "{631926B7-2FCE-46F4-95BB-F4C90F53F019}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wires.Sample.Droid", "Wires.Sample.Droid\Wires.Sample.Droid.csproj", "{C345A701-4558-42E3-A56B-EA0A6DF529F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,9 +99,22 @@ Global
 		{631926B7-2FCE-46F4-95BB-F4C90F53F019}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{631926B7-2FCE-46F4-95BB-F4C90F53F019}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{631926B7-2FCE-46F4-95BB-F4C90F53F019}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|iPhone.Build.0 = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3}.Debug|iPhone.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{01F0F936-F75B-4641-9611-D40AA362B2FE} = {3F9AC364-3FA8-4A47-9297-90F2677353B0}
 		{393AF82A-554A-470E-94E2-712C19A27114} = {3F9AC364-3FA8-4A47-9297-90F2677353B0}
+		{C345A701-4558-42E3-A56B-EA0A6DF529F3} = {3F9AC364-3FA8-4A47-9297-90F2677353B0}
 	EndGlobalSection
 EndGlobal
