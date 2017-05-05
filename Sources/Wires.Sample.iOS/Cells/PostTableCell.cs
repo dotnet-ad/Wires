@@ -8,13 +8,13 @@ namespace Wires.Sample.iOS
 {
 	public partial class PostTableCell : UITableViewCell, IView
 	{
-		public static readonly NSString Key = new NSString("PostTableCell");
+		public static readonly NSString Key = new NSString(nameof(PostTableCell));
 
 		public static readonly UINib Nib;
 
 		static PostTableCell()
 		{
-			Nib = UINib.FromName("PostTableCell", NSBundle.MainBundle);
+			Nib = UINib.FromName(nameof(PostTableCell), NSBundle.MainBundle);
 		}
 
 		protected PostTableCell(IntPtr handle) : base(handle)

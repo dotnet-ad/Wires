@@ -89,6 +89,13 @@
 			return section;
 		}
 
+		public Section<TViewModel> WithSections(Func<TViewModel, IEnumerable<Section<TViewModel>>> sections)
+		{
+			var section = new Section<TViewModel>(this);
+			this.sections.Add(sections);
+			return section;
+		}
+
 		public CollectionSource<TViewModel> WithSections<TKey, TItem>(string cellIdentifier, string headerIdentifier,Func<TViewModel,IEnumerable<TItem>> items, Func<TItem,TKey> selector, ICommand select)
 		{
 			sections.Add((vm) => items(vm)?.GroupBy(selector).Select(x =>

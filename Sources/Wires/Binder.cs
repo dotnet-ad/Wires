@@ -205,10 +205,26 @@
 
 		#endregion
 
-		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target) 
+		#region Binding to sub properties
+
+		public Binder<TSource, TTarget> SubBind<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<Binder<TSourceProperty, TTarget>> subbind)
+			where TSourceProperty : class
+		{
+			return this.ObserveProperty(sourceProperty, (s, t, p) => subbind(p.Rebind(t)));
+		}
+
+		#endregion
+
+		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target)
 			where TNewTarget : class
 		{
 			return this.Source.Bind(target);
+		}
+
+		public Binder<TSource, TNewTarget> Rebind<TNewTarget>(TNewTarget target)
+			where TNewTarget : class
+		{
+			return this.Source.Rebind(target);
 		}
 
 		public override void Dispose()
