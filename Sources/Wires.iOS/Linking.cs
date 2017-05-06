@@ -71,6 +71,9 @@
 			var x16 = new UITextView();
 			x16.Text = x16.Text;
 			x16.Changed += (sender, e) => { };
+
+			var x17 = new UIActivityIndicatorView();
+			x17.Color = x17.Color;
 		}
 	}
 }
