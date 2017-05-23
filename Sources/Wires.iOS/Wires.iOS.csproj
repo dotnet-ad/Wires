@@ -120,6 +120,9 @@
     </Compile>
     <Compile Include="Linking.cs" />
     <Compile Include="Utils\FileCache.cs" />
+    <Compile Include="UIBarButtonItem.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">
