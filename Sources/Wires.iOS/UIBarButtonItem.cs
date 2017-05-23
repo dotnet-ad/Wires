@@ -7,7 +7,7 @@
 
 	public static partial class UIExtensions
 	{
-		#region TouchUpInside command
+		#region Clicked command
 
 		public static Binder<TSource, UIBarButtonItem> Clicked<TSource>(this Binder<TSource, UIBarButtonItem> binder, Expression<Func<TSource, ICommand>> property)
 			where TSource : class
