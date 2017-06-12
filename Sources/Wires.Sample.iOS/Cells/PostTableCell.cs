@@ -6,15 +6,15 @@ using Wires.Sample.ViewModel;
 
 namespace Wires.Sample.iOS
 {
-	public partial class PostTableCell : UITableViewCell
+	public partial class PostTableCell : UITableViewCell, IView
 	{
-		public static readonly NSString Key = new NSString("PostTableCell");
+		public static readonly NSString Key = new NSString(nameof(PostTableCell));
 
 		public static readonly UINib Nib;
 
 		static PostTableCell()
 		{
-			Nib = UINib.FromName("PostTableCell", NSBundle.MainBundle);
+			Nib = UINib.FromName(nameof(PostTableCell), NSBundle.MainBundle);
 		}
 
 		protected PostTableCell(IntPtr handle) : base(handle)
@@ -46,6 +46,12 @@ namespace Wires.Sample.iOS
 							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
 				}
 			}
+		}
+
+		object IView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { this.ViewModel = value as RedditViewModel.ItemViewModel; }
 		}
 	}
 }

@@ -39,17 +39,19 @@
     <Compile Include="Bindings.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Conversions\RelayConverter.cs" />
-    <Compile Include="Sources\BindableCollectionSource.cs" />
     <Compile Include="PropertyBindings\OneTimeBinding.cs" />
     <Compile Include="Conversions\ChainConverter.cs" />
     <Compile Include="Binder.cs" />
-    <Compile Include="Sources\Index.cs" />
-    <Compile Include="Sources\Collection.cs" />
     <Compile Include="PropertyBindings\AsyncOneWayBinding.cs" />
     <Compile Include="PropertyBindings\AsyncOneTimeBinding.cs" />
-    <Compile Include="Sources\BindableGroupedCollectionSource.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="EventBinding.cs" />
+    <Compile Include="Sources\Cell.cs" />
+    <Compile Include="Sources\Section.cs" />
+    <Compile Include="Sources\CollectionSource.cs" />
+    <Compile Include="PropertyBindings\PropertyObserver.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="Sources\CellDescriptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

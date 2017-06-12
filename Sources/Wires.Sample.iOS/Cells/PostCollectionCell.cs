@@ -6,7 +6,7 @@ using Wires.Sample.ViewModel;
 
 namespace Wires.Sample.iOS
 {
-	public partial class PostCollectionCell : UICollectionViewCell
+	public partial class PostCollectionCell : UICollectionViewCell, IView
 	{
 		public static readonly NSString Key = new NSString("PostCollectionCell");
 
@@ -40,6 +40,12 @@ namespace Wires.Sample.iOS
 							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
 				}
 			}
+		}
+
+		object IView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { this.ViewModel = value as RedditViewModel.ItemViewModel; }
 		}
 	}
 }

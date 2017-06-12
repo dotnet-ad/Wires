@@ -170,6 +170,8 @@
 
 		#endregion
 
+		#region Observers
+
 		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
 		{
 			return this.ObserveProperty<TSourceProperty, TSourceProperty>(sourceProperty, action);
@@ -201,10 +203,28 @@
 			return this;
 		}
 
-		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target) 
+		#endregion
+
+		#region Binding to sub properties
+
+		public Binder<TSource, TTarget> SubBind<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<Binder<TSourceProperty, TTarget>> subbind)
+			where TSourceProperty : class
+		{
+			return this.ObserveProperty(sourceProperty, (s, t, p) => subbind(p.Rebind(t)));
+		}
+
+		#endregion
+
+		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target)
 			where TNewTarget : class
 		{
 			return this.Source.Bind(target);
+		}
+
+		public Binder<TSource, TNewTarget> Rebind<TNewTarget>(TNewTarget target)
+			where TNewTarget : class
+		{
+			return this.Source.Rebind(target);
 		}
 
 		public override void Dispose()

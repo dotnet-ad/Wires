@@ -16,8 +16,23 @@
 			return binder.Property(property, b => b.Visibility, converter);
 		}
 
-		#endregion
+		public static Binder<TSource, TView> Visible<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+			where TSource : class
+			where TView : View
+		{
+			converter = converter ?? Converters.Default<TPropertyType, bool>();
+			return binder.Visibility(property,converter.Chain(PlatformConverters.BoolToViewState));
+		}
 
+		public static Binder<TSource, TView> Hidden<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+			where TSource : class
+			where TView : View
+		{
+			converter = converter ?? Converters.Default<TPropertyType, bool>();
+			return binder.Visible(property, converter.Chain(Converters.Invert));
+		}
+
+		#endregion
 
 		#region BackgroundColor property
 

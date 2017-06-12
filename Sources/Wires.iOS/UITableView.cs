@@ -11,32 +11,61 @@
 	{
 		#region Source property
 
-		public static TableViewSourceBinding<TSource, TItem, TCell> Source<TSource, TItem, TCell>(this Binder<TSource, UITableView> binder, Expression<Func<TSource, IEnumerable<TItem>>> property, Action<TItem,int,TCell> prepareCell, ICommand select = null,  Func<int, nfloat> heightForItem = null, bool fromNib = true, Action<float> onScroll = null)
+		public static Binder<TSource, UITableView> Source<TSource, TPropertyType>(this Binder<TSource, UITableView> binder, Expression<Func<TSource, TPropertyType>> property, Action<TSource, UITableView, CollectionSource<TSource>> registerViews, IConverter<TPropertyType, CollectionSource<TSource>> converter = null, bool fromNibs = true)
 			where TSource : class
-			where TCell : UITableViewCell
 		{
-			heightForItem = heightForItem ?? ((i) => 44);
-
-			var s = new BindableCollectionSource<TSource, TItem, UITableView, TCell>(binder.Source, property, binder.Target, (obj) => obj.ReloadData(), prepareCell, select);
-
-			var result = new TableViewSourceBinding<TSource, TItem, TCell>(s, heightForItem, fromNib, onScroll);
-			binder.Target.Source = result;
-			return result;
+			return binder.ObserveProperty(property, (s, v, collection) =>
+			{
+				collection.ClearViews();
+				registerViews(s, v, collection);
+				v.Source = new TableViewSourceBinding<TSource>(v, collection, fromNibs);
+				v.ReloadData();
+			}, converter);
 		}
 
-		public static GroupedTableViewSourceBinding<TSource, IEnumerable<IGrouping<TSection, TItem>>, TSection, TItem, TCell, THeaderCell> Source<TSource, TSection, TItem, THeaderCell, TCell>(this Binder<TSource, UITableView> binder, Expression<Func<TSource, IEnumerable<IGrouping<TSection,TItem>>>> property, Action<TSection, int, THeaderCell> prepareHeader, Action<TItem, Index, TCell> prepareCell, ICommand select = null, Func<int, nfloat> heightForHeader = null, Func<Index, nfloat> heightForItem = null, bool fromNib = true, Action<float> onScroll = null)
+		#endregion
+
+		#region Simple helpers
+
+		public static Binder<TSource, UITableView> Source<TSource, TItem, TCell>(this Binder<TSource, UITableView> binder, Expression<Func<TSource, IEnumerable<TItem>>> property, ICommand select = null, int heightForItem = 44, bool fromNibs = true, Action<float> onScroll = null)
 			where TSource : class
-			where THeaderCell : UITableViewHeaderFooterView
-			where TCell : UITableViewCell
+			where TCell : IView
 		{
-			heightForItem = heightForItem ?? ((i) => 44);
-			heightForHeader = heightForHeader ?? ((i) => 32);
+			return binder.Source(property,(s, v, c) => 
+			{
+				c.RegisterCellView<TCell>("cell", heightForItem);
+			}, new RelayConverter<IEnumerable<TItem>, CollectionSource<TSource>>((x) => 
+			{
+				var collection = new CollectionSource<TSource>(binder.Source);
+				collection.WithSection().WithCells("cell", (arg) => x, select);
+				return collection;
+			}), fromNibs);
+		}
 
-			var s = new BindableGroupedCollectionSource<TSource, TSection, TItem, UITableView, TCell, THeaderCell>(binder.Source, property, binder.Target, (obj) => obj.ReloadData(), prepareCell, prepareHeader, select);
-
-			var result = new GroupedTableViewSourceBinding<TSource, IEnumerable<IGrouping<TSection, TItem>>, TSection, TItem, TCell, THeaderCell>(s, heightForItem, heightForHeader, fromNib, onScroll);
-			binder.Target.Source = result;
-			return result;
+		public static Binder<TSource, UITableView> Source<TSource, TSection, TItem, THeaderCell, TCell>(this Binder<TSource, UITableView> binder, Expression<Func<TSource, IEnumerable<IGrouping<TSection, TItem>>>> property, ICommand select = null, int heightForHeader = 44, int heightForItem = 44, bool fromNibs = true, Action<float> onScroll = null)
+			where TSource : class
+			where TCell : IView
+			where THeaderCell : IView
+		{
+			return binder.Source(property, (s, v, c) =>
+			 {
+				 c.RegisterCellView<TCell>("cell", heightForItem);
+				 c.RegisterHeaderView<THeaderCell>("header", heightForHeader);
+			 }, new RelayConverter<IEnumerable<IGrouping<TSection, TItem>>, CollectionSource<TSource>>((x) =>
+			 {
+				 var collection = new CollectionSource<TSource>(binder.Source);
+				 collection.WithSections((vm) =>
+				{
+					return x.Select(e =>
+					{
+						var section = new Section<TSource>(collection);
+						section.WithHeader("header", vm2 => e.Key);
+						section.WithCells("cell", vm2 => e, select);
+						return section;
+					});
+				});
+				 return collection;
+			 }), fromNibs);
 		}
 
 		#endregion

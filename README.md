@@ -117,6 +117,13 @@ You also observe a property with `ObserveProperty` : the given action will be in
 ```csharp
 this.ViewModel.Bind(this.label).ObserveProperty(vm => vm.Title, (vm,label,title) => { label.Text = title; });
 ```
+If you wish to bind a sub-property, use the `SubBind`.
+
+```csharp
+this.ViewModel.Bind(this.label)
+			     .Text(vm => vm.Title)
+			     .SubBind(vm => vm.ExecuteCommand, sub => sub.Visible(c => c.IsExecuting);
+```
 
 
 For more advanced options see `Binder<TSource,TTarget>` APIs, or simply take a look at provided extensions to create your own ones.
@@ -157,17 +164,54 @@ Specific converter can be used when binding, a several common converters are ava
 
 ## Built-in sources
 
-Wires provides also helpers for binding collection sources to `UITableView`*(iOS)*, `UICollectionView`*(iOS)* and `ListView`*(Android)*.
+Wires provides also common helpers for binding simple collection sources to `UITableView`*(iOS)*, `UICollectionView`*(iOS)* and `RecycleView`*(Android)*.
+
+You can first describe your `CollectionSource<TViewModel>` from your shared code.
 
 ```csharp
-this.ViewModel.Bind(this.tableView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
-this.ViewModel.Bind(this.tableView).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand, (headerIndex) => 68, (cellIndex) => 88);
+var collection = new CollectionSource<RedditViewModel>(this);
+collection.WithSections<TSection,TItem>("cell", "header", vm => vm.Items, (item) => item.Status, null);
 ```
 
 ```csharp
-this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
-this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand);
+var collection = new CollectionSource<RedditViewModel>(this)
+collection.WithSection()
+			  .WithHeader("header", vm => "Section 1")
+			  .WithCells("cell", vm => vm.Items1 );
+		    .WithSection()
+			  .WithHeader("header", vm => "Section 2")
+			  .WithCell("cell", vm => vm.Item21 )
+			  .WithCell("cell", vm => vm.Item22 )
+			  .WithCells("cell", vm => vm.Items23to26 )
+			  .WithCell("cell", vm => vm.Item27 )
+			  .WithFooter("footer", vm => "End");
 ```
+
+And then bind it like any other property with the view extensions on iOS.
+
+```csharp
+this.ViewModel
+			.Bind(this.tableView)
+				.Source(vm => vm.Items, (vm,v,c) =>
+					{
+						c.RegisterCellView<PostTableCell>("cell", 44);
+						c.RegisterHeaderView<PostTableHeader>("header", 88);
+					});
+```
+
+Its the same for Android!
+
+```csharp
+this.ViewModel
+			.Bind(this.recyclerview)
+				.Source(vm => vm.Items, (vm,v,c) =>
+					{
+						c.RegisterCellView<PostCellViewHolder>("cell", 44);
+						c.RegisterHeaderView<PostHeaderViewHolder>("header", 88);
+					});
+```
+
+Be sure that your `UITableViewCell` and `RecyclerView.ViewHolder` are implementing `Wires.IView` and update the view on `ViewModel` setter view. Your `RecyclerView.ViewHolder` should also have only one constructor with a `ViewGroup` as only input parameter.
 
 Take a look at samples to see it in action.
 
@@ -180,13 +224,13 @@ But if you reuse a view, and want to update bindings you have to remove the prev
 This is available through `Unbind(this TSsource, params object[] targets)` extension.
 
 ```csharp
-this.viewmodel.Unbind(label, this.image, this.title)
+this.viewmodel.Unbind(label, this.image, this.title);
 ```
 
 You can also use `Rebind` method to unbind just before binding.
 
 ```csharp
-this.ViewModel.Rebind(this.label).Text(v => v.Title)
+this.ViewModel.Rebind(this.label).Text(v => v.Title);
 ```
 
 ## WeakEventHandlers
@@ -215,7 +259,7 @@ private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs 
 * Improve architecture
 * Improve tests
 * Android extensions
-* Bindable adapters on Android
+* Dynamic sources with collection changes
 * Cleaner code
 * More documentation
 * Trottling functiunalities

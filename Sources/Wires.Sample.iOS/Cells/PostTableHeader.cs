@@ -5,15 +5,15 @@
 	using Foundation;
 	using UIKit;
 
-	public partial class PostTableHeader : UITableViewHeaderFooterView
+	public partial class PostTableHeader : UITableViewHeaderFooterView, IView
 	{
-		public static readonly NSString Key = new NSString("PostTableHeader");
+		public static readonly NSString Key = new NSString(nameof(PostTableHeader));
 
 		public static readonly UINib Nib;
 
 		static PostTableHeader()
 		{
-			Nib = UINib.FromName("PostTableHeader", NSBundle.MainBundle);
+			Nib = UINib.FromName(nameof(PostTableHeader), NSBundle.MainBundle);
 		}
 
 		protected PostTableHeader(IntPtr handle) : base(handle)
@@ -36,6 +36,12 @@
 							.Text(vm => vm);
 				}
 			}
+		}
+
+		object IView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { this.ViewModel = value as string; }
 		}
 	}
 }

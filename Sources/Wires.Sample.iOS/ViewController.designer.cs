@@ -47,7 +47,7 @@ namespace Wires.Sample.iOS
 
 		[Outlet]
 		UIKit.UISwitch toggleSwitch { get; set; }
-		
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (activityIndicator != null) {
