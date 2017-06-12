@@ -85,7 +85,7 @@ namespace Wires
 			var toDispose = bindings.Where(c =>
 			{
 				object s, t;
-				return c.TryGetSourceAndTarget(out s, out t) && (s == (object)source) && targets.Contains(t);
+				return c.TryGetSourceAndTarget(out s, out t) && targets.Contains(t);
 			}).ToArray();
 
 			foreach (var item in toDispose)
@@ -118,8 +118,8 @@ namespace Wires
 		/// <param name="target">Target.</param>
 		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
 		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
-		public static Binder<TSource, TTarget> Rebind<TSource, TTarget>(this TSource source, TTarget target) 
-			where TSource : class 
+		public static Binder<TSource, TTarget> Rebind<TSource, TTarget>(this TSource source, TTarget target)
+			where TSource : class
 			where TTarget : class
 		{
 			source.Unbind(target);
