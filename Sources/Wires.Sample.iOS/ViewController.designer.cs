@@ -1,6 +1,6 @@
 // WARNING
 //
-// This file has been generated automatically by Xamarin Studio to store outlets and
+// This file has been generated automatically by Visual Studio to store outlets and
 // actions made in the UI designer. If it is removed, they will be lost.
 // Manual changes to this file may not be handled correctly.
 //
@@ -29,6 +29,9 @@ namespace Wires.Sample.iOS
 
 		[Outlet]
 		UIKit.UILabel label { get; set; }
+
+		[Outlet]
+		UIKit.UIPageControl pageControl { get; set; }
 
 		[Outlet]
 		UIKit.UIProgressView progressView { get; set; }
@@ -92,14 +95,19 @@ namespace Wires.Sample.iOS
 				slider = null;
 			}
 
+			if (textView != null) {
+				textView.Dispose ();
+				textView = null;
+			}
+
 			if (toggleSwitch != null) {
 				toggleSwitch.Dispose ();
 				toggleSwitch = null;
 			}
 
-			if (textView != null) {
-				textView.Dispose ();
-				textView = null;
+			if (pageControl != null) {
+				pageControl.Dispose ();
+				pageControl = null;
 			}
 		}
 	}

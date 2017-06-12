@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="CQb-CC-SO5">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="CQb-CC-SO5">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -185,13 +185,13 @@
                                                         <rect key="frame" x="0.0" y="29" width="375" height="128"/>
                                                     </imageView>
                                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Field" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sGd-HG-zZO">
-                                                        <rect key="frame" x="0.0" y="157" width="375" height="158"/>
+                                                        <rect key="frame" x="0.0" y="157" width="375" height="121"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
                                                     </textField>
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vje-VE-F5S">
-                                                        <rect key="frame" x="0.0" y="315" width="375" height="128"/>
+                                                        <rect key="frame" x="0.0" y="278" width="375" height="128"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="128" id="ivR-d1-gP1"/>
@@ -201,20 +201,25 @@
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     </textView>
                                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="71I-e2-ok2">
-                                                        <rect key="frame" x="0.0" y="443" width="375" height="216"/>
+                                                        <rect key="frame" x="0.0" y="406" width="375" height="216"/>
                                                         <date key="date" timeIntervalSinceReferenceDate="506290191.47248">
                                                             <!--2017-01-16 20:09:51 +0000-->
                                                         </date>
                                                     </datePicker>
                                                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="h72-0B-K3e">
-                                                        <rect key="frame" x="0.0" y="659" width="375" height="2"/>
+                                                        <rect key="frame" x="0.0" y="622" width="375" height="2"/>
                                                     </progressView>
                                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="7wP-xN-t8h">
-                                                        <rect key="frame" x="0.0" y="661" width="375" height="20"/>
+                                                        <rect key="frame" x="0.0" y="624" width="375" height="20"/>
                                                     </activityIndicatorView>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="H0f-WQ-ycv">
-                                                        <rect key="frame" x="-2" y="681" width="379" height="31"/>
+                                                        <rect key="frame" x="-2" y="644" width="379" height="31"/>
                                                     </slider>
+                                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="6" translatesAutoresizingMaskIntoConstraints="NO" id="JKU-MX-ZYY">
+                                                        <rect key="frame" x="0.0" y="674" width="375" height="37"/>
+                                                        <color key="pageIndicatorTintColor" red="0.31372549020000001" green="0.74509803919999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="currentPageIndicatorTintColor" red="1" green="0.57528430949999998" blue="0.074174389330000007" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </pageControl>
                                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PdE-Gh-CtN">
                                                         <rect key="frame" x="0.0" y="711" width="377" height="31"/>
                                                     </switch>
@@ -289,6 +294,7 @@
                         <outlet property="field" destination="sGd-HG-zZO" id="q2A-Qm-1PW"/>
                         <outlet property="image" destination="Z42-mK-ySt" id="fzr-zf-0QL"/>
                         <outlet property="label" destination="dBT-00-RSb" id="ntl-pk-Ab0"/>
+                        <outlet property="pageControl" destination="JKU-MX-ZYY" id="gam-SC-9TH"/>
                         <outlet property="progressView" destination="h72-0B-K3e" id="EGw-FW-RQe"/>
                         <outlet property="segmented" destination="YhC-rR-d2s" id="MRy-CB-Kfd"/>
                         <outlet property="slider" destination="H0f-WQ-ycv" id="a84-Hn-1SL"/>

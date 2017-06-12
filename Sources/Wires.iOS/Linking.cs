@@ -71,6 +71,11 @@
 			var x16 = new UITextView();
 			x16.Text = x16.Text;
 			x16.Changed += (sender, e) => { };
+
+            var x17 = new UIPageControl();
+            x17.CurrentPage = x17.CurrentPage;
+            x17.Pages = x17.Pages;
+            x17.CurrentPageIndicatorTintColor = x17.CurrentPageIndicatorTintColor;
 		}
 	}
 }
