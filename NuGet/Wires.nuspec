@@ -13,6 +13,9 @@
        <description>Basic data binding for Xamarin.iOS and Xamarin.Android.</description>
        <summary>Wire is a simple binding library for frameworks that doesn't have built-in binding mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also package for Xamarin.iOS and Xamarin.Android.</summary>
      <tags>iOS, Android, Xamarin, binding, databinding, bind, wire, wires</tags>
+     <dependencies>
+         <dependency id="Transmute" version="0.5.7" />
+     </dependencies>
    </metadata>
    <files>
      <!-- Portable -->
