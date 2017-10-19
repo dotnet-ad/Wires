@@ -30,6 +30,14 @@ namespace Wires
 			return this;
 		}
 
+		public Binder<TSource, TNewTarget> As<TNewTarget>()
+			where TNewTarget : class
+		{
+			var cast = new Binder<TSource, TNewTarget>(Source, (TNewTarget)(object)Target);
+			this.Add(cast);
+			return cast;
+		}
+
 		#region OneTime
 
 		private IBinding OneTime<TSourceProperty, TTargetProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Expression<Func<TTarget, TTargetProperty>> targetProperty, IConverter<TSourceProperty, TTargetProperty> converter = null)
@@ -102,7 +110,10 @@ namespace Wires
 
 		public void Dispose()
 		{
-			throw new NotImplementedException();
+			foreach (var binding in this.bindings)
+			{
+				binding.Dispose();
+			}
 		}
 	}
 }

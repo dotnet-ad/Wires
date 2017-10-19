@@ -80,10 +80,18 @@
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
     <Compile Include="UIExtensions.cs" />
-    <Compile Include="UISliderExtensions.cs" />
-    <Compile Include="UIProgressViewExtensions.cs" />
-    <Compile Include="UIActivityIndicatorExtensions.cs" />
-    <Compile Include="UIDatePickerExtensions.cs" />
+    <Compile Include="UISliderExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIProgressViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIActivityIndicatorExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIDatePickerExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
     <Compile Include="Converters\DateConverters.cs" />
   </ItemGroup>
   <ItemGroup>
