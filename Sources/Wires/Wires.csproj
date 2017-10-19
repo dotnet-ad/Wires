@@ -44,6 +44,8 @@
     <Compile Include="PropertyBindings\OneTimeBinding.cs" />
     <Compile Include="Conversions\ChainConverter.cs" />
     <Compile Include="Binder.cs" />
+    <Compile Include="Sources\Index.cs" />
+    <Compile Include="Sources\Collection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

@@ -34,6 +34,9 @@ namespace Wires.Sample.iOS
 		UIKit.UIProgressView progressView { get; set; }
 
 		[Outlet]
+		UIKit.UISegmentedControl segmented { get; set; }
+
+		[Outlet]
 		UIKit.UISlider slider { get; set; }
 
 		[Outlet]
@@ -41,19 +44,14 @@ namespace Wires.Sample.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (label != null) {
-				label.Dispose ();
-				label = null;
+			if (activityIndicator != null) {
+				activityIndicator.Dispose ();
+				activityIndicator = null;
 			}
 
-			if (image != null) {
-				image.Dispose ();
-				image = null;
-			}
-
-			if (field != null) {
-				field.Dispose ();
-				field = null;
+			if (button != null) {
+				button.Dispose ();
+				button = null;
 			}
 
 			if (datePicker != null) {
@@ -61,14 +59,24 @@ namespace Wires.Sample.iOS
 				datePicker = null;
 			}
 
+			if (field != null) {
+				field.Dispose ();
+				field = null;
+			}
+
+			if (image != null) {
+				image.Dispose ();
+				image = null;
+			}
+
+			if (label != null) {
+				label.Dispose ();
+				label = null;
+			}
+
 			if (progressView != null) {
 				progressView.Dispose ();
 				progressView = null;
-			}
-
-			if (activityIndicator != null) {
-				activityIndicator.Dispose ();
-				activityIndicator = null;
 			}
 
 			if (slider != null) {
@@ -81,9 +89,9 @@ namespace Wires.Sample.iOS
 				toggleSwitch = null;
 			}
 
-			if (button != null) {
-				button.Dispose ();
-				button = null;
+			if (segmented != null) {
+				segmented.Dispose ();
+				segmented = null;
 			}
 		}
 	}

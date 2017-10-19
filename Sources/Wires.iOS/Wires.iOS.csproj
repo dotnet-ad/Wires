@@ -93,6 +93,10 @@
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
     <Compile Include="Converters\DateConverters.cs" />
+    <Compile Include="Sources\IndexExtensions.cs" />
+    <Compile Include="UISegmentedControlExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

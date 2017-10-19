@@ -38,7 +38,7 @@ namespace Wires.Sample.ViewModel
 		public string Title
 		{
 			get { return title; }
-			set { this.Set(ref title, value); }
+			set { if (this.Set(ref title, value)) RaiseProperty(nameof(Sections)); }
 		}
 
 		public string Illustration
@@ -47,16 +47,18 @@ namespace Wires.Sample.ViewModel
 			set { this.Set(ref illustration, value); }
 		}
 
+		public string[] Sections => new[] { Title, Amount.ToString(), IsActive.ToString()  };
+
 		public double Amount
 		{
 			get { return amount; }
-			set { this.Set(ref amount, value); }
+			set { if(this.Set(ref amount, value)) RaiseProperty(nameof(Sections)); }
 		}
 
 		public bool IsActive
 		{
 			get { return isActive; }
-			set { this.Set(ref isActive, value); }
+			set { if (this.Set(ref isActive, value)) RaiseProperty(nameof(Sections)); }
 		}
 
 		public DateTime Birthday
