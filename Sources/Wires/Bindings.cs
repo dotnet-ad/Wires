@@ -2,8 +2,8 @@ namespace Wires
 {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.Windows.Input;
+	using System.Diagnostics;
+	using System.Linq;
 
 	/// <summary>
 	/// A set of extensions that help with the use of Bindings.
@@ -20,106 +20,113 @@ namespace Wires
 		public static IEnumerable<IBinding> All => bindings.ToArray();
 
 		/// <summary>
-		/// Removes all bindings that are not alive anymore from the global binding list.
+		/// Removes all bindings that are not alive anymore from the global binding list if the last purge 
+		/// is older than the given interval.
 		/// </summary>
-		public static void Purge()
+		/// <param name="checkInterval">Purge consecutive minimum interval (if null, then forces a purge).</param>
+		public static int Purge(TimeSpan? checkInterval = null)
 		{
-			for (int i = 0; i < bindings.Count;)
+			int purged = 0;
+
+			if ((checkInterval == null) || (lastPurge + checkInterval < DateTime.Now))
 			{
-				var b = bindings[i];
-				if (!b.IsAlive)
+				for (int i = 0; i < bindings.Count;)
 				{
-					b.Dispose();
-					bindings.RemoveAt(i);
+					var b = bindings[i];
+					if (!b.IsAlive)
+					{
+						b.Dispose();
+						bindings.RemoveAt(i);
+						purged++;
+					}
+					else i++;
 				}
-				else i++;
+
+				lastPurge = DateTime.Now;
+
+				Debug.WriteLine($"[Bindings](Purge) {purged} removed, {bindings.Count} remaining");
+			}
+
+			return purged;
+		}
+
+		/// <summary>
+		/// Destroys all declared bindings.
+		/// </summary>
+		public static void Reset()
+		{
+			foreach (var b in All)
+			{
+				b.Dispose();
+			}
+
+			bindings = new List<IBinding>();
+		}
+
+		private static DateTime lastPurge;
+
+	
+
+		#endregion
+
+		#region Actions
+
+
+		public static TimeSpan PurgeInterval = TimeSpan.FromSeconds(15);
+
+		/// <summary>
+		/// Unbind all the bindings previously declared.
+		/// </summary>
+		/// <param name="source">Source.</param>
+		/// <param name="targets">Targets.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
+		public static void Unbind<TSource>(this TSource source, params object[] targets)
+		{
+			var toDispose = bindings.Where(c =>
+			{
+				object s, t;
+				return c.TryGetSourceAndTarget(out s, out t) && (s == (object)source) && targets.Contains(t);
+			}).ToArray();
+
+			foreach (var item in toDispose)
+			{
+				item.Dispose();
 			}
 		}
 
 		/// <summary>
-		/// Destroys all bindings.
+		/// Start to bind properties from target to source.
 		/// </summary>
-		public static void Reset()
+		/// <param name="source">Source.</param>
+		/// <param name="target">Target.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
+		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
+		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TSource source, TTarget target) 
+			where TSource : class 
+			where TTarget : class
 		{
-			bindings = new List<IBinding>();
+			Purge(PurgeInterval);
+			var binder = new Binder<TSource, TTarget>(source, target);
+			bindings.Add(binder);
+			return binder;
+		}
+
+		/// <summary>
+		/// Unbind the target from the source, and restart a new set of bindings.
+		/// </summary>
+		/// <param name="source">Source.</param>
+		/// <param name="target">Target.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
+		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
+		public static Binder<TSource, TTarget> Rebind<TSource, TTarget>(this TSource source, TTarget target) 
+			where TSource : class 
+			where TTarget : class
+		{
+			source.Unbind(target);
+			return source.Bind(target);
 		}
 
 		#endregion
 
-		#region OneWay
-
-		public static IBinding BindOneWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null)
-			where TSourceChangedEventArgs : EventArgs
-			where TSource : class
-			where TTarget : class
-		{
-			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, converter, sourceEventFilter);
-			bindings.Add(b);
-			return b;
-		}
-
-		public static IBinding BindOneWay<TTarget, TSourceProperty, TTargetProperty>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter)
-			where TTarget : class
-		{
-			return source.BindOneWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetProperty, converter, (arg) => (arg.PropertyName == sourceProperty));
-		}
-
-		public static IBinding BindOneWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null)
-			where TSourceChangedEventArgs : EventArgs
-			where TSource : class
-			where TTarget : class
-		{
-			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter);
-			bindings.Add(b);
-			return b;
-		}
-
-		public static IBinding BindOneWay<TTarget, TSourceProperty, TTargetProperty>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter)
-			where TTarget : class
-		{
-			return source.BindOneWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetGetter, targetSetter, converter, (arg) => (arg.PropertyName == sourceProperty));
-		}
-
-		#endregion
-
-		#region TwoWay
-
-		public static IBinding BindTwoWay<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(this TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, string targetUpdateEvent, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null, Func<TTargetChangedEventArgs, bool> targetEventFilter = null)
-			where TSourceChangedEventArgs : EventArgs
-			where TTargetChangedEventArgs : EventArgs
-			where TSource : class
-			where TTarget : class
-		{
-			var b = new TwoWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, targetUpdateEvent, converter, sourceEventFilter, targetEventFilter);
-			bindings.Add(b);
-			return b;
-		}
-
-		public static IBinding BindTwoWay<TTarget, TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(this INotifyPropertyChanged source, string sourceProperty, TTarget target, string targetProperty, string targetEvent, IConverter<TSourceProperty, TTargetProperty> converter)
-			where TTargetChangedEventArgs : EventArgs
-			where TTarget : class
-		{
-			return source.BindTwoWay<INotifyPropertyChanged, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs, TTargetChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetProperty, targetEvent, converter, (arg) => (arg.PropertyName == sourceProperty));
-		}
-
-		public static IBinding BindTwoWay<TSourceProperty, TTargetProperty>(this INotifyPropertyChanged source, string sourceProperty, INotifyPropertyChanged target, string targetProperty, IConverter<TSourceProperty, TTargetProperty> converter)
-		{
-			return source.BindTwoWay<INotifyPropertyChanged, INotifyPropertyChanged, TSourceProperty, TTargetProperty, PropertyChangedEventArgs, PropertyChangedEventArgs>(sourceProperty, nameof(INotifyPropertyChanged.PropertyChanged), target, targetProperty, nameof(INotifyPropertyChanged.PropertyChanged), converter, (arg) => (arg.PropertyName == sourceProperty),(arg) => (arg.PropertyName == targetProperty));
-		}
-
-		#endregion
-
-		#region Commands
-
-		public static IBinding Bind<TTarget, TTargetEventArgs>(this ICommand command, TTarget target, string targetEvent, Action<TTarget, bool> onExecuteChanged)
-			where TTargetEventArgs : EventArgs
-			where TTarget : class
-		{
-			var b = new CommandBinding<TTarget, TTargetEventArgs>(command, target, targetEvent, onExecuteChanged);
-			bindings.Add(b);
-			return b;
-		}
-
-		#endregion
 	}
 }
