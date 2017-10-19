@@ -49,8 +49,8 @@ For more advanced options see : [./Sources/Wires/Bindings.cs](./Sources/Wires/Bi
 * Improve architecture
 * Improve tests
 * MORE extensions
-* Bindable TableView, CollectionView sources on iOS
 * Bindable adapters on Android
+* Grouped collection sources
 
 ### Contributions
 

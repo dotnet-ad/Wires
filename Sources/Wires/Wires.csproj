@@ -40,6 +40,7 @@
     <Compile Include="Bindings.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Conversions\RelayConverter.cs" />
+    <Compile Include="Sources\BindableCollectionSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
@@ -47,6 +48,7 @@
     <Folder Include="CommandBindings\" />
     <Folder Include="Conversions\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Sources\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

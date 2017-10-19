@@ -52,6 +52,7 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Converters\" />
+    <Folder Include="Sources\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UIButtonExtensions.cs" />
@@ -62,6 +63,9 @@
     <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\ImageConverters.cs" />
     <Compile Include="UIViewExtensions.cs" />
+    <Compile Include="Sources\TableViewSourceBinding.cs" />
+    <Compile Include="Sources\CollectionViewSourceBinding.cs" />
+    <Compile Include="Sources\NibLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

@@ -3,6 +3,7 @@ namespace Wires
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
+	using System.Reflection;
 	using System.Windows.Input;
 
 	/// <summary>
@@ -53,7 +54,10 @@ namespace Wires
 			where TSource : class
 			where TTarget : class
 		{
-			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, converter, sourceEventFilter);
+			var sourceAccessors = source.BuildAccessors<TSource,TSourceProperty>(sourceProperty);
+			var targetAccessors = target.BuildAccessors<TTarget, TTargetProperty>(targetProperty);
+
+			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceAccessors.Item1, sourceAccessors.Item2, sourceUpdateEvent, target, targetAccessors.Item1, targetAccessors.Item2, converter, sourceEventFilter);
 			bindings.Add(b);
 			return b;
 		}
@@ -69,7 +73,9 @@ namespace Wires
 			where TSource : class
 			where TTarget : class
 		{
-			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter);
+			var sourceAccessors = source.BuildAccessors<TSource, TSourceProperty>(sourceProperty);
+
+			var b = new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs>(source, sourceAccessors.Item1, sourceAccessors.Item2, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter);
 			bindings.Add(b);
 			return b;
 		}
@@ -90,7 +96,10 @@ namespace Wires
 			where TSource : class
 			where TTarget : class
 		{
-			var b = new TwoWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(source, sourceProperty, sourceUpdateEvent, target, targetProperty, targetUpdateEvent, converter, sourceEventFilter, targetEventFilter);
+			var sourceAccessors = source.BuildAccessors<TSource, TSourceProperty>(sourceProperty);
+			var targetAccessors = target.BuildAccessors<TTarget, TTargetProperty>(targetProperty);
+
+			var b = new TwoWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, TSourceChangedEventArgs, TTargetChangedEventArgs>(source, sourceAccessors.Item1, sourceAccessors.Item2, sourceUpdateEvent, target, targetAccessors.Item1, targetAccessors.Item2, targetUpdateEvent, converter, sourceEventFilter, targetEventFilter);
 			bindings.Add(b);
 			return b;
 		}

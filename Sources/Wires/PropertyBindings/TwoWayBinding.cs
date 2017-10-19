@@ -8,15 +8,8 @@ namespace Wires
 		where TSource : class
 		where TTarget : class
 	{
-		public TwoWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target,Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, string targetUpdateEvent, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null, Func<TTargetChangedEventArgs, bool> targetEventFilter = null)
-			: base(source, sourceProperty, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter)
-		{
-			this.targetEventFilter = targetEventFilter ?? ((a) => true);
-			this.targetEvent = target.AddWeakHandler<TTargetChangedEventArgs>(targetUpdateEvent, this.OnTargetChanged);
-		}
-
-		public TwoWayBinding(TSource source, string sourceProperty, string sourceUpdateEvent, TTarget target, string targetProperty, string targetUpdateEvent, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null, Func<TTargetChangedEventArgs, bool> targetEventFilter = null)
-			: base(source, sourceProperty, sourceUpdateEvent, target, targetProperty, converter, sourceEventFilter)
+		public TwoWayBinding(TSource source, Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter, string sourceUpdateEvent, TTarget target,Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, string targetUpdateEvent, IConverter<TSourceProperty, TTargetProperty> converter, Func<TSourceChangedEventArgs, bool> sourceEventFilter = null, Func<TTargetChangedEventArgs, bool> targetEventFilter = null)
+			: base(source, sourceGetter, sourceSetter, sourceUpdateEvent, target, targetGetter, targetSetter, converter, sourceEventFilter)
 		{
 			this.targetEventFilter = targetEventFilter ?? ((a) => true);
 			this.targetEvent = target.AddWeakHandler<TTargetChangedEventArgs>(targetUpdateEvent, this.OnTargetChanged);
