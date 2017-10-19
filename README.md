@@ -27,8 +27,8 @@ this.ViewModel
 			.Bind(this.image)
 		    	.ImageAsync(vm => vm.Illustration)
 		    	.As<UIView>()
-		    		.Alpha(vm => vm.Amount)
-		    		.Visible(vm => vm.IsActive)
+		    	.Alpha(vm => vm.Amount)
+		    	.Visible(vm => vm.IsActive)
 			.Bind(this.toggleSwitch)
 		    	.On(vm => vm.IsActive)
 			.Bind(this.slider)
@@ -66,7 +66,7 @@ this.ViewModel.Bind(this.label).TextColor(vm => vm.IsValid, x => x ? UIColor.Gre
 * **UIActivityIndicator**
   * `IsAnimating` *bool*
 * **UIButton**
-  * `TouchUpInside` (command)
+  * `TouchUpInside` *ICommand*
   * `Title` *string*
   * `Image` *UIImage*
 * **UIDatePicker**
@@ -107,9 +107,11 @@ this.ViewModel.Bind(this.label).TextColor(vm => vm.IsValid, x => x ? UIColor.Gre
 **Wires** provides more basic APIs on which are based all the extensions.
 
 ```csharp
+this.ViewModel.Bind(custom).Property(vm => vm.Source, x => x.Target);
+this.ViewModel.Bind(custom).Property<TSourceType, TTargetType, EventArgs>(vm => vm.Source, x => x.Value, nameof(Custom.ValueChanged));
 ```
 
-For more advanced options see provided extensions to create your own ones.
+For more advanced options see `Binder<TSource,TTarget>` APIs, or simply take a look at provided extensions to create your own ones.
 
 ## Built-in converters
 
@@ -171,6 +173,27 @@ This is available through `Unbind(this TSsource, params object[] targets)` exten
 
 ```csharp
 this.viewmodel.Unbind(this.textfield, this.image, this.title)
+```
+
+## WeakEventHandlers
+
+If you want to observe an event without keeping a strong reference to your subscriber, use a `WeakEventHandler` instead. You don't have to worry about unscription anymore in most cases!
+
+```csharp
+public override void ViewDidLoad()
+{
+	base.ViewDidLoad();
+	this.ViewModel = new RedditViewModel();
+	this.ViewModel.AddWeakHandler<PropertyChangedEventArgs>(nameof(INotifyPropertyChanged.PropertyChanged), this.OnViewModelPropertyChanged);
+}
+
+private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs args)
+{
+	if(args == nameof(this.ViewModel.Title)
+	{
+	  // ...
+	}
+}
 ```
 
 ## Roadmap / Ideas
