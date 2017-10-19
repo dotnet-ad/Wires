@@ -43,6 +43,7 @@ namespace Wires.Sample.iOS
 					.Progress(vm => vm.Amount)
 				.Bind(this.activityIndicator)
 					.IsAnimating(vm => vm.IsLoading)
+					.Color(vm => vm.Amount, new RelayConverter<double, UIColor>(d => new UIColor((nfloat)d / 3, (nfloat)d, (nfloat)d / 2, 1)))
 				.Bind(this.segmented)
 					.Titles(vm => vm.Sections)
 					.Selected(vm => vm.Selected)
