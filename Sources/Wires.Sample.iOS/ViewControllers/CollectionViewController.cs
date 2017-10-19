@@ -30,25 +30,17 @@
 			    		.IsAnimating(vm => vm.IsUpdating)
 			    		.Visible(vm => vm.IsUpdating)
 					.Bind(this.collectionView)
-			    		.Hidden(vm => vm.IsUpdating);
-
-			this.UpdateSource();
+			    		.Hidden(vm => vm.IsUpdating)
+			    	.Bind(this.collectionView)
+						.Source(vm => vm.Items, (vm, v, c) =>
+						{
+							c.RegisterCellView<PostCollectionCell>("cell", 44);
+							c.RegisterHeaderView<PostCollectionHeader>("header", 88);
+						});
 
 			this.ViewModel.UpdateCommand.Execute(null);
 
-			this.segmented.ValueChanged += (sender, e) => this.UpdateSource();
-		}
-
-		private void UpdateSource()
-		{
-			if (this.segmented.SelectedSegment == 0)
-			{
-				this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
-			}
-			else
-			{
-				this.ViewModel.Bind(this.collectionView).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post);
-			}
+			this.segmented.ValueChanged += (sender, e) => this.ViewModel.IsGrouped = this.segmented.SelectedSegment > 0;
 		}
 	}
 }
