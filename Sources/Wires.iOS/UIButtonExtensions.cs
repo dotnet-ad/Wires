@@ -19,7 +19,7 @@ namespace Wires
 
 		#region Title property
 
-		public static IBinding Title<TSource, TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
+		public static Binder<TSource, UIButton>  Title<TSource, TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
 			where TSource : class
 		{
 			Action<UIButton, string> setter = (b, v) => b.SetTitle(v, UIControlState.Normal);
@@ -31,7 +31,7 @@ namespace Wires
 
 		#region Image property
 
-		public static IBinding Image<TSource,TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource,TPropertyType>> property, IConverter<TPropertyType, UIImage> converter = null)
+		public static Binder<TSource, UIButton> Image<TSource,TPropertyType>(this Binder<TSource, UIButton> binder, Expression<Func<TSource,TPropertyType>> property, IConverter<TPropertyType, UIImage> converter = null)
 			where TSource : class
 		{
 			Action<UIButton, UIImage> setter = (b, v) => b.SetImage(v, UIControlState.Normal);

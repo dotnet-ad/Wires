@@ -58,21 +58,6 @@ namespace Wires
 
 		#endregion
 
-
-		#region OneTime
-
-	
-
-		#endregion
-
-
-
-		#region TwoWay
-
-
-
-		#endregion
-
 		#region Commands
 
 		public static IBinding Command<TTarget, TTargetEventArgs>(this Binder<ICommand,TTarget> binder, string targetEvent, Action<TTarget, bool> onExecuteChanged)

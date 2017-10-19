@@ -8,7 +8,7 @@
 	{
 		#region Image property
 
-		public static IBinding Progress<TSource, TPropertyType>(this Binder<TSource, UIProgressView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, float> converter = null)
+		public static Binder<TSource, UIProgressView> Progress<TSource, TPropertyType>(this Binder<TSource, UIProgressView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, float> converter = null)
 			where TSource : class
 		{
 			return binder.Property(property, b => b.Progress, converter);

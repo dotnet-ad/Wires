@@ -23,5 +23,35 @@ namespace Wires
 
 		#endregion
 
+		#region TintColor property
+
+		public static IBinding TintColor<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIColor> converter = null)
+			where TSource : class
+		{
+			return binder.Property(property, b => b.TintColor, converter);
+		}
+
+		#endregion
+
+		#region BackgroundColor property
+
+		public static Binder<TSource, UIView> BackgroundColor<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIColor> converter = null)
+			where TSource : class
+		{
+			return binder.Property(property, b => b.BackgroundColor, converter);
+		}
+
+		#endregion
+
+		#region Alpha property
+
+		public static Binder<TSource, UIView> Alpha<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, nfloat> converter = null)
+			where TSource : class
+		{
+			return binder.Property(property, b => b.Alpha, converter);
+		}
+
+		#endregion
+
 	}
 }

@@ -46,6 +46,10 @@
     <Compile Include="Binder.cs" />
     <Compile Include="Sources\Index.cs" />
     <Compile Include="Sources\Collection.cs" />
+    <Compile Include="PropertyBindings\AsyncOneWayBinding.cs" />
+    <Compile Include="PropertyBindings\AsyncOneTimeBinding.cs" />
+    <Compile Include="Sources\BindableGroupedCollectionSource.cs" />
+    <Compile Include="WeakPair.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

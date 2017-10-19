@@ -6,14 +6,24 @@ namespace Wires.Sample.ViewModel
 {
 	public class HomeViewModel : ViewModelBase
 	{
+		private static string[] Images =
+		{
+			"https://github.com/aloisdeniel/Wires/raw/develop/Documentation/Logo.png",
+			"http://i.imgur.com/xzsmoWB.jpg",
+			"https://i.reddituploads.com/ca996e077cf949cb9d513356a28e70fc?fit=max&h=1536&w=1536&s=f9f0852b5630467a26911237430b3ef4",
+			"https://i.redd.it/e516mt1qujay.jpg",
+			"https://i.reddituploads.com/5e1f26943ced4adf94fc610c3b4e3201?fit=max&h=1536&w=1536&s=748a3e8b1fcc4b7f7fcafcbe6f97a9bf",
+			"https://i.reddituploads.com/4f6d53d29453403fa5da8607bdc18b60?fit=max&h=1536&w=1536&s=87647d9050b46371c5b41a820d515e60",
+			"http://i.imgur.com/qkpagbu.jpg",
+		};
+
 		public HomeViewModel()
 		{
 			this.Title = "Wires";
-			this.Illustration = "https://github.com/aloisdeniel/Wires/raw/develop/Documentation/Logo.png";
+			this.Illustration = null;
 			this.Amount = 0.45;
 			this.IsActive = true;
 			this.birthday = new DateTime(1988, 6, 2);
-
 			this.loadCommand = new RelayCommand(ExecuteLoadCommand, CanExecuteLoadCommand);
 		}
 
@@ -85,10 +95,13 @@ namespace Wires.Sample.ViewModel
 
 		public ICommand LoadCommand => loadCommand;
 
+		int image = -1;
+
 		async void ExecuteLoadCommand()
 		{
 			this.IsLoading = true;
 			await Task.Delay(2000);
+			this.Illustration = Images[image = (image + 1) % Images.Length];
 			this.IsLoading = false;
 		}
 
