@@ -61,7 +61,7 @@ namespace Wires
 			ICommand source;
 			TTarget target;
 
-			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target))
+			if (this.SourceReference.TryGetTarget(out source) && this.TargetReference.TryGetTarget(out target) && source !=null && target != null)
 			{
 				this.onExecuteEvent(target, source.CanExecute(null));
 			}
