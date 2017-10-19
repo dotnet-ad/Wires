@@ -27,6 +27,7 @@ namespace Wires.Sample.iOS
 					.Text(vm => vm.Title)
 				.Bind(this.textView)
 					.Text(vm => vm.Title)
+					.UserInteractionEnabled(vm => vm.IsActive)
 				.Bind(this.image)
 					.ImageAsync(vm => vm.Illustration)
 					.Alpha(vm => vm.Amount)

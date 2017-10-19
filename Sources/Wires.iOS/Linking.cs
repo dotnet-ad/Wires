@@ -32,6 +32,7 @@
 			x6.TintColor = x6.TintColor;
 			x6.BackgroundColor = x6.BackgroundColor;
 			x6.Alpha = x6.Alpha;
+			x6.UserInteractionEnabled = x6.UserInteractionEnabled;
 
 			var x7 = new UIViewController();
 			x7.Title = x7.Title;

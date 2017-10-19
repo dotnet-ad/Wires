@@ -9,7 +9,7 @@ namespace Wires
 	{
 		#region Hidden property
 
-		public static Binder<TSource, TView> Visible<TSource, TView, TPropertyType>(this Binder<TSource,TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+		public static Binder<TSource, TView> Visible<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 			where TView : UIView
 		{
@@ -17,11 +17,22 @@ namespace Wires
 			return binder.Hidden(property, converter.Chain(Converters.Invert));
 		}
 
-		public static Binder<TSource, TView> Hidden<TSource, TView, TPropertyType>(this Binder<TSource,TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+		public static Binder<TSource, TView> Hidden<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 			where TView : UIView
 		{
 			return binder.Property(property, b => b.Hidden, converter);
+		}
+
+		#endregion
+
+		#region UserInteractionEnabled property
+
+		public static Binder<TSource, TView> UserInteractionEnabled<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
+			where TSource : class
+			where TView : UIView
+		{
+			return binder.Property(property, b => b.UserInteractionEnabled, converter);
 		}
 
 		#endregion
