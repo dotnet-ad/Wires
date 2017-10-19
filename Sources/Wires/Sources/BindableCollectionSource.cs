@@ -18,7 +18,7 @@
 		where TView : class
 		where TCollection : class
 	{
-		public BindableCollectionSource(TOwner source, Expression<Func<TOwner,TCollection>>sourceProperty, Func<TCollection, int, TSection> getSection, Func<TCollection,int> countSections, Func<TCollection, int, int> countItems, Func<TCollection, Index, TItem> getItem, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null)
+		public BindableCollectionSource(TOwner source, Expression<Func<TOwner,TCollection>>sourceProperty, Func<TCollection, int, TSection> getSection, Func<TCollection,int> countSections, Func<TCollection, int, int> countItems, Func<TCollection, Index, TItem> getItem, TView view, Action<TView> triggerReloading, Action<TItem, Index, TCellView> prepareCell = null, Action<TSection, int, THeaderCellView> prepareHeader = null, ICommand selectCommand = null, bool hasHeaders = true)
 		{
 			var sourceAccessors = sourceProperty.BuildAccessors();
 
@@ -27,6 +27,7 @@
 				this.propertyChangedEvent = source.AddWeakHandler<PropertyChangedEventArgs>(nameof(INotifyPropertyChanged.PropertyChanged), this.OnPropertyChanged);
 			}
 
+			this.HasHeaders = hasHeaders;
 			this.getSection = getSection;
 			this.getItem = getItem;
 			this.countItems = countItems;
@@ -42,6 +43,8 @@
 		}
 
 		#region Dynamic updates
+
+		public bool HasHeaders { get; private set; } = true;
 
 		private void Reload()
 		{

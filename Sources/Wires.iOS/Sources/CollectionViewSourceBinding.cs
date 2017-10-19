@@ -21,15 +21,25 @@
 			cellIdentifier = typeof(TCellView).Name;
 			headerIdentifier = typeof(THeaderCellView).Name;
 
+			if (source.HasHeaders)
+			{
+				if (fromNib)
+				{
+					view.RegisterNibForSupplementaryView(NibLocator<THeaderCellView>.Nib, UICollectionElementKindSection.Header, headerIdentifier);
+				}
+				else
+				{
+					view.RegisterClassForSupplementaryView(typeof(THeaderCellView), UICollectionElementKindSection.Header, headerIdentifier);
+				}
+			}
+
 			if (fromNib)
 			{
 				view.RegisterNibForCell(NibLocator<TCellView>.Nib, cellIdentifier);
-				view.RegisterNibForSupplementaryView(NibLocator<THeaderCellView>.Nib, UICollectionElementKindSection.Header, headerIdentifier);
 			}
 			else
 			{
 				view.RegisterClassForCell(typeof(TCellView), cellIdentifier);
-				view.RegisterClassForSupplementaryView(typeof(THeaderCellView), UICollectionElementKindSection.Header, headerIdentifier);
 			}
 		}
 
@@ -54,6 +64,9 @@
 
 		public override UICollectionReusableView GetViewForSupplementaryElement(UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
 		{
+			if (!this.source.HasHeaders)
+				return null;
+			
 			var view = (THeaderCellView)collectionView.DequeueReusableSupplementaryView(UICollectionElementKindSection.Header, headerIdentifier, indexPath);
 			this.source.PrepareHeader(indexPath.Section, view);
 			return view;
