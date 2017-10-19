@@ -56,6 +56,13 @@
     <Compile Include="View.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
+    <Compile Include="Switch.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Linking.cs" />
+    <Compile Include="EditText.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

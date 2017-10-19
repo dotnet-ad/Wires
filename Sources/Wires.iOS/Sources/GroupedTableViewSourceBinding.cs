@@ -12,11 +12,12 @@
 	{
 		#region Constructors
 
-		public GroupedTableViewSourceBinding(BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, UITableView, TCellView, THeaderCellView> source, Func<Index, nfloat> heightForItem, Func<int, nfloat> heightForHeader, bool fromNib)
+		public GroupedTableViewSourceBinding(BindableGroupedCollectionSource<TOwner, TCollection, TSection, TItem, UITableView, TCellView, THeaderCellView> source, Func<Index, nfloat> heightForItem, Func<int, nfloat> heightForHeader, bool fromNib, Action<float> onScroll = null)
 		{
 			this.source = source;
 			this.heightForItem = heightForItem;
 			this.heightForHeader = heightForHeader;
+			this.onScroll = onScroll;
 
 			var view = this.source.Target;
 			cellIdentifier = typeof(TCellView).Name;
@@ -37,6 +38,8 @@
 		#endregion
 
 		#region Fields
+
+		readonly Action<float> onScroll;
 
 		private readonly string cellIdentifier, headerIdentifier;
 
@@ -73,6 +76,8 @@
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) => this.heightForItem(indexPath.ToIndex());
 
 		public override nfloat GetHeightForHeader(UITableView tableView, nint section) => this.heightForHeader((int)section);
+
+		public override void Scrolled(UIScrollView scrollView) => this.onScroll?.Invoke((float)scrollView.ContentOffset.Y);
 
 		#endregion
 	}

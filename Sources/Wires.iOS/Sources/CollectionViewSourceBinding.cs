@@ -11,10 +11,11 @@
 
 		#region Constructors
 
-		public CollectionViewSourceBinding(BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView> source, bool fromNib)
+		public CollectionViewSourceBinding(BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView> source, bool fromNib, Action<float, float> onScroll = null)
 		{
 			this.source = source;
 			this.cellIdentifier = typeof(TCellView).Name;
+			this.onScroll = onScroll;
 
 			var view = this.source.View;
 
@@ -34,6 +35,8 @@
 
 		private readonly string cellIdentifier;
 
+		readonly Action<float, float> onScroll;
+
 		readonly BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView> source;
 
 		#endregion
@@ -50,6 +53,8 @@
 		public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath) => this.source?.Select(indexPath.Row);
 
 		public override nint GetItemsCount(UICollectionView collectionView, nint section) => this.source.Count;
+
+		public override void Scrolled(UIScrollView scrollView) => this.onScroll?.Invoke((float)scrollView.ContentOffset.X, (float)scrollView.ContentOffset.Y);
 
 		#endregion
 	}

@@ -17,9 +17,9 @@
 
 		#endregion
 
-		#region Title property
+		#region Text property
 
-		public static Binder<TSource, Button> Title<TSource, TPropertyType>(this Binder<TSource, Button> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
+		public static Binder<TSource, Button> Text<TSource, TPropertyType>(this Binder<TSource, Button> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
 			where TSource : class
 		{
 			return binder.Property(property, x => x.Text, converter);
