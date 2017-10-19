@@ -1,6 +1,4 @@
-﻿
-
-namespace Wires
+﻿namespace Wires
 {
 	using System;
 	using System.Diagnostics;
@@ -10,11 +8,23 @@ namespace Wires
 	using System.Text;
 	using System.Threading.Tasks;
 
-	public static class FileCache
+	public class FileCache
 	{
-		public const string Folder = "./.file-cache";
+		#region Global
 
-		private static string CreateHash(string input)
+		public static Lazy<FileCache> instance = new Lazy<FileCache>(() => new FileCache());
+
+		public static FileCache Default => instance.Value;
+
+		#endregion
+
+		public string Folder { get; set; } = ".file-cache";
+
+		public string AbsoluteFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Folder);
+
+		public Func<string, WebRequest> RequestFactory { get; set; } = (url) => HttpWebRequest.Create(url);
+
+		private string CreateHash(string input)
 		{
 			using (var alg = SHA256.Create())
 			{
@@ -28,24 +38,24 @@ namespace Wires
 			}
 		}
 
-		public static string GetCachePath(string url) => Path.Combine(Folder, $"{CreateHash(url)}");
+		public string GetCachePath(string url) => Path.Combine(AbsoluteFolderPath, $"{CreateHash(url)}");
 
-		public static async Task<string> DownloadCachedFile(string url, TimeSpan expiration)
+		public async Task<string> DownloadCachedFile(string url, TimeSpan expiration)
 		{
 			var cachePath = GetCachePath(url);
 
 			DateTime lastWrite = DateTime.MinValue;
 			if (!File.Exists(cachePath) || (lastWrite = File.GetLastWriteTimeUtc(cachePath)) + expiration < DateTime.UtcNow)
 			{
-				if (!Directory.Exists(Folder))
+				if (!Directory.Exists(AbsoluteFolderPath))
 				{
-					Directory.CreateDirectory(Folder);
+					Directory.CreateDirectory(AbsoluteFolderPath);
 				}
 
 				try
 				{
 					Debug.WriteLine($"[Cache][Images]({cachePath}) Start downloading from \"{url}\" ...");
-					var request = HttpWebRequest.Create(url);
+					var request = RequestFactory(url);
 					using (var res = (await request.GetResponseAsync()) as HttpWebResponse)
 					{
 						if (res.LastModified > lastWrite)
