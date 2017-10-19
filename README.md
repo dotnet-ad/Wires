@@ -1,5 +1,7 @@
 ![Logo](./Documentation/Logo.png)
 
+[![NuGet](https://img.shields.io/nuget/v/Wires.svg?label=NuGet)](https://www.nuget.org/packages/Wires/) [![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZJZKXPPGBKKAY&lc=US&item_name=GitHub&item_number=0000001&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
 **Wires** is a simple *binding* library for frameworks that doesn't have built-in mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also packaged for Xamarin.iOS and Xamarin.Android.
 
 ## Why ?
@@ -8,9 +10,7 @@ Several other solutions exist, but I've experienced a **lot** of memory issues w
 
 ## Install
 
-Available on NuGet
-
-[![NuGet](https://img.shields.io/nuget/v/Wires.svg?label=NuGet)](https://www.nuget.org/packages/Wires/)
+Available on [NuGet](https://www.nuget.org/packages/Wires/).
 
 ## Quickstart
 
