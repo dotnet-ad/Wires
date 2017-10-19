@@ -30,9 +30,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Events\WeakEventHandler.cs" />
-    <Compile Include="PropertyBindings\Binding.cs" />
+    <Compile Include="PropertyBindings\PropertyBinding.cs" />
     <Compile Include="PropertyBindings\OneWayBinding.cs" />
-    <Compile Include="PropertyBindings\TwoWayBinding.cs" />
     <Compile Include="CommandBindings\CommandBinding.cs" />
     <Compile Include="Conversions\IConverter.cs" />
     <Compile Include="Conversions\Converters.cs" />
@@ -40,6 +39,17 @@
     <Compile Include="Bindings.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Conversions\RelayConverter.cs" />
+    <Compile Include="Sources\BindableCollectionSource.cs" />
+    <Compile Include="PropertyBindings\OneTimeBinding.cs" />
+    <Compile Include="Conversions\ChainConverter.cs" />
+    <Compile Include="Binder.cs" />
+    <Compile Include="Sources\Index.cs" />
+    <Compile Include="Sources\Collection.cs" />
+    <Compile Include="PropertyBindings\AsyncOneWayBinding.cs" />
+    <Compile Include="PropertyBindings\AsyncOneTimeBinding.cs" />
+    <Compile Include="Sources\BindableGroupedCollectionSource.cs" />
+    <Compile Include="Binding.cs" />
+    <Compile Include="EventBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
@@ -47,6 +57,7 @@
     <Folder Include="CommandBindings\" />
     <Folder Include="Conversions\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Sources\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

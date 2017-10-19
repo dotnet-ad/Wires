@@ -19,30 +19,82 @@ namespace Wires
 
 		#region Accessor expression for faster property updates
 
-		public static Action<object, object> BuildSetExpression(this PropertyInfo property)
+		public static Action<TOwner, TPropertyType> BuildSetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
+			if (property?.SetMethod == null)
+				return (owner,v) => { throw new InvalidOperationException("No available setter"); };
+			
 			var method = property.SetMethod;
 
-			var instance = Expression.Parameter(typeof(object), "instance");
-			var value = Expression.Parameter(typeof(object));
+			var instance = Expression.Parameter(typeof(TOwner), "instance");
+			var value = Expression.Parameter(typeof(TPropertyType));
 
 			var call = Expression.Call(Expression.Convert(instance, method.DeclaringType),method,Expression.Convert(value, method.GetParameters()[0].ParameterType));
-			var expr = Expression.Lambda<Action<object, object>>(call,instance,value);
+			var expr = Expression.Lambda<Action<TOwner, TPropertyType>>(call,instance,value);
 
 			return expr.Compile();
 		}
 
-		public static Func<object, object> BuildGetExpression(this PropertyInfo property)
+		public static Func<TOwner, TPropertyType> BuildGetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
-			var method = property.GetMethod;
 
-			var instance = Expression.Parameter(typeof(object), "instance");
+			var instance = Expression.Parameter(typeof(TOwner), "instance");
 
-			var call = Expression.Call(Expression.Convert(instance, method.DeclaringType), method);
-			var expr = Expression.Lambda<Func<object, object>>(Expression.Convert(call, typeof(object)), instance);
+			Expression<Func<TOwner, TPropertyType>> expr;
+
+			// if no property info, then its the owner itself
+			if (property == null)
+			{
+				expr = Expression.Lambda<Func<TOwner, TPropertyType>>(Expression.Convert(instance, typeof(TPropertyType)), instance);
+			}
+			else
+			{
+				if (property.GetMethod == null)
+					return (owner) => { throw new InvalidOperationException("No available getter"); };
+
+				var method = property.GetMethod;
+
+				var call = Expression.Call(Expression.Convert(instance, method.DeclaringType), method);
+				expr = Expression.Lambda<Func<TOwner, TPropertyType>>(Expression.Convert(call, typeof(TPropertyType)), instance);
+			}
 
 			return expr.Compile();
 		}
+
+		private static PropertyInfo GetInfo<TOwner, TPropertyType>(this Expression<Func<TOwner, TPropertyType>> property)
+		{
+			if (property.Body is UnaryExpression)
+			{
+				var unary = (UnaryExpression)property.Body;
+				if (unary.Operand is MemberExpression)
+				{
+					var unaryMember = (MemberExpression)unary.Operand;
+					return (PropertyInfo)unaryMember.Member;
+				}
+				throw new ArgumentException();
+			}
+
+			var member = property.Body as MemberExpression;
+			if (member == null)
+				return null;
+
+			return (PropertyInfo)member.Member;
+		}
+
+		public static Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string> BuildAccessors<TOwner, TPropertyType>(this Expression<Func<TOwner,TPropertyType>> property)
+		{
+			return property.GetInfo().BuildAccessors<TOwner, TPropertyType>();
+		}
+
+		public static Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>, string> BuildAccessors<TOwner, TPropertyType>(this PropertyInfo property)
+		{
+			var getter = property.BuildGetExpression<TOwner, TPropertyType>();
+			var setter = property.BuildSetExpression<TOwner, TPropertyType>();
+
+			return new Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string>(getter, setter, property?.Name ?? "__UNKNOWN__");
+		}
+
+		public static string GetPropertyName<TOwner, TPropertyType>(this Expression<Func<TOwner, TPropertyType>> property) => property.GetInfo().Name;
 
 		#endregion
 
