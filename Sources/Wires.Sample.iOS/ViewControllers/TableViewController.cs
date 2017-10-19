@@ -23,9 +23,12 @@ namespace Wires.Sample.iOS
 
 			this.ViewModel = new RedditViewModel();
 
-			this.indicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsUpdating)
-				.As<UIView>().Visible(vm => vm.IsUpdating);
-			this.tableView.Bind(this.ViewModel).As<UIView>().Hidden(vm => vm.IsUpdating);
+			this.ViewModel
+			    	.Bind(this.indicator)
+			    		.IsAnimating(vm => vm.IsUpdating)
+						.As<UIView>().Visible(vm => vm.IsUpdating)
+					.Bind(this.tableView)
+			    		.As<UIView>().Hidden(vm => vm.IsUpdating);
 
 			this.UpdateSource();
 
@@ -38,11 +41,11 @@ namespace Wires.Sample.iOS
 		{
 			if (this.segmented.SelectedSegment == 0)
 			{
-				this.tableView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
+				this.ViewModel.Bind(this.tableView).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
 			}
 			else
 			{
-				this.tableView.Bind(this.ViewModel).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped,(section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, null, (c) => 68, (c) => 88);
+				this.ViewModel.Bind(this.tableView).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped,(section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, null, (c) => 68, (c) => 88);
 			}
 		}
 

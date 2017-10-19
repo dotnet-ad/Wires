@@ -88,7 +88,7 @@ namespace Wires
 
 		public static TimeSpan PurgeInterval = TimeSpan.FromSeconds(15);
 
-		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TTarget target, TSource source) where TSource : class where TTarget : class
+		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TSource source, TTarget target) where TSource : class where TTarget : class
 		{
 			Purge(PurgeInterval);
 			var binder = new Binder<TSource, TTarget>(source, target);

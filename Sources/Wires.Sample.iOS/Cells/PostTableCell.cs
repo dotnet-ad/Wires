@@ -34,10 +34,16 @@ namespace Wires.Sample.iOS
 					this.ViewModel?.Unbind(this.title, this.author, this.illustration);
 
 					this.viewModel = value;
-					this.title.Bind(value).Text(vm => vm.Title);
-					this.author.Bind(value).Text(vm => vm.Author);
-					this.date.Bind(value).Text(vm => vm.Datetime);
-					this.illustration.Bind(value).ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
+
+					value
+						.Bind(title)
+							.Text(vm => vm.Title)
+						.Bind(author)
+							.Text(vm => vm.Author)
+						.Bind(date)
+							.Text(vm => vm.Datetime)
+						.Bind(illustration)
+							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
 				}
 			}
 		}

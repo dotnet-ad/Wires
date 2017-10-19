@@ -170,6 +170,12 @@
 
 		#endregion
 
+		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target) 
+			where TNewTarget : class
+		{
+			return this.Source.Bind(target);
+		}
+
 		public override void Dispose()
 		{
 			if (!this.IsDisposed)

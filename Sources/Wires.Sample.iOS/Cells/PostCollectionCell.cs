@@ -32,8 +32,12 @@ namespace Wires.Sample.iOS
 				if (this.viewModel != value)
 				{
 					this.viewModel = value;
-					this.title.Bind(value).Text(vm => vm.Title);
-					this.illustration.Bind(value).ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
+
+					value
+						.Bind(title)
+							.Text(vm => vm.Title)
+						.Bind(illustration)
+							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
 				}
 			}
 		}
