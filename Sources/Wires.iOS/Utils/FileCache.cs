@@ -20,7 +20,7 @@
 
 		public string Folder { get; set; } = ".file-cache";
 
-		public string AbsoluteFolderPath => Path.Combine(Environment.SpecialFolder.MyDocuments.ToString(), Folder);
+		public string AbsoluteFolderPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Folder);
 
 		public Func<string, WebRequest> RequestFactory { get; set; } = (url) => HttpWebRequest.Create(url);
 
