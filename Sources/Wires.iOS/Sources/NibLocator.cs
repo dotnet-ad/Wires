@@ -1,6 +1,7 @@
 ﻿namespace Wires
 {
 	using System;
+	using Foundation;
 	using UIKit;
 
 	public static class NibLocator<TCellView>
