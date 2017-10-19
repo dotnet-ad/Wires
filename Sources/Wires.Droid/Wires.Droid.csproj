@@ -48,7 +48,7 @@
     <Compile Include="TextView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
-    <Compile Include="Converters\ViewConverters.cs" />
+    <Compile Include="Converters\PlatformConverters.cs" />
     <Compile Include="UIExtensions.cs" />
     <Compile Include="Button.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
@@ -63,6 +63,15 @@
     <Compile Include="EditText.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
 	</Compile>
+    <Compile Include="ProgressBar.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="ImageView.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="..\Wires.iOS\Utils\FileCache.cs">
+      <Link>Utils\FileCache.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -78,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

@@ -170,6 +170,11 @@
 
 		#endregion
 
+		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
+		{
+			return this.ObserveProperty<TSourceProperty, TSourceProperty>(sourceProperty, action);
+		}
+
 		/// <summary>
 		/// Observes the property change and executes the given callback each time it changes. The action is also executed at initialization.
 		/// </summary>
@@ -177,10 +182,12 @@
 		/// <param name="sourceProperty">Source property.</param>
 		/// <param name="action">Action.</param>
 		/// <typeparam name="TSourceProperty">The 1st type parameter.</typeparam>
-		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
+		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty, TTargetProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TTargetProperty> action, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
+			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+
 			var sourceAccessors = sourceProperty.BuildAccessors();
-			Action<TSource, TTarget> onEvent = (s, t) => action(s, t, sourceAccessors.Item1(s));
+			Action<TSource, TTarget> onEvent = (s, t) => action(s, t, converter.Convert(sourceAccessors.Item1(s)));
 
 			// Initialization
 			onEvent(this.Source, this.Target);

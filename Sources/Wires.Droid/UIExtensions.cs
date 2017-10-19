@@ -6,6 +6,7 @@
 		{
 			// Registering all converters
 			Converters.Register(PlatformConverters.BoolToViewState);
+			Converters.Register(PlatformConverters.StringToImage);
 		}
 	}
 }

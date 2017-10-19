@@ -7,7 +7,7 @@
 
 	public static partial class UIExtensions
 	{
-		#region Hidden property
+		#region Visibility property
 
 		public static Binder<TSource,TView> Visibility<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, ViewStates> converter = null)
 			where TSource : class

@@ -2,11 +2,8 @@ namespace Wires
 {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel;
 	using System.Diagnostics;
 	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Windows.Input;
 
 	/// <summary>
 	/// A set of extensions that help with the use of Bindings.
@@ -54,7 +51,7 @@ namespace Wires
 		}
 
 		/// <summary>
-		/// Destroys all bindings.
+		/// Destroys all declared bindings.
 		/// </summary>
 		public static void Reset()
 		{
@@ -68,6 +65,21 @@ namespace Wires
 
 		private static DateTime lastPurge;
 
+	
+
+		#endregion
+
+		#region Actions
+
+
+		public static TimeSpan PurgeInterval = TimeSpan.FromSeconds(15);
+
+		/// <summary>
+		/// Unbind all the bindings previously declared.
+		/// </summary>
+		/// <param name="source">Source.</param>
+		/// <param name="targets">Targets.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
 		public static void Unbind<TSource>(this TSource source, params object[] targets)
 		{
 			var toDispose = bindings.Where(c =>
@@ -82,18 +94,36 @@ namespace Wires
 			}
 		}
 
-		#endregion
-
-		#region Binder
-
-		public static TimeSpan PurgeInterval = TimeSpan.FromSeconds(15);
-
-		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TSource source, TTarget target) where TSource : class where TTarget : class
+		/// <summary>
+		/// Start to bind properties from target to source.
+		/// </summary>
+		/// <param name="source">Source.</param>
+		/// <param name="target">Target.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
+		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
+		public static Binder<TSource, TTarget> Bind<TSource, TTarget>(this TSource source, TTarget target) 
+			where TSource : class 
+			where TTarget : class
 		{
 			Purge(PurgeInterval);
 			var binder = new Binder<TSource, TTarget>(source, target);
 			bindings.Add(binder);
 			return binder;
+		}
+
+		/// <summary>
+		/// Unbind the target from the source, and restart a new set of bindings.
+		/// </summary>
+		/// <param name="source">Source.</param>
+		/// <param name="target">Target.</param>
+		/// <typeparam name="TSource">The 1st type parameter.</typeparam>
+		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
+		public static Binder<TSource, TTarget> Rebind<TSource, TTarget>(this TSource source, TTarget target) 
+			where TSource : class 
+			where TTarget : class
+		{
+			source.Unbind(target);
+			return source.Bind(target);
 		}
 
 		#endregion
