@@ -117,6 +117,13 @@ You also observe a property with `ObserveProperty` : the given action will be in
 ```csharp
 this.ViewModel.Bind(this.label).ObserveProperty(vm => vm.Title, (vm,label,title) => { label.Text = title; });
 ```
+If you wish to bind a sub-property, use the `SubBind`.
+
+```csharp
+this.ViewModel.Bind(this.label)
+			     .Text(vm => vm.Title)
+			     .SubBind(vm => vm.ExecuteCommand, sub => sub.Visible(c => c.IsExecuting);
+```
 
 
 For more advanced options see `Binder<TSource,TTarget>` APIs, or simply take a look at provided extensions to create your own ones.
@@ -162,21 +169,22 @@ Wires provides also common helpers for binding simple collection sources to `UIT
 You can first describe your `CollectionSource<TViewModel>` from your shared code.
 
 ```csharp
-new CollectionSource<RedditViewModel>(this).WithSections("cell", "header", vm => vm.Items, (item) => item.Status, null);
+var collection = new CollectionSource<RedditViewModel>(this);
+collection.WithSections<TSection,TItem>("cell", "header", vm => vm.Items, (item) => item.Status, null);
 ```
 
 ```csharp
-new CollectionSource<RedditViewModel>(this)
-		.WithSection()
-			.WithHeader("header", vm => "Section 1")
-			.WithCells("cell", vm => vm.Items1 );
-		.WithSection()
-			.WithHeader("header", vm => "Section 2")
-			.WithCell("cell", vm => vm.Item21 )
-			.WithCell("cell", vm => vm.Item22 )
-			.WithCells("cell", vm => vm.Items23to26 )
-			.WithCell("cell", vm => vm.Item27 )
-			.WithFooter("footer", vm => "End");
+var collection = new CollectionSource<RedditViewModel>(this)
+collection.WithSection()
+			  .WithHeader("header", vm => "Section 1")
+			  .WithCells("cell", vm => vm.Items1 );
+		    .WithSection()
+			  .WithHeader("header", vm => "Section 2")
+			  .WithCell("cell", vm => vm.Item21 )
+			  .WithCell("cell", vm => vm.Item22 )
+			  .WithCells("cell", vm => vm.Items23to26 )
+			  .WithCell("cell", vm => vm.Item27 )
+			  .WithFooter("footer", vm => "End");
 ```
 
 And then bind it like any other property with the view extensions on iOS.
@@ -216,13 +224,13 @@ But if you reuse a view, and want to update bindings you have to remove the prev
 This is available through `Unbind(this TSsource, params object[] targets)` extension.
 
 ```csharp
-this.viewmodel.Unbind(label, this.image, this.title)
+this.viewmodel.Unbind(label, this.image, this.title);
 ```
 
 You can also use `Rebind` method to unbind just before binding.
 
 ```csharp
-this.ViewModel.Rebind(this.label).Text(v => v.Title)
+this.ViewModel.Rebind(this.label).Text(v => v.Title);
 ```
 
 ## WeakEventHandlers

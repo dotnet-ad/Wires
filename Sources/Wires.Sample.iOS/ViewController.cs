@@ -24,6 +24,7 @@ namespace Wires.Sample.iOS
 				.Bind(this.label)
 					.Text(vm => vm.Title, Converters.Uppercase)
 				.Bind(this.field)
+			    	.ShouldReturn(vm => vm.LoadCommand)
 					.Text(vm => vm.Title)
 				.Bind(this.textView)
 					.Text(vm => vm.Title)

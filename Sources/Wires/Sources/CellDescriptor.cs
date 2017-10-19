@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Wires
+﻿namespace Wires
 {
+	using System;
+
 	public class CellDescriptor
 	{
 		public CellDescriptor(string id, Type viewType, float width, float height) : this(id,viewType, (arg) => new Tuple<float, float>(width, height))
