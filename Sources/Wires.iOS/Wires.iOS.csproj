@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -58,67 +57,70 @@
   <ItemGroup>
     <Compile Include="UIButton.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UILabel.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UITextField.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIImageView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\ImageConverters.cs" />
     <Compile Include="UIView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Sources\GroupedTableViewSourceBinding.cs" />
     <Compile Include="Sources\GroupedCollectionViewSourceBinding.cs" />
     <Compile Include="Sources\NibLocator.cs" />
     <Compile Include="UISwitch.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIExtensions.cs" />
     <Compile Include="UISlider.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIProgressView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIActivityIndicator.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIDatePicker.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Converters\DateConverters.cs" />
     <Compile Include="Sources\IndexExtensions.cs" />
     <Compile Include="UISegmentedControl.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIStepper.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIRefreshControl.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UIViewController.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Sources\TableViewSourceBinding.cs" />
     <Compile Include="Sources\CollectionViewSourceBinding.cs" />
+    <Compile Include="UITextView.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIWebView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Converters\CGConverters.cs" />
     <Compile Include="UITableView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="UICollectionView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Include="Linking.cs" />
     <Compile Include="Utils\FileCache.cs" />
   </ItemGroup>

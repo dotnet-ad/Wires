@@ -66,6 +66,10 @@
 
 			var x15 = new UISwitch();
 			x15.On = x15.On;
+
+			var x16 = new UITextView();
+			x16.Text = x16.Text;
+			x16.Changed += (sender, e) => { };
 		}
 	}
 }
