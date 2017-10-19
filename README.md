@@ -1,10 +1,10 @@
 ![Logo](./Documentation/Logo.png)
 
-Wires is a simple binding library for frameworks that doesn't have built-in binding mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also package for Xamarin.iOS and Xamarin.Android.
+**Wires** is a simple *binding* library for frameworks that doesn't have built-in mecanisms. Many choices have been made to have a restrictive base API. A wide set of extensions are also packaged for Xamarin.iOS and Xamarin.Android.
 
 ## Why ?
 
-Several other solutions exists, but I've experienced a **lot** of memory issues with these : that's why I've decided to initiate my own binding library.
+Several other solutions exist, but I've experienced a **lot** of memory issues with these : that's why I've decided to initiate my own binding library.
 
 ## Install
 
@@ -16,7 +16,7 @@ Available on NuGet
 
 ### iOS
 
-To bind data to components :
+To bind data to components with extensions, simply use those fluent APIs :
 
 ```csharp
 this.ViewModel
@@ -47,7 +47,9 @@ this.ViewModel
 Value converters can also be used with an `IConverter<TSource,TTarget>` implementation, or a lambda expression :
 
 ```csharp
-this.ViewModel.Bind(this.label).TextColor(vm => vm.IsValid, x => x ? UIColor.Green : UIColor.Red);
+this.ViewModel
+		.Bind(this.label)
+			.TextColor(vm => vm.IsValid, new RelayConverter<bool,UIColor>(x => x ? UIColor.Green : UIColor.Red));
 ```
 
 ## Bindings
@@ -110,6 +112,13 @@ this.ViewModel.Bind(custom).Property(vm => vm.Source, x => x.Target);
 this.ViewModel.Bind(custom).Property<TSourceType, TTargetType, EventArgs>(vm => vm.Source, x => x.Value, nameof(Custom.ValueChanged));
 ```
 
+You also observe a property with `ObserveProperty` : the given action will be invoked and again each time the property changes.
+
+```csharp
+this.ViewModel.Bind(this.label).ObserveProperty(vm => vm.Title, (vm,label,title) => { label.Text = title; });
+```
+
+
 For more advanced options see `Binder<TSource,TTarget>` APIs, or simply take a look at provided extensions to create your own ones.
 
 ## Built-in converters
@@ -171,7 +180,13 @@ But if you reuse a view, and want to update bindings you have to remove the prev
 This is available through `Unbind(this TSsource, params object[] targets)` extension.
 
 ```csharp
-this.viewmodel.Unbind(this.textfield, this.image, this.title)
+this.viewmodel.Unbind(label, this.image, this.title)
+```
+
+You can also use `Rebind` method to unbind just before binding.
+
+```csharp
+this.ViewModel.Rebind(this.label).Text(v => v.Title)
 ```
 
 ## WeakEventHandlers
