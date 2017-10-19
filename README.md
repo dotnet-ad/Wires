@@ -26,7 +26,6 @@ this.ViewModel
 		    	.Text(vm => vm.Title)
 			.Bind(this.image)
 		    	.ImageAsync(vm => vm.Illustration)
-		    	.As<UIView>()
 		    	.Alpha(vm => vm.Amount)
 		    	.Visible(vm => vm.IsActive)
 			.Bind(this.toggleSwitch)

@@ -4,14 +4,14 @@
 	using System.Linq.Expressions;
 	using Android.Graphics.Drawables;
 	using Android.Views;
-	using Android.Widget;
 
 	public static partial class UIExtensions
 	{
 		#region Hidden property
 
-		public static Binder<TSource, View> Visibility<TSource, TPropertyType>(this Binder<TSource, View> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, ViewStates> converter = null)
+		public static Binder<TSource,TView> Visibility<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, ViewStates> converter = null)
 			where TSource : class
+			where TView : View
 		{
 			return binder.Property(property, b => b.Visibility, converter);
 		}
@@ -21,8 +21,9 @@
 
 		#region BackgroundColor property
 
-		public static Binder<TSource, View> Background<TSource, TPropertyType>(this Binder<TSource, View> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, Drawable> converter = null)
+		public static Binder<TSource, TView> Background<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, Drawable> converter = null)
 			where TSource : class
+			where TView : View
 		{
 			return binder.Property(property, b => b.Background, converter);
 		}
@@ -31,8 +32,9 @@
 
 		#region Alpha property
 
-		public static Binder<TSource, View> Alpha<TSource, TPropertyType>(this Binder<TSource, View> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, float> converter = null)
+		public static Binder<TSource, TView> Alpha<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, float> converter = null)
 			where TSource : class
+			where TView : View
 		{
 			return binder.Property(property, b => b.Alpha, converter);
 		}

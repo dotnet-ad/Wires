@@ -26,9 +26,9 @@ namespace Wires.Sample.iOS
 			this.ViewModel
 			    	.Bind(this.indicator)
 			    		.IsAnimating(vm => vm.IsUpdating)
-						.As<UIView>().Visible(vm => vm.IsUpdating)
+						.Visible(vm => vm.IsUpdating)
 					.Bind(this.tableView)
-			    		.As<UIView>().Hidden(vm => vm.IsUpdating);
+			    		.Hidden(vm => vm.IsUpdating);
 
 			this.UpdateSource();
 

@@ -170,6 +170,30 @@
 
 		#endregion
 
+		/// <summary>
+		/// Observes the property change and executes the given callback each time it changes. The action is also executed at initialization.
+		/// </summary>
+		/// <returns>The property.</returns>
+		/// <param name="sourceProperty">Source property.</param>
+		/// <param name="action">Action.</param>
+		/// <typeparam name="TSourceProperty">The 1st type parameter.</typeparam>
+		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
+		{
+			var sourceAccessors = sourceProperty.BuildAccessors();
+			Action<TSource, TTarget> onEvent = (s, t) => action(s, t, sourceAccessors.Item1(s));
+
+			// Initialization
+			onEvent(this.Source, this.Target);
+
+			// Changes
+			if (this.Source is INotifyPropertyChanged)
+			{
+				this.Add(new RelayEventBinding<TSource, TTarget, PropertyChangedEventArgs>(this.Source, this.Target, nameof(INotifyPropertyChanged.PropertyChanged), onEvent, (a) => (a.PropertyName == sourceAccessors.Item3)));
+			}
+
+			return this;
+		}
+
 		public Binder<TSource, TNewTarget> Bind<TNewTarget>(TNewTarget target) 
 			where TNewTarget : class
 		{
