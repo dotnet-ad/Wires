@@ -2,18 +2,24 @@
 {
 	using System;
 	using System.Linq.Expressions;
+	using Transmute;
 	using UIKit;
 
 	public static partial class UIExtensions
 	{
 		#region Selected property
 
-		public static Binder<TSource, UISegmentedControl> Selected<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, int> converter = null)
+		public static Binder<TSource, UISegmentedControl> Selected<TSource, TPropertyType>(this Binder<TSource, UISegmentedControl> binder, Expression<Func<TSource, TPropertyType>> property, ITwoWayConverter<TPropertyType, int> converter = null)
 			where TSource : class
 		{
-			converter = converter ?? Converters.Default<TPropertyType, int>();
-			var finalConverter = converter.Chain(Converters.Default<int, nint>());
-			return binder.Property<TPropertyType, nint, EventArgs>(property, b => b.SelectedSegment, nameof(UISegmentedControl.ValueChanged), finalConverter);
+			if(converter == null)
+			{
+				converter = Transmuter.Default.GetTwoWayConverter<TPropertyType,int>();
+			}
+
+			var nconverter = converter.Chain(Transmuter.Default.GetTwoWayConverter<int, nint>());
+				
+			return binder.Property<TPropertyType, nint, EventArgs>(property, b => b.SelectedSegment,  nameof(UISegmentedControl.ValueChanged), nconverter);
 		}
 
 		#endregion

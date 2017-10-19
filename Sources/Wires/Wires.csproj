@@ -33,14 +33,10 @@
     <Compile Include="PropertyBindings\PropertyBinding.cs" />
     <Compile Include="PropertyBindings\OneWayBinding.cs" />
     <Compile Include="CommandBindings\CommandBinding.cs" />
-    <Compile Include="Conversions\IConverter.cs" />
-    <Compile Include="Conversions\Converters.cs" />
     <Compile Include="IBinding.cs" />
     <Compile Include="Bindings.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
-    <Compile Include="Conversions\RelayConverter.cs" />
     <Compile Include="PropertyBindings\OneTimeBinding.cs" />
-    <Compile Include="Conversions\ChainConverter.cs" />
     <Compile Include="Binder.cs" />
     <Compile Include="PropertyBindings\AsyncOneWayBinding.cs" />
     <Compile Include="PropertyBindings\AsyncOneTimeBinding.cs" />
@@ -57,9 +53,16 @@
     <Folder Include="Events\" />
     <Folder Include="PropertyBindings\" />
     <Folder Include="CommandBindings\" />
-    <Folder Include="Conversions\" />
     <Folder Include="Extensions\" />
     <Folder Include="Sources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Transmute">
+      <HintPath>..\packages\Transmute.0.5.7\lib\portable-net45+win8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Transmute.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

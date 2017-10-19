@@ -37,7 +37,7 @@ namespace Wires.Sample.iOS
 						.Bind(title)
 							.Text(vm => vm.Title)
 						.Bind(illustration)
-							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
+							.ImageAsync(vm => vm.Thumbnail); //PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1))
 				}
 			}
 		}

@@ -43,14 +43,28 @@ namespace Wires.Sample.ViewModel
 
 		private int selected;
 
+		private string entry;
+
 		#endregion
 
 		#region Properties
 
 		public string Title
 		{
-			get { return title + $" ({selected})"; }
-			set { if (this.Set(ref title, value)) RaiseProperty(nameof(Sections)); }
+			get { return title + $" ({selected})({entry})({amount})"; }
+			set 
+			{ 
+				if (this.Set(ref title, value))
+				{
+					RaiseProperty(nameof(Sections));
+				} 
+			}
+		}
+
+		public string Entry
+		{
+			get { return entry; }
+			set { if (this.Set(ref entry, value)) RaiseProperty(nameof(Title)); }
 		}
 
 		public string Illustration
@@ -70,7 +84,14 @@ namespace Wires.Sample.ViewModel
 		public double Amount
 		{
 			get { return amount; }
-			set { if(this.Set(ref amount, value)) RaiseProperty(nameof(Sections)); }
+			set 
+			{ 
+				if(this.Set(ref amount, value))
+				{
+					RaiseProperty(nameof(Sections));
+					RaiseProperty(nameof(Title));
+				}
+			}
 		}
 
 		public bool IsActive

@@ -43,7 +43,7 @@ namespace Wires.Sample.iOS
 						.Bind(date)
 							.Text(vm => vm.Datetime)
 						.Bind(illustration)
-							.ImageAsync(vm => vm.Thumbnail, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1)));
+							.ImageAsync(vm => vm.Thumbnail); //, PlatformConverters.AsyncStringToCachedImage(TimeSpan.FromHours(1))
 				}
 			}
 		}

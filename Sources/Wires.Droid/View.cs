@@ -4,10 +4,13 @@
 	using System.Linq.Expressions;
 	using Android.Graphics.Drawables;
 	using Android.Views;
+	using Transmute;
 
 	public static partial class UIExtensions
 	{
 		#region Visibility property
+
+		private static IConverter invert = new RelayConverter<bool, bool>(x => !x);
 
 		public static Binder<TSource,TView> Visibility<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, ViewStates> converter = null)
 			where TSource : class
@@ -20,16 +23,19 @@
 			where TSource : class
 			where TView : View
 		{
-			converter = converter ?? Converters.Default<TPropertyType, bool>();
-			return binder.Visibility(property,converter.Chain(PlatformConverters.BoolToViewState));
+			converter = converter ?? Transmuter.Default.GetConverter<TPropertyType, bool>();
+			var toState = Transmuter.Default.GetConverter<bool, ViewStates>();
+			var stateconverter = new TypedConverter<TPropertyType, ViewStates>(new ChainConverter(converter, toState));
+			return binder.Visibility(property, stateconverter);
 		}
 
 		public static Binder<TSource, TView> Hidden<TSource, TView, TPropertyType>(this Binder<TSource, TView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, bool> converter = null)
 			where TSource : class
 			where TView : View
 		{
-			converter = converter ?? Converters.Default<TPropertyType, bool>();
-			return binder.Visible(property, converter.Chain(Converters.Invert));
+			converter = converter ?? Transmuter.Default.GetConverter<TPropertyType, bool>();
+			converter = new TypedConverter<TPropertyType, bool>(new ChainConverter(converter, invert));
+			return binder.Visible(property, converter);
 		}
 
 		#endregion

@@ -2,6 +2,7 @@ namespace Wires
 {
 	using System;
 	using System.Linq.Expressions;
+	using Transmute;
 	using UIKit;
 
 	public static partial class UIExtensions

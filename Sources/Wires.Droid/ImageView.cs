@@ -6,6 +6,7 @@
 	using Android.Graphics;
 	using Android.Graphics.Drawables;
 	using Android.Widget;
+	using Transmute;
 
 	public static partial class UIExtensions
 	{
@@ -21,6 +22,15 @@
 			where TSource : class
 		{
 			return binder.PropertyAsync(property, b => ((BitmapDrawable)b.Drawable).Bitmap, (b, v) => b.SetImageBitmap(v), converter, loading);
+		}
+
+		public static Binder<TSource, ImageView> ImageAsync<TSource>(this Binder<TSource, ImageView> binder, Expression<Func<TSource, string>> property, TimeSpan cacheExpiration = default(TimeSpan), Bitmap loading = null)
+			where TSource : class
+		{
+			if (cacheExpiration == default(TimeSpan))
+				cacheExpiration = TimeSpan.FromDays(1);
+
+			return binder.ImageAsync(property, Transmute.BitmapConverters.FromStringToCachedImage(cacheExpiration,400,400), loading);
 		}
 
 		#endregion

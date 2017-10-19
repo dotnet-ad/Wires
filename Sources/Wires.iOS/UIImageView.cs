@@ -3,6 +3,7 @@ namespace Wires
 	using System;
 	using System.Linq.Expressions;
 	using System.Threading.Tasks;
+	using Transmute;
 	using UIKit;
 
 	public static partial class UIExtensions
@@ -27,7 +28,7 @@ namespace Wires
 			if (cacheExpiration == default(TimeSpan))
 				cacheExpiration = TimeSpan.FromDays(1);
 
-			return binder.ImageAsync(property,PlatformConverters.AsyncStringToCachedImage(cacheExpiration), loading);
+			return binder.ImageAsync(property,UIImageConverters.FromStringToCachedImage(cacheExpiration), loading);
 		}
 
 		#endregion

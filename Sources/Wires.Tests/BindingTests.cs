@@ -49,7 +49,7 @@ namespace Wires.Tests
 			var source = new Observable<int>();
 			var target = new Stub<int>();
 
-			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Converters.Identity<int>());
+			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Transmute.Transmuter.Default.GetConverter<int,int>());
 
 			source.Value = 5;
 
@@ -64,7 +64,7 @@ namespace Wires.Tests
 
 			source.Value = 5;
 
-			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Converters.Identity<int>());
+			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Transmute.Transmuter.Default.GetConverter<int, int>());
 
 			Assert.AreEqual(source.Value, target.Value);
 		}
@@ -75,7 +75,7 @@ namespace Wires.Tests
 			var source = new Observable<int>();
 			var target = new Observable<int>();
 
-			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Converters.Identity<int>());
+			var binding = target.Bind(source).Property(s => s.Value, t => t.Value, Transmute.Transmuter.Default.GetConverter<int, int>());
 
 			source.Value = 5;
 			Assert.AreEqual(source.Value, target.Value);
@@ -94,7 +94,7 @@ namespace Wires.Tests
 				var source = new Observable<int>();
 				var target = new Observable<int>();
 
-				binding = target.Bind(source).Property(s => s.Value, t => t.Value, Converters.Identity<int>());
+				binding = target.Bind(source).Property(s => s.Value, t => t.Value, Transmute.Transmuter.Default.GetConverter<int, int>());
 			});
 
 			Assert.IsFalse(binding.IsAlive);
@@ -108,7 +108,7 @@ namespace Wires.Tests
 			var source = new Observable<int>();
 			var target = new Observable<int>();
 
-			binding = target.Bind(source).Property(s => s.Value, t => t.Value, Converters.Identity<int>());
+			binding = target.Bind(source).Property(s => s.Value, t => t.Value, Transmute.Transmuter.Default.GetConverter<int, int>());
 		
 			Assert.IsTrue(binding.IsAlive);
 

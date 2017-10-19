@@ -4,6 +4,7 @@ namespace Wires
 	using System;
 	using System.Diagnostics;
 	using System.Threading.Tasks;
+	using Transmute;
 
 	public class AsyncOneTimeBinding<TSource, TTarget, TSourceProperty, TTargetProperty> : PropertyBinding<TSource, TTarget, TSourceProperty, TTargetProperty>
 		where TSource : class

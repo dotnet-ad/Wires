@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 namespace Wires
 {
 	using System;
 	using System.Diagnostics;
+	using Transmute;
 
 	/// <summary>
 	/// A data binding from a source to a target.
@@ -56,9 +58,13 @@ namespace Wires
 
 			if (TryGet(out source, out target))
 			{
+				var targetValye = this.targetGetter(target);
 				var sourceValue = this.Converter.Convert(this.sourceGetter(source));
-				this.targetSetter(target, sourceValue);
-				Debug.WriteLine($"[Bindings]({source.GetType().Name}:{source.GetHashCode()}) ~={{{sourceValue}}}=> ({target.GetType().Name}:{target.GetHashCode()})");
+				if(!EqualityComparer<TTargetProperty>.Default.Equals(sourceValue, targetValye))
+				{
+					this.targetSetter(target, sourceValue);
+					Debug.WriteLine($"[Bindings]({source.GetType().Name}:{source.GetHashCode()}) ~={{{sourceValue}}}=> ({target.GetType().Name}:{target.GetHashCode()})");
+				}
 			}
 		}
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Android.Support.V7.Widget;
+using Transmute;
 
 namespace Wires
 {
@@ -15,8 +16,18 @@ namespace Wires
 			{
 				collection.ClearViews();
 				registerViews(s, v, collection);
-				var adapter = new RecyclerViewAdapterBinding<TSource>(collection);
-				v.SetAdapter(adapter);
+				var adapter = v.GetAdapter() as RecyclerViewAdapterBinding<TSource>;
+
+				if(adapter == null)
+				{
+					adapter = new RecyclerViewAdapterBinding<TSource>(collection);
+					v.SetAdapter(adapter);
+				}
+				else
+				{
+					adapter.DataSource = collection;
+				}
+					
 				adapter.NotifyDataSetChanged(); // TODO ? Needed
 			}, converter);
 		}

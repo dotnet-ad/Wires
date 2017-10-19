@@ -1,6 +1,7 @@
 namespace Wires
 {
 	using System;
+	using Transmute;
 
 	/// <summary>
 	/// A binding that 

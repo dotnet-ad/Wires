@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Threading.Tasks;
+	using Transmute;
 
 	/// <summary>
 	/// A binding that 

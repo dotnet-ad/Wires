@@ -1,10 +1,9 @@
-using System;
-
-using UIKit;
-using Wires.Sample.ViewModel;
-
 namespace Wires.Sample.iOS
 {
+	using System;
+	using UIKit;
+	using Wires.Sample.ViewModel;
+
 	public partial class ViewController : UIViewController
 	{
 		protected ViewController(IntPtr handle) : base(handle)
@@ -22,10 +21,9 @@ namespace Wires.Sample.iOS
 
 			this.ViewModel
 				.Bind(this.label)
-					.Text(vm => vm.Title, Converters.Uppercase)
+			    .Text(vm => vm.Title)//, Converters.Uppercase)
 				.Bind(this.field)
-			    	.ShouldReturn(vm => vm.LoadCommand)
-					.Text(vm => vm.Title)
+					.Text(vm => vm.Entry)
 				.Bind(this.textView)
 					.Text(vm => vm.Title)
 					.UserInteractionEnabled(vm => vm.IsActive)
@@ -43,7 +41,7 @@ namespace Wires.Sample.iOS
 					.Progress(vm => vm.Amount)
 				.Bind(this.activityIndicator)
 					.IsAnimating(vm => vm.IsLoading)
-					.Color(vm => vm.Amount, new RelayConverter<double, UIColor>(d => new UIColor((nfloat)d / 3, (nfloat)d, (nfloat)d / 2, 1)))
+					//.Color(vm => vm.Amount, new RelayConverter<double, UIColor>(d => new UIColor((nfloat)d / 3, (nfloat)d, (nfloat)d / 2, 1)))
 				.Bind(this.segmented)
 					.Titles(vm => vm.Sections)
 					.Selected(vm => vm.Selected)

@@ -27,6 +27,27 @@
 			x4.Visibility = x4.Visibility;
 			x4.Background = x4.Background;
 			x4.Alpha = x4.Alpha;
+
+			var x5 = new TextView(null);
+			x5.Text = x5.Text;
+
+			var x6 = new CheckBox(null);
+			x6.CheckedChange += (s, e) => { };
+			x6.Checked = x6.Checked;
+
+			var x7 = new SeekBar(null);
+			x7.ProgressChanged += (s, e) => { };
+			x7.Progress = x7.Progress;
+
+			var x8 = new ToggleButton(null);
+			x8.TextChanged += (s, e) => { };
+			x8.Text = x8.Text;
+			x8.CheckedChange += (s, e) => { };
+			x8.Checked = x8.Checked;
+
+			var x9 = new RadioButton(null);
+			x9.CheckedChange += (s, e) => { };
+			x9.Checked = x9.Checked;
 		}
 	}
 }

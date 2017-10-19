@@ -1,4 +1,5 @@
-﻿namespace Wires
+﻿
+namespace Wires
 {
 	using System;
 	using System.Collections.Generic;
@@ -7,6 +8,7 @@
 	using System.Linq.Expressions;
 	using System.Threading.Tasks;
 	using System.Windows.Input;
+	using Transmute;
 
 	/// <summary>
 	/// A binder allows the creation of one or more bindings from a source to a target.
@@ -48,7 +50,7 @@
 
 		private Binder<TSource, TTarget> OneTime<TSourceProperty, TTargetProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Expression<Func<TTarget, TTargetProperty>> targetProperty, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
-			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+			converter = AssertConverter(converter ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>());
 
 			var sourceAccessors = sourceProperty.BuildAccessors();
 			var targetAccessors = targetProperty.BuildAccessors();
@@ -58,7 +60,7 @@
 
 		private Binder<TSource, TTarget> OneTime<TSourceProperty, TTargetProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
-			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+			converter = AssertConverter(converter ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>());
 
 			var sourceAccessors = sourceProperty.BuildAccessors();
 
@@ -67,7 +69,7 @@
 
 		private Binder<TSource, TTarget> OneTime<TSourceProperty, TTargetProperty>(Func<TSource, TSourceProperty> sourceGetter , Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
-			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+			converter = converter ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>();
 
 			return Add(new OneTimeBinding<TSource, TTarget, TSourceProperty, TTargetProperty>(Source, sourceGetter, Target, targetGetter, targetSetter, converter));
 		}
@@ -112,9 +114,10 @@
 
 		public Binder<TSource, TTarget> Property<TSourceProperty, TTargetProperty>(Func<TSource, TSourceProperty> sourceGetter, Action<TSource, TSourceProperty> sourceSetter , Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, string propertyName, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
+			converter = AssertConverter(converter ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>());
+
 			if (Source is INotifyPropertyChanged)
 			{
-				converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
 				return Add(new OneWayBinding<TSource, TTarget, TSourceProperty, TTargetProperty, PropertyChangedEventArgs>(Source, sourceGetter, sourceSetter, nameof(INotifyPropertyChanged.PropertyChanged), Target, targetGetter, targetSetter, converter, (PropertyChangedEventArgs arg) => (arg.PropertyName == propertyName)));
 			}
 
@@ -133,19 +136,20 @@
 			return this.Property(sourceProperty , targetAccessors.Item1, targetAccessors.Item2, converter);
 		}
 
-		public Binder<TSource, TTarget> Property<TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, string targetChangedEvent, IConverter<TSourceProperty, TTargetProperty> converter = null, string targetPropertyName = null)
+		public Binder<TSource, TTarget> Property<TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Func<TTarget, TTargetProperty> targetGetter, Action<TTarget, TTargetProperty> targetSetter, string targetChangedEvent, ITwoWayConverter<TSourceProperty, TTargetProperty> converter = null, string targetPropertyName = null)
 			where TTargetChangedEventArgs : EventArgs
 		{
-			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+			var forwardconverter = AssertConverter(converter?.ToTarget ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>());
+			var backConverter = AssertConverter(converter?.ToSource ?? Transmuter.Default.GetConverter<TTargetProperty, TSourceProperty>());
 
-			var r = this.Property(sourceProperty, targetGetter, targetSetter, converter);
+			var r = this.Property(sourceProperty, targetGetter, targetSetter, forwardconverter);
 
 			var sourceAccessors = sourceProperty.BuildAccessors();
-			this.Invert().Add(new OneWayBinding<TTarget, TSource, TTargetProperty, TSourceProperty, TTargetChangedEventArgs>(Target, targetGetter, targetSetter, targetChangedEvent, Source, sourceAccessors.Item1, sourceAccessors.Item2, converter.Inverse()));
+			this.Invert().Add(new OneWayBinding<TTarget, TSource, TTargetProperty, TSourceProperty, TTargetChangedEventArgs>(Target, targetGetter, targetSetter, targetChangedEvent, Source, sourceAccessors.Item1, sourceAccessors.Item2, backConverter));
 			return r;
 		}
 
-		public Binder<TSource, TTarget> Property<TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Expression<Func<TTarget, TTargetProperty>> targetProperty, string targetChangedEvent, IConverter<TSourceProperty, TTargetProperty> converter = null)
+		public Binder<TSource, TTarget> Property<TSourceProperty, TTargetProperty, TTargetChangedEventArgs>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Expression<Func<TTarget, TTargetProperty>> targetProperty, string targetChangedEvent, ITwoWayConverter<TSourceProperty, TTargetProperty> converter = null)
 			where TTargetChangedEventArgs : EventArgs
 		{
 			var targetAccessors = targetProperty.BuildAccessors();
@@ -170,6 +174,14 @@
 
 		#endregion
 
+		private IConverter<TSourceProperty, TTargetProperty> AssertConverter<TSourceProperty,TTargetProperty>(IConverter<TSourceProperty,TTargetProperty> converter) 
+		{
+			if (converter == null)
+				throw new MissingMemberException($"No default converter found for conversion : {typeof(TSourceProperty)} -> {typeof(TTargetProperty)}");
+
+			return converter;
+		}
+
 		#region Observers
 
 		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TSourceProperty> action)
@@ -186,7 +198,7 @@
 		/// <typeparam name="TSourceProperty">The 1st type parameter.</typeparam>
 		public Binder<TSource, TTarget> ObserveProperty<TSourceProperty, TTargetProperty>(Expression<Func<TSource, TSourceProperty>> sourceProperty, Action<TSource, TTarget, TTargetProperty> action, IConverter<TSourceProperty, TTargetProperty> converter = null)
 		{
-			converter = converter ?? Converters.Default<TSourceProperty, TTargetProperty>();
+			converter = AssertConverter(converter ?? Transmuter.Default.GetConverter<TSourceProperty, TTargetProperty>());
 
 			var sourceAccessors = sourceProperty.BuildAccessors();
 			Action<TSource, TTarget> onEvent = (s, t) => action(s, t, converter.Convert(sourceAccessors.Item1(s)));

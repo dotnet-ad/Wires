@@ -130,37 +130,7 @@ For more advanced options see `Binder<TSource,TTarget>` APIs, or simply take a l
 
 ## Built-in converters
 
-### Implicits
-
-If no converter is given, an default one will be chosen from the registered ones (with `Converters.Register<TSource,TTarget>(converter)`).
-
-* **Shared**
-  * `<float, double>` : casting value
-  * `<double, float>` : casting value
-  * `<long, DateTime>` : from a millisecond timestamp to a datetime.
-* **iOS**
-  * `<int,nint>` : casting value
-  * `<uint,nuint>` : casting value
-  * `<float,nfloat>` : casting value
-  * `<double,nfloat>` : casting value
-  * `<int,nfloat>` : casting value
-  * `<DateTime,NSDate>` : from managed type to native one
-  * `<int,UIColor>` : an hexadecimal raw value from `0xAARRGGBB` to a native color
-  * `<string,UIColor>` : an hexadecimal text value from `"#AARRGGBB"` to a native color
-  * `<string,UIImage>` : from a bundle image name to an image instance
-
-### Explicit
-
-Specific converter can be used when binding, a several common converters are available.
-
-* **Shared**
-  * `Converters.Identity<T>()` :  creates a `IConverter<T,T>` that returns the given value in both ways.
-  * `Converters.Invert` :  a `IConverter<bool,bool>` that inverts the given boolean value.
-  * `Converters.Uppercase` :  a `IConverter<string,string>` that change the given string to uppercase.
-  * `Converters.Lowercase` :  a `IConverter<string,string>` that change the given string to lowercase.
-  * `new RelayConverter<TSource,TTarget>(...)` : an easy way to implement a converter from lambdas.
-* **iOS**
-  * `PlatformConverters.AsyncStringToCachedImage(TimeSpan expiration)` : at first request ,downloads image from http location and stores it into local storage. The next times (until the expiration date is reached), the cached image will be returned.
+**Wires** relies on [Transmute](https://github.com/aloisdeniel/Transmute) converters for converting values beetween sources and targets.
 
 ## Built-in sources
 

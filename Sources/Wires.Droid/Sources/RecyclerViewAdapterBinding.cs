@@ -1,6 +1,4 @@
-﻿
-
-namespace Wires
+﻿namespace Wires
 {
 	using System;
 	using System.Collections.Generic;
@@ -11,21 +9,28 @@ namespace Wires
 	public class RecyclerViewAdapterBinding<TViewModel> : RecyclerView.Adapter
 		         where TViewModel : class
 	{
-
-
 		public RecyclerViewAdapterBinding(CollectionSource<TViewModel> datasource)
 		{
-			this.datasource = datasource;
-			this.descriptors = datasource.CellViews.Union(datasource.HeaderViews).Union(datasource.FooterViews).ToList();
+			this.DataSource = datasource;
 		}
 
 		private List<WeakEventHandler<EventArgs>> clickHandlers = new List<WeakEventHandler<EventArgs>>();
 
-		readonly List<CellDescriptor> descriptors;
+		private List<CellDescriptor> descriptors;
 
-		readonly CollectionSource<TViewModel> datasource;
+		private CollectionSource<TViewModel> dataSource;
 
-		private IEnumerable<ICell> FlatCells => this.datasource.Sections.SelectMany(x =>
+		public CollectionSource<TViewModel> DataSource 
+		{ 
+			get { return this.dataSource; }
+			set
+			{
+				this.dataSource = value;
+				this.descriptors = value?.CellViews.Union(value.HeaderViews).Union(value.FooterViews).ToList() ?? new List<CellDescriptor>();
+			}
+		}
+
+		private IEnumerable<ICell> FlatCells => this.DataSource.Sections.SelectMany(x =>
 		{
 			var result = x.Cells.ToList();
 			if (x.Header != null) result.Insert(0, x.Header);
@@ -55,8 +60,9 @@ namespace Wires
 
 		public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
 		{
+			var inflater = LayoutInflater.From(parent.Context);
 			var type = this.descriptors[viewType].ViewType;
-			var holder = Activator.CreateInstance(type, new object[] { parent }) as RecyclerView.ViewHolder;
+			var holder = Activator.CreateInstance(type, new object[] { inflater, parent }) as RecyclerView.ViewHolder;
 			holder.ItemView.AddWeakHandler<EventArgs>(nameof(View.Click), (s, e) =>
 			{
 				var i = holder.AdapterPosition;  //FIXME weak reference on holder

@@ -1,4 +1,6 @@
 ﻿using System;
+using Transmute;
+
 namespace Wires
 {
 	public class OneTimeBinding<TSource, TTarget, TSourceProperty, TTargetProperty> : PropertyBinding<TSource, TTarget, TSourceProperty, TTargetProperty>

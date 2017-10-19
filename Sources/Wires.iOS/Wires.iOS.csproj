@@ -20,8 +20,6 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <MtouchFastDev>true</MtouchFastDev>
-    <MtouchUseSGen>true</MtouchUseSGen>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <IOSDebuggerPort>49570</IOSDebuggerPort>
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
     <MtouchLink>SdkOnly</MtouchLink>
@@ -36,8 +34,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchUseSGen>true</MtouchUseSGen>
-    <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchTlsProvider>Default</MtouchTlsProvider>
@@ -47,12 +43,13 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="Transmute">
+      <HintPath>..\packages\Transmute.0.5.7\lib\Xamarin.iOS10\Transmute.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Converters\" />
     <Folder Include="Sources\" />
-    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UIButton.cs">
@@ -68,8 +65,6 @@
     <Compile Include="UIImageView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\ColorConverters.cs" />
-    <Compile Include="Converters\ImageConverters.cs" />
     <Compile Include="UIView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
@@ -90,7 +85,6 @@
     <Compile Include="UIDatePicker.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\DateConverters.cs" />
     <Compile Include="UISegmentedControl.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
@@ -111,7 +105,6 @@
     <Compile Include="UIWebView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\CGConverters.cs" />
     <Compile Include="UITableView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
@@ -119,13 +112,15 @@
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
     <Compile Include="Linking.cs" />
-    <Compile Include="Utils\FileCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">
       <Project>{190C423F-A178-43DE-A8FE-955DBD12562B}</Project>
       <Name>Wires</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

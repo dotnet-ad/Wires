@@ -4,12 +4,13 @@
 	using System.Linq.Expressions;
 	using System.Windows.Input;
 	using Android.Widget;
+	using Transmute;
 
 	public static partial class UIExtensions
 	{
 		#region TouchUpInside command
 
-		public static Binder<TSource, Button> TouchUpInside<TSource>(this Binder<TSource, Button> binder, Expression<Func<TSource, ICommand>> property)
+		public static Binder<TSource, Button> Click<TSource>(this Binder<TSource, Button> binder, Expression<Func<TSource, ICommand>> property)
 			where TSource : class
 		{
 			return binder.Command<EventArgs>(property, nameof(Button.Click), (b, v) => b.Enabled = v);
