@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
-using UIKit;
-
-namespace Wires
+﻿namespace Wires
 {
+	using System;
+	using System.Linq.Expressions;
+	using UIKit;
+
 	public static partial class UIExtensions
 	{
 		#region Selected property
@@ -13,7 +13,7 @@ namespace Wires
 		{
 			converter = converter ?? Converters.Default<TPropertyType, int>();
 			var finalConverter = converter.Chain(Converters.Default<int, nint>());
-			return binder.Property(property, b => b.SelectedSegment, finalConverter);
+			return binder.Property<TPropertyType, nint, EventArgs>(property, b => b.SelectedSegment, nameof(UISegmentedControl.ValueChanged), finalConverter);
 		}
 
 		#endregion

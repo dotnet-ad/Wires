@@ -41,13 +41,15 @@ namespace Wires.Sample.ViewModel
 
 		private DateTime birthday;
 
+		private int selected;
+
 		#endregion
 
 		#region Properties
 
 		public string Title
 		{
-			get { return title; }
+			get { return title + $" ({selected})"; }
 			set { if (this.Set(ref title, value)) RaiseProperty(nameof(Sections)); }
 		}
 
@@ -58,6 +60,12 @@ namespace Wires.Sample.ViewModel
 		}
 
 		public string[] Sections => new[] { Title, Amount.ToString(), IsActive.ToString()  };
+
+		public int Selected 
+		{
+			get { return selected; }
+			set { if (this.Set(ref selected, value)) RaiseProperty(nameof(Title)); }
+		}
 
 		public double Amount
 		{
