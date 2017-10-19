@@ -21,8 +21,8 @@ namespace Wires
 
 		public static Action<TOwner, TPropertyType> BuildSetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
-			if (property.SetMethod == null)
-				return null;
+			if (property?.SetMethod == null)
+				return (owner,v) => { throw new InvalidOperationException("No available setter"); };
 			
 			var method = property.SetMethod;
 
@@ -37,15 +37,26 @@ namespace Wires
 
 		public static Func<TOwner, TPropertyType> BuildGetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
-			if (property.GetMethod == null)
-				return null;
-			
-			var method = property.GetMethod;
 
 			var instance = Expression.Parameter(typeof(TOwner), "instance");
 
-			var call = Expression.Call(Expression.Convert(instance, method.DeclaringType), method);
-			var expr = Expression.Lambda<Func<TOwner, TPropertyType>>(Expression.Convert(call, typeof(TPropertyType)), instance);
+			Expression<Func<TOwner, TPropertyType>> expr;
+
+			// if no property info, then its the owner itself
+			if (property == null)
+			{
+				expr = Expression.Lambda<Func<TOwner, TPropertyType>>(Expression.Convert(instance, typeof(TPropertyType)), instance);
+			}
+			else
+			{
+				if (property.GetMethod == null)
+					return (owner) => { throw new InvalidOperationException("No available getter"); };
+
+				var method = property.GetMethod;
+
+				var call = Expression.Call(Expression.Convert(instance, method.DeclaringType), method);
+				expr = Expression.Lambda<Func<TOwner, TPropertyType>>(Expression.Convert(call, typeof(TPropertyType)), instance);
+			}
 
 			return expr.Compile();
 		}
@@ -63,7 +74,10 @@ namespace Wires
 				throw new ArgumentException();
 			}
 
-			var member = (MemberExpression)property.Body;
+			var member = property.Body as MemberExpression;
+			if (member == null)
+				return null;
+
 			return (PropertyInfo)member.Member;
 		}
 
@@ -77,7 +91,7 @@ namespace Wires
 			var getter = property.BuildGetExpression<TOwner, TPropertyType>();
 			var setter = property.BuildSetExpression<TOwner, TPropertyType>();
 
-			return new Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string>(getter, setter, property.Name);
+			return new Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string>(getter, setter, property?.Name ?? "__UNKNOWN__");
 		}
 
 		public static string GetPropertyName<TOwner, TPropertyType>(this Expression<Func<TOwner, TPropertyType>> property) => property.GetInfo().Name;

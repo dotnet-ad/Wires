@@ -108,6 +108,9 @@
 	</Compile>
     <Compile Include="Sources\TableViewSourceBinding.cs" />
     <Compile Include="Sources\CollectionViewSourceBinding.cs" />
+    <Compile Include="UIWebViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">
