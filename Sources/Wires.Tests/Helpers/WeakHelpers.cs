@@ -7,6 +7,8 @@ namespace Wires.Tests
 		{
 			execute();
 
+			Bindings.Purge();
+
 			// Forcing garbage collection
 			GC.Collect();
 			GC.WaitForPendingFinalizers();

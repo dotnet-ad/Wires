@@ -1,26 +1,17 @@
 namespace Wires
 {
 	using System;
-	using System.ComponentModel;
+	using System.Linq.Expressions;
 	using Android.Widget;
 
 	public static class TextViewExtensions
 	{
 		#region Text property
 
-		public static IBinding BindText(this INotifyPropertyChanged observable, TextView label, string propertyName)
+		public static IBinding Text<TSource, TPropertyType>(this Binder<TSource, TextView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
+			where TSource : class
 		{
-			return observable.BindText(label, propertyName, Converters.Identity<string>());
-		}
-
-		public static IBinding BindText<TPropertyType>(this INotifyPropertyChanged observable, TextView label, string propertyName, Func<TPropertyType, string> converter)
-		{
-			return observable.BindText(label, propertyName, new RelayConverter<TPropertyType, string>(converter));
-		}
-
-		public static IBinding BindText<TPropertyType>(this INotifyPropertyChanged observable, TextView label, string propertyName, IConverter<TPropertyType, string> converter)
-		{
-			return observable.BindOneWay(propertyName, label, nameof(TextView.Text), converter);
+			return binder.Property(property, b => b.Text, converter);
 		}
 
 		#endregion

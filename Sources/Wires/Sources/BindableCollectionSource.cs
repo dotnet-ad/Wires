@@ -2,18 +2,18 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
 	using System.Collections.Specialized;
 	using System.ComponentModel;
 	using System.Linq;
+	using System.Linq.Expressions;
 
 	public class BindableCollectionSource<TOwner, TItem, TView, TCellView>
 		where TOwner : class
 		where TView : class
 	{
-		public BindableCollectionSource(TOwner source, string sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, int, TCellView> prepareCell = null)
+		public BindableCollectionSource(TOwner source, Expression<Func<TOwner,IEnumerable<TItem>> >sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, int, TCellView> prepareCell = null)
 		{
-			var sourceAccessors = source.BuildAccessors<TOwner, IEnumerable<TItem>>(sourceProperty);
+			var sourceAccessors = sourceProperty.BuildAccessors();
 
 			if (source is INotifyPropertyChanged)
 			{
@@ -25,6 +25,8 @@
 			this.triggerReloading = triggerReloading;
 			this.prepareCell = prepareCell;
 			this.CellIdentifer = typeof(TCellView).Name;
+			this.getter = sourceAccessors.Item1;
+			this.sourceProperty = sourceAccessors.Item3;
 		}
 
 		#region Dynamic updates
@@ -53,7 +55,7 @@
 				{
 					var items = getter(owner);
 
-					if (items is ObservableCollection<TItem>)
+					if (items is INotifyCollectionChanged)
 					{
 						this.collectionChangedEvent = items.AddWeakHandler<NotifyCollectionChangedEventArgs>(nameof(INotifyPropertyChanged.PropertyChanged), this.OnCollectionChanged);
 					}
@@ -66,7 +68,7 @@
 
 		public void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
 		{
-			this.Reload();
+			this.Reload(); // TODO Reload few elements only
 		}
 
 		#endregion
@@ -102,7 +104,7 @@
 				if (this.owner.TryGetTarget(out owner))
 				{
 					var items = getter(owner);
-					return items.Count();
+					return items?.Count() ?? 0;
 				}
 
 				throw new InvalidOperationException("Source's owner has been garbage collected");

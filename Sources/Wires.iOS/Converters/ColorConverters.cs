@@ -3,7 +3,7 @@ namespace Wires
 	using System;
 	using UIKit;
 
-	public partial class PlatformConverters
+	public static partial class PlatformConverters
 	{
 		public static IConverter<int, UIColor> IntToColor { get; private set; } = new RelayConverter<int, UIColor>((value) =>
 		 {

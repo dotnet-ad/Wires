@@ -41,6 +41,9 @@
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Conversions\RelayConverter.cs" />
     <Compile Include="Sources\BindableCollectionSource.cs" />
+    <Compile Include="PropertyBindings\OneTimeBinding.cs" />
+    <Compile Include="Conversions\ChainConverter.cs" />
+    <Compile Include="Binder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

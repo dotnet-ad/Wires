@@ -1,6 +1,8 @@
 ﻿namespace Wires
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq.Expressions;
 	using Foundation;
 	using UIKit;
 
@@ -10,7 +12,7 @@
 	{
 		#region Constructors
 
-		public TableViewSourceBinding(TOwner source, string sourceProperty, UITableView view, bool fromNib, nfloat rowHeight, Action<TItem, int, TCellView> prepareCell = null)
+		public TableViewSourceBinding(TOwner source, Expression<Func<TOwner,IEnumerable<TItem>>> sourceProperty, UITableView view, bool fromNib, nfloat rowHeight, Action<TItem, int, TCellView> prepareCell = null)
 		{
 			this.source = new BindableCollectionSource<TOwner, TItem, UITableView, TCellView>(source, sourceProperty, view, (c) => c.ReloadData(), prepareCell);
 			this.rowHeight = rowHeight;
@@ -46,7 +48,7 @@
 
 		public override nint NumberOfSections(UITableView tableView) => 1;
 
-		public override nint RowsInSection(UITableView tableview, nint section) => this.source.Count;
+		public override nint RowsInSection(UITableView tableview, nint section) => this.source?.Count ?? 0;
 
 		public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath) => this.rowHeight;
 

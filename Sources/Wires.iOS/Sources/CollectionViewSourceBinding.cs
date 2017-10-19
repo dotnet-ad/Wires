@@ -1,6 +1,8 @@
 ﻿namespace Wires
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq.Expressions;
 	using UIKit;
 
 	public class CollectionViewSourceBinding<TOwner, TItem, TCellView> : UICollectionViewSource
@@ -9,7 +11,7 @@
 	{
 		#region Constructors
 
-		public CollectionViewSourceBinding(TOwner source, string sourceProperty, UICollectionView view, bool fromNib, Action<TItem, int, TCellView> prepareCell = null)
+		public CollectionViewSourceBinding(TOwner source, Expression<Func<TOwner, IEnumerable<TItem>>> sourceProperty, UICollectionView view, bool fromNib, Action<TItem, int, TCellView> prepareCell = null)
 		{
 			this.source = new BindableCollectionSource<TOwner, TItem, UICollectionView, TCellView>(source,sourceProperty,view,(c) => c.ReloadData(), prepareCell);
 
@@ -42,7 +44,7 @@
 
 		public override nint NumberOfSections(UICollectionView collectionView) => 1;
 
-		public override nint GetItemsCount(UICollectionView collectionView, nint section) => this.source.Count;
+		public override nint GetItemsCount(UICollectionView collectionView, nint section) => this.source?.Count ?? 0;
 
 		public override bool ShouldHighlightItem(UICollectionView collectionView, Foundation.NSIndexPath indexPath) => false;
 

@@ -1,46 +1,27 @@
 namespace Wires
 {
 	using System;
-	using System.ComponentModel;
+	using System.Linq.Expressions;
 	using UIKit;
 
-	public static class UILabelExtensions
+	public static partial class UIExtensions
 	{
 		#region Text property
 
-		public static IBinding BindText(this INotifyPropertyChanged observable, UILabel label, string propertyName)
+		public static IBinding Text<TSource, TPropertyType>(this Binder<TSource, UILabel> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, string> converter = null)
+			where TSource : class
 		{
-			return observable.BindText(label, propertyName, Converters.Identity<string>());
-		}
-
-		public static IBinding BindText<TPropertyType>(this INotifyPropertyChanged observable, UILabel label, string propertyName, Func<TPropertyType, string> converter)
-		{
-			return observable.BindText(label, propertyName, new RelayConverter<TPropertyType, string>(converter));
-		}
-
-		public static IBinding BindText<TPropertyType>(this INotifyPropertyChanged observable, UILabel label, string propertyName, IConverter<TPropertyType, string> converter)
-		{
-			return observable.BindOneWay(propertyName, label, nameof(UILabel.Text), converter);
+			return binder.Property(property, b => b.Text, converter);
 		}
 
 		#endregion
 
+		#region TextColor property
 
-		#region Text property
-
-		public static IBinding BindTextColor(this INotifyPropertyChanged observable, UILabel label, string propertyName)
+		public static IBinding TextColor<TSource, TPropertyType>(this Binder<TSource,UILabel> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, UIColor> converter = null)
+			where TSource : class
 		{
-			return observable.BindTextColor(label, propertyName, PlatformConverters.IntToColor);
-		}
-
-		public static IBinding BindText<TPropertyType>(this INotifyPropertyChanged observable, UILabel label, string propertyName, Func<TPropertyType, UIColor> converter)
-		{
-			return observable.BindTextColor(label, propertyName, new RelayConverter<TPropertyType, UIColor>(converter));
-		}
-
-		public static IBinding BindTextColor<TPropertyType>(this INotifyPropertyChanged observable, UILabel label, string propertyName, IConverter<TPropertyType, UIColor> converter)
-		{
-			return observable.BindOneWay(propertyName, label, nameof(UILabel.TextColor), converter);
+			return binder.Property(property, b => b.TextColor, converter);
 		}
 
 		#endregion

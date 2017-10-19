@@ -21,6 +21,9 @@ namespace Wires
 
 		public static Action<TOwner, TPropertyType> BuildSetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
+			if (property.SetMethod == null)
+				return null;
+			
 			var method = property.SetMethod;
 
 			var instance = Expression.Parameter(typeof(TOwner), "instance");
@@ -34,6 +37,9 @@ namespace Wires
 
 		public static Func<TOwner, TPropertyType> BuildGetExpression<TOwner, TPropertyType>(this PropertyInfo property)
 		{
+			if (property.GetMethod == null)
+				return null;
+			
 			var method = property.GetMethod;
 
 			var instance = Expression.Parameter(typeof(TOwner), "instance");
@@ -44,18 +50,37 @@ namespace Wires
 			return expr.Compile();
 		}
 
-		public static Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>> BuildAccessors<TOwner, TPropertyType>(this object owner, string property)
+		private static PropertyInfo GetInfo<TOwner, TPropertyType>(this Expression<Func<TOwner, TPropertyType>> property)
 		{
-			var targetPropertyInfo = owner.GetType().GetRuntimeProperty(property);
+			if (property.Body is UnaryExpression)
+			{
+				var unary = (UnaryExpression)property.Body;
+				if (unary.Operand is MemberExpression)
+				{
+					var unaryMember = (MemberExpression)unary.Operand;
+					return (PropertyInfo)unaryMember.Member;
+				}
+				throw new ArgumentException();
+			}
 
-			if (targetPropertyInfo.PropertyType != typeof(TPropertyType))
-				throw new ArgumentException($"The given target property should be of type {typeof(TPropertyType)}", nameof(property));
-
-			var targetGetter = targetPropertyInfo.BuildGetExpression<TOwner, TPropertyType>();
-			var targetSetter = targetPropertyInfo.BuildSetExpression<TOwner, TPropertyType>();
-
-			return new Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>>(targetGetter, targetSetter);
+			var member = (MemberExpression)property.Body;
+			return (PropertyInfo)member.Member;
 		}
+
+		public static Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string> BuildAccessors<TOwner, TPropertyType>(this Expression<Func<TOwner,TPropertyType>> property)
+		{
+			return property.GetInfo().BuildAccessors<TOwner, TPropertyType>();
+		}
+
+		public static Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>, string> BuildAccessors<TOwner, TPropertyType>(this PropertyInfo property)
+		{
+			var getter = property.BuildGetExpression<TOwner, TPropertyType>();
+			var setter = property.BuildSetExpression<TOwner, TPropertyType>();
+
+			return new Tuple<Func<TOwner, TPropertyType>, Action<TOwner, TPropertyType>,string>(getter, setter, property.Name);
+		}
+
+		public static string GetPropertyName<TOwner, TPropertyType>(this Expression<Func<TOwner, TPropertyType>> property) => property.GetInfo().Name;
 
 		#endregion
 

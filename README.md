@@ -4,7 +4,7 @@ Wires is a simple binding library for frameworks that doesn't have built-in bind
 
 ## Why ?
 
-Several other solutions exists, but I've experienced a **lot** of memory issues with those because they are mainly based on lambda expressions. That's why Wire keeps basic concepts at its core and limits usag of lambda expressions.
+Several other solutions exists, but I've experienced a **lot** of memory issues with these : that's why I've decided to initiate my own binding library.
 
 ## Install
 
@@ -19,28 +19,25 @@ Available on NuGet
 To bind data to components :
 
 ```csharp
-viewmodel.BindHidden(view,nameof(viewmodel.IsHidden);
-viewmodel.BindText(label,nameof(viewmodel.Title));
-viewmodel.BindTextColor(label,nameof(viewmodel.ForegroundColor));
-viewmodel.BindText(field,nameof(viewmodel.ForegroundColor));
-viewmodel.UpdateCommand.Bind(button));
+this.label.Bind(this.ViewModel).Text(vm => vm.Title);
+this.field.Bind(this.ViewModel).Text(vm => vm.Title);
+this.image.Bind(this.ViewModel).Image(vm => vm.Illustration);
+this.image.Bind<HomeViewModel,UIView>(this.ViewModel).Visible(vm => vm.IsActive);
+this.toggleSwitch.Bind(this.ViewModel).On(vm => vm.IsActive);
+this.slider.Bind(this.ViewModel).Value(vm => vm.Amount);
+this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
+this.progressView.Bind(this.ViewModel).Progress(vm => vm.Amount);
+this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
+this.button.Bind(this.ViewModel.LoadCommand).TouchUpInside();
 ```
 
 Value converters can also be used with an `IConverter<TSource,TTarget>` implementation, or a lambda expression :
 
 ```csharp
-viewmodel.BindHidden(view,nameof(viewmodel.IsVisible), Converters.Invert);
-viewmodel.BindTextColor<bool>(label,nameof(viewmodel.ForegroundColor), x => x ? UIColor.Green : UIColor.Red);
+this.label.Bind(this.ViewModel).TextColor(vm => vm.IsValid, x => x ? UIColor.Green : UIColor.Red);
 ```
 
 ## Basic APIs
-
-If included binding extensions don't feet your needs, you can use the basic APIs :
-
-```csharp
-viewmodel.BindOneWay(nameof(viewmodel.SourceProperty), target, nameof(target.TargetProperty), converter);
-viewmodel.BindTwoWay<Target, TProperty, string, EventArgs>((nameof(viewmodel.SourceProperty), target, nameof(target.TargetProperty), converter);
-```
 
 For more advanced options see : [./Sources/Wires/Bindings.cs](./Sources/Wires/Bindings.cs) or the provided extensions.
 

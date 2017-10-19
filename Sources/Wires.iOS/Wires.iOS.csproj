@@ -55,17 +55,36 @@
     <Folder Include="Sources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UIButtonExtensions.cs" />
+    <Compile Include="UIButtonExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UILabelExtensions.cs" />
-    <Compile Include="UITextFieldExtensions.cs" />
-    <Compile Include="UIImageViewExtensions.cs" />
+    <Compile Include="UILabelExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UITextFieldExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIImageViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
     <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\ImageConverters.cs" />
-    <Compile Include="UIViewExtensions.cs" />
+    <Compile Include="UIViewExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
     <Compile Include="Sources\TableViewSourceBinding.cs" />
     <Compile Include="Sources\CollectionViewSourceBinding.cs" />
     <Compile Include="Sources\NibLocator.cs" />
+    <Compile Include="UISwitchExtensions.cs">
+      <DependentUpon>UIExtensions.cs</DependentUpon>
+	</Compile>
+    <Compile Include="UIExtensions.cs" />
+    <Compile Include="UISliderExtensions.cs" />
+    <Compile Include="UIProgressViewExtensions.cs" />
+    <Compile Include="UIActivityIndicatorExtensions.cs" />
+    <Compile Include="UIDatePickerExtensions.cs" />
+    <Compile Include="Converters\DateConverters.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wires\Wires.csproj">

@@ -112,5 +112,19 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wires.Sample.ViewModel\Wires.Sample.ViewModel.csproj">
+      <Project>{393AF82A-554A-470E-94E2-712C19A27114}</Project>
+      <Name>Wires.Sample.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wires.iOS\Wires.iOS.csproj">
+      <Project>{B0343DA8-7002-4E66-872A-7F4AD157866C}</Project>
+      <Name>Wires.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wires\Wires.csproj">
+      <Project>{190C423F-A178-43DE-A8FE-955DBD12562B}</Project>
+      <Name>Wires</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
