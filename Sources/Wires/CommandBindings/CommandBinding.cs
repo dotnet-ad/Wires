@@ -11,10 +11,10 @@ namespace Wires
 		{
 			this.SourceReference = new WeakReference<ICommand>(command);
 			this.TargetReference = new WeakReference<TTarget>(target);
-			UpdateCanExecute();
 			this.onExecuteEvent = onExecuteChanged;
 			this.targetEvent = target.AddWeakHandler<TTargetEventArgs>(targetEvent, this.OnClick);
 			this.commandEvent = command.AddWeakHandler<EventArgs>(nameof(command.CanExecuteChanged), this.OnCanExecuteChanged);
+			UpdateCanExecute();
 		}
 
 		bool isDisposed;
