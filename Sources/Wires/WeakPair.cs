@@ -17,6 +17,21 @@ namespace Wires
 
 		public bool IsDisposed { get; protected set; }
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="T:Wires.Binding`4"/> is still alive.
+		/// </summary>
+		/// <value><c>true</c> if is alive; otherwise, <c>false</c>.</value>
+		public bool IsAlive
+		{
+			get
+			{
+				TSource source;
+				TTarget target;
+
+				return this.TryGet(out source, out target);
+			}
+		}
+
 		public virtual void Dispose()
 		{
 			this.IsDisposed = true;
@@ -75,6 +90,22 @@ namespace Wires
 				}
 				throw new InvalidOperationException("Binding is not alive anymore");
 			}
+		}
+
+		public bool TryGetSourceAndTarget(out object source, out object target)
+		{
+			TSource tsource = default(TSource);
+			TTarget ttarget = default(TTarget);
+			if (this.TryGet(out tsource, out ttarget))
+			{
+				source = tsource;
+				target = ttarget;
+				return true;
+			}
+
+			source = default(TSource);
+			target = default(TTarget);
+			return false;
 		}
 	}
 }

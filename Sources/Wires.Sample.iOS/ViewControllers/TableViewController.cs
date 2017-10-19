@@ -33,13 +33,13 @@ namespace Wires.Sample.iOS
 		{
 			if (this.segmented.SelectedSegment == 0)
 			{
-				var source = new BindableCollectionSource<RedditViewModel, Post, UITableView, PostTableCell>(this.ViewModel, vm => vm.Simple, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post);
-				this.tableView.Source = new TableViewSourceBinding<RedditViewModel, Post, PostTableCell>(source, (arg) => 88, true);
+				var source = new BindableCollectionSource<RedditViewModel, RedditViewModel.ItemViewModel, UITableView, PostTableCell>(this.ViewModel, vm => vm.Simple, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post);
+				this.tableView.Source = new TableViewSourceBinding<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(source, (arg) => 88, true);
 			}
 			else
 			{
-				var source = new BindableGroupedCollectionSource<RedditViewModel, string, Post, UITableView, PostTableCell, PostTableHeader>(this.ViewModel, vm => vm.Grouped, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post, (section, index, cell) => cell.ViewModel = section);
-				this.tableView.Source = new GroupedTableViewSourceBinding<RedditViewModel, Collection<string,Post>, string,  Post, PostTableCell, PostTableHeader>(source, (arg) => 88,(arg) => 68, true);
+				var source = new BindableGroupedCollectionSource<RedditViewModel, string, RedditViewModel.ItemViewModel, UITableView, PostTableCell, PostTableHeader>(this.ViewModel, vm => vm.Grouped, this.tableView, (obj) => obj.ReloadData(), (post, index, cell) => cell.ViewModel = post, (section, index, cell) => cell.ViewModel = section);
+				this.tableView.Source = new GroupedTableViewSourceBinding<RedditViewModel, Collection<string,RedditViewModel.ItemViewModel>, string,  RedditViewModel.ItemViewModel, PostTableCell, PostTableHeader>(source, (arg) => 88,(arg) => 68, true);
 			}
 		}
 

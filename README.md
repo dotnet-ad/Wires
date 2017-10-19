@@ -38,9 +38,110 @@ Value converters can also be used with an `IConverter<TSource,TTarget>` implemen
 this.label.Bind(this.ViewModel).TextColor(vm => vm.IsValid, x => x ? UIColor.Green : UIColor.Red);
 ```
 
-## Basic APIs
+## Bindings
+
+### Build-in extensions
+
+#### iOS
+
+* **UIView**
+  * `Visible` *bool*
+  * `Hidden` *bool*
+  * `TintColor` *UIColor*
+  * `BackgroundColor` *UIColor*
+  * `Alpha` *nfloat*
+* **UIActivityIndicator**
+  * `IsAnimating` *bool*
+* **UIButton**
+  * `TouchUpInside` (command)
+  * `Title` *string*
+  * `Image` *UIImage*
+* **UIDatePicker**
+  * `Date` *DateTime*
+* **UIProgressView**
+  * `Progress` *double*
+  * `ProgressTintColor` *UIColor*
+  * `TrackTintColor` *UIColor*
+* **UIImageView**
+  * `Image` *UIImage*
+  * `ImageAsync` *UIImage*
+* **UILabel**
+  * `Text` *string*
+  * `TextColor` *UIColor*
+* **UISegmentedControl**
+  * `Titles` *string[]*
+  * `Selected` *int*
+* **UISlider**
+  * `Value` *float*
+  * `MaxValue` *float*
+  * `MinValue` *float*
+* **UIStepper**
+  * `Value` *double*
+  * `MaximumValue` *double*
+  * `MinimumValue` *double*
+* **UISwitch**
+  * `On` *bool*
+* **UITextField**
+  * `Text` *string*
+* **UIViewController**
+  * `Title` *string*
+  * `BackTitle` *string*
+* **UIWebView / WKWebView**
+  * `HtmlContent` *string*
+
+### Basic APIs
 
 For more advanced options see : [./Sources/Wires/Bindings.cs](./Sources/Wires/Bindings.cs) or the provided extensions.
+
+## Built-in converters
+
+### Implicits
+
+If no converter is given, an default one will be chosen from the registered ones (with `Converters.Register<TSource,TTarget>(converter)`).
+
+* **Shared**
+  * `<float, double>` : casting value
+  * `<double, float>` : casting value
+  * `<long, DateTime>` : from a millisecond timestamp to a datetime.
+* **iOS**
+  * `<int,nint>` : casting value
+  * `<uint,nuint>` : casting value
+  * `<float,nfloat>` : casting value
+  * `<double,nfloat>` : casting value
+  * `<int,nfloat>` : casting value
+  * `<DateTime,NSDate>` : from managed type to native one
+  * `<int,UIColor>` : an hexadecimal raw value from `0xAARRGGBB` to a native color
+  * `<string,UIColor>` : an hexadecimal text value from `"#AARRGGBB"` to a native color
+  * `<string,UIImage>` : from a bundle image name to an image instance
+
+### Explicit
+
+Specific converter can be used when binding, a several common converters are available.
+
+* **Shared**
+  * `Converters.Identity<T>()` :  creates a `IConverter<T,T>` that returns the given value in both ways.
+  * `Converters.Invert` :  a `IConverter<bool,bool>` that inverts the given boolean value.
+  * `Converters.Uppercase` :  a `IConverter<string,string>` that change the given string to uppercase.
+  * `Converters.Lowercase` :  a `IConverter<string,string>` that change the given string to lowercase.
+  * `new RelayConverter<TSource,TTarget>(...)` : an easy way to implement a converter from lambdas.
+* **iOS**
+  * `PlatformConverters.AsyncStringToCachedImage(TimeSpan expiration)` : at first request ,downloads image from http location and stores it into local storage. The next times (until the expiration date is reached), the cached image will be returned.
+
+## Built-in sources
+
+TODO
+
+## Unbinding
+
+In most cases, you don't have to worry about unbinding because **Wires** purges all bindings regulary if sources of targets have been garbage collected.
+
+But if you reuse a view, and want to update bindings you have to remove the previous bindings before. It is a common with recycling collection patterns (UITableViews, UICollectionViews, Adapters).
+
+This is available through `Unbind(this TSsource, params object[] targets)` extension.
+
+```csharp
+this.viewmodel.Unbind(this.textfield, this.image, this.title)
+```
 
 ## Roadmap / Ideas
 

@@ -12,14 +12,47 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="cZE-iV-UFb" customClass="PostCollectionCell">
-            <rect key="frame" x="0.0" y="0.0" width="425" height="130"/>
+            <rect key="frame" x="0.0" y="0.0" width="307" height="130"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="425" height="130"/>
+                <rect key="frame" x="0.0" y="0.0" width="307" height="130"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hkY-Va-NX2">
+                        <rect key="frame" x="0.0" y="0.0" width="307" height="130"/>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0V9-n4-5aC">
+                        <rect key="frame" x="0.0" y="0.0" width="307" height="130"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.11392337328767123" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9BQ-mf-GxG">
+                        <rect key="frame" x="0.0" y="0.0" width="307" height="130"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="7"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
             </view>
-            <size key="customSize" width="425" height="130"/>
-            <point key="canvasLocation" x="224.5" y="94"/>
+            <constraints>
+                <constraint firstItem="hkY-Va-NX2" firstAttribute="top" secondItem="cZE-iV-UFb" secondAttribute="top" id="4aF-cw-9JS"/>
+                <constraint firstItem="0V9-n4-5aC" firstAttribute="top" secondItem="cZE-iV-UFb" secondAttribute="top" id="6Eg-2S-oos"/>
+                <constraint firstItem="9BQ-mf-GxG" firstAttribute="top" secondItem="cZE-iV-UFb" secondAttribute="top" id="7jw-GZ-QDZ"/>
+                <constraint firstAttribute="trailing" secondItem="hkY-Va-NX2" secondAttribute="trailing" id="8yw-1p-OlU"/>
+                <constraint firstAttribute="bottom" secondItem="9BQ-mf-GxG" secondAttribute="bottom" id="GZ2-Mo-gwY"/>
+                <constraint firstAttribute="trailing" secondItem="9BQ-mf-GxG" secondAttribute="trailing" id="Gfq-Ta-wlG"/>
+                <constraint firstItem="hkY-Va-NX2" firstAttribute="leading" secondItem="cZE-iV-UFb" secondAttribute="leading" id="IxH-fF-vQh"/>
+                <constraint firstAttribute="bottom" secondItem="0V9-n4-5aC" secondAttribute="bottom" id="Nge-ko-Yui"/>
+                <constraint firstAttribute="trailing" secondItem="0V9-n4-5aC" secondAttribute="trailing" id="U4N-6C-6Fc"/>
+                <constraint firstItem="9BQ-mf-GxG" firstAttribute="leading" secondItem="cZE-iV-UFb" secondAttribute="leading" id="ekW-NH-bML"/>
+                <constraint firstItem="0V9-n4-5aC" firstAttribute="leading" secondItem="cZE-iV-UFb" secondAttribute="leading" id="jxf-ko-BGB"/>
+                <constraint firstAttribute="bottom" secondItem="hkY-Va-NX2" secondAttribute="bottom" id="onZ-h4-qyS"/>
+            </constraints>
+            <size key="customSize" width="307" height="130"/>
+            <connections>
+                <outlet property="illustration" destination="hkY-Va-NX2" id="Y3y-yU-jWB"/>
+                <outlet property="title" destination="9BQ-mf-GxG" id="gy2-NF-BuA"/>
+            </connections>
+            <point key="canvasLocation" x="165.5" y="94"/>
         </collectionViewCell>
     </objects>
 </document>
