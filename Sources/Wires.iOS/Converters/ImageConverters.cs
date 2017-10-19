@@ -20,7 +20,7 @@ namespace Wires
 					return UIImage.LoadFromData(data);
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return null;
 			}
@@ -36,7 +36,7 @@ namespace Wires
 			if (string.IsNullOrEmpty(value))
 				return null;
 
-			var localPath = await FileCache.DownloadCachedFile(value, expiration);
+			var localPath = await FileCache.Default.DownloadCachedFile(value, expiration);
 
 			// Reading image from cache
 			NSError err;
