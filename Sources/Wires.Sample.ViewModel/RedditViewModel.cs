@@ -72,13 +72,15 @@
 			{
 				var result = new CollectionSource<RedditViewModel>(this);
 
+				Func<RedditViewModel,IEnumerable<ItemViewModel>> getItems = vm => (IEnumerable<ItemViewModel>)vm.items?.OrderByDescending(a => a.Datetime) ?? new ItemViewModel[0];
+
 				if (IsGrouped)
 				{
-					result.WithSections("cell", "header", vm => vm.items.OrderByDescending(a => a.Datetime), (p) => $"Day n°{p.Datetime.DayOfYear}", null);
+					result.WithSections("cell", "header", getItems, (p) => $"Day n°{p.Datetime.DayOfYear}", null);
 				}
 				else
 				{
-					result.WithSection().WithCells("cell", vm => vm.items);
+					result.WithSection().WithCells("cell", getItems);
 				}
 
 				return result; 

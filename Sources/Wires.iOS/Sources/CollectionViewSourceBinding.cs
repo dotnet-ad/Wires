@@ -36,6 +36,17 @@
 				var size = descriptor.GetSize(headerdata);
 				return new CoreGraphics.CGSize(size.Item1, size.Item2);
 			}
+
+			public override CoreGraphics.CGSize GetReferenceSizeForFooter(UICollectionView collectionView, UICollectionViewLayout layout, nint section)
+			{
+				var headerdata = datasource.Sections.ElementAt((int)section).Footer;
+				if (headerdata == null)
+					return CoreGraphics.CGSize.Empty;
+
+				var descriptor = this.datasource.GetFooterView(headerdata.ViewIdentifier);
+				var size = descriptor.GetSize(headerdata);
+				return new CoreGraphics.CGSize(size.Item1, size.Item2);
+			}
 		}
 
 		#region Constructors
@@ -80,20 +91,17 @@
 
 		public override UICollectionReusableView GetViewForSupplementaryElement(UICollectionView collectionView, NSString elementKind, NSIndexPath indexPath)
 		{
-			if (elementKind == "UICollectionElementKindSectionHeader")
-			{
-				var item = datasource.Sections.ElementAt(indexPath.Section).Header;
-				if (item == null)
-				{
-					return collectionView.DequeueReusableSupplementaryView(elementKind, "___empty___", indexPath);
-				}
+			var section = datasource.Sections.ElementAt(indexPath.Section);
+			var item = (elementKind == UICollectionElementKindSectionKey.Header) ? section.Header : section.Footer;
 
-				var view = collectionView.DequeueReusableSupplementaryView(elementKind, item.ViewIdentifier, indexPath) as IView;
-				view.ViewModel = item.Item;
-				return view as UICollectionReusableView;
+			if (item == null)
+			{
+				return collectionView.DequeueReusableSupplementaryView(elementKind, "___empty___", indexPath);
 			}
 
-			return base.GetViewForSupplementaryElement(collectionView, elementKind, indexPath);
+			var view = collectionView.DequeueReusableSupplementaryView(elementKind, item.ViewIdentifier, indexPath) as IView;
+			view.ViewModel = item.Item;
+			return view as UICollectionReusableView;
 		}
 
 
@@ -124,6 +132,11 @@
 					view.RegisterNibForSupplementaryView(NibLocator.Nib(item.ViewType), UICollectionElementKindSection.Header, item.Identifier);
 				}
 
+				foreach (var item in datasource.FooterViews)
+				{
+					view.RegisterNibForSupplementaryView(NibLocator.Nib(item.ViewType), UICollectionElementKindSection.Footer, item.Identifier);
+				}
+
 				foreach (var item in datasource.CellViews)
 				{
 					view.RegisterNibForCell(NibLocator.Nib(item.ViewType), item.Identifier);
@@ -134,6 +147,11 @@
 				foreach (var item in datasource.HeaderViews)
 				{
 					view.RegisterClassForSupplementaryView(item.ViewType, UICollectionElementKindSection.Header, item.Identifier);
+				}
+
+				foreach (var item in datasource.FooterViews)
+				{
+					view.RegisterClassForSupplementaryView(item.ViewType, UICollectionElementKindSection.Footer, item.Identifier);
 				}
 
 				foreach (var item in datasource.CellViews)

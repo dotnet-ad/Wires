@@ -17,7 +17,7 @@
 
 		private List<Func<TViewModel, IEnumerable<ICell>>> cells = new List<Func<TViewModel, IEnumerable<ICell>>>();
 
-		private Func<TViewModel, ICell> header;
+		private Func<TViewModel, ICell> header, footer;
 
 		private readonly CollectionSource<TViewModel> source;
 
@@ -28,6 +28,8 @@
 		public IEnumerable<ICell> Cells => cells.Select(x => x(this.source.ViewModel)).Where(x => x != null).SelectMany(x => x);
 
 		public ICell Header => header?.Invoke(this.source.ViewModel);
+
+		public ICell Footer => footer?.Invoke(this.source.ViewModel);
 
 		#endregion
 
@@ -48,6 +50,12 @@
 		public Section<TViewModel> WithHeader<TItem>(string viewIdentifier, Func<TViewModel,TItem> item)
 		{
 			header = vm => new Cell(viewIdentifier,item(vm));
+			return this;
+		}
+
+		public Section<TViewModel> WithFooter<TItem>(string viewIdentifier, Func<TViewModel, TItem> item)
+		{
+			footer = vm => new Cell(viewIdentifier, item(vm));
 			return this;
 		}
 	}

@@ -44,7 +44,7 @@
                         </constraints>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <color key="backgroundColor" red="0.87428616749999999" green="0.87428616749999999" blue="0.87428616749999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
                     <constraint firstItem="tvg-On-uhL" firstAttribute="leading" secondItem="YTl-1W-gDM" secondAttribute="leadingMargin" constant="8" id="0Be-0z-hHc"/>
                     <constraint firstItem="tvg-On-uhL" firstAttribute="top" secondItem="YTl-1W-gDM" secondAttribute="topMargin" constant="8" id="M88-xv-EDz"/>
@@ -52,7 +52,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="tvg-On-uhL" secondAttribute="trailing" constant="8" id="na1-Ld-dwc"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.87428616749999999" green="0.87428616749999999" blue="0.87428616749999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="title" destination="64e-kA-AC6" id="wgj-K6-Qr3"/>
             </connections>
