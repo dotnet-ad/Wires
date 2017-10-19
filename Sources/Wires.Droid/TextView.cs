@@ -4,7 +4,7 @@ namespace Wires
 	using System.Linq.Expressions;
 	using Android.Widget;
 
-	public static class TextViewExtensions
+	public static partial class UIExtensions
 	{
 		#region Text property
 

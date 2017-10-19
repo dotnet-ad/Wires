@@ -28,9 +28,11 @@
 			this.ViewModel
 			    	.Bind(this.indicator)
 			    		.IsAnimating(vm => vm.IsUpdating)
-						.As<UIView>().Visible(vm => vm.IsUpdating)
+						.As<UIView>()
+			    		.Visible(vm => vm.IsUpdating)
 					.Bind(this.collectionView)
-			    		.As<UIView>().Hidden(vm => vm.IsUpdating);
+			    		.As<UIView>()
+			    		.Hidden(vm => vm.IsUpdating);
 
 			this.UpdateSource();
 

@@ -33,10 +33,17 @@ namespace Wires
 			if (string.IsNullOrEmpty(value))
 				return null;
 
-			NSError err;
-			using (var data = NSData.FromFile(value, NSDataReadingOptions.Mapped, out err))
+			try
 			{
-				return UIImage.LoadFromData(data);
+				NSError err;
+				using (var data = NSData.FromFile(value, NSDataReadingOptions.Mapped, out err))
+				{
+					return UIImage.LoadFromData(data);
+				}
+			}
+			catch (Exception ex)
+			{
+				return null;
 			}
 		});
 
