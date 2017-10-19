@@ -8,8 +8,11 @@ namespace Wires
 	{
 		static Converters()
 		{
+			var intToFloat = new RelayConverter<int, float>(v => v, v => (int)v);
 			var floatToDouble = new RelayConverter<float, double>(v => v, v => (float)v);
 
+			Register(intToFloat);
+			Register(intToFloat.Inverse());
 			Register(floatToDouble);
 			Register(floatToDouble.Inverse());
 			Register(TimestampToDatetime);
@@ -42,7 +45,10 @@ namespace Wires
 		/// <typeparam name="TTarget">The 2nd type parameter.</typeparam>
 		public static IConverter<TSource,TTarget> Default<TSource, TTarget>()
 		{
-			if (typeof(TSource) == typeof(TTarget))
+			var tSource = typeof(TSource);
+			var tTarget = typeof(TTarget);
+
+			if (tSource == tTarget)
 				return (IConverter<TSource, TTarget>) Identity<TSource>();
 
 			var converter = converters.OfType<IConverter<TSource, TTarget>>().FirstOrDefault();
@@ -50,10 +56,15 @@ namespace Wires
 			if (converter != null)
 				return converter;
 
-			if (typeof(TTarget) == typeof(string))
+			if (tTarget == typeof(string))
 				return new RelayConverter<TSource, TTarget>(v => (TTarget)((object)v?.ToString()));
 
-			throw new ArgumentException($"No default converter has been registered for types <{typeof(TSource)},{typeof(TTarget)}>.");
+			if (tSource.IsArray && tTarget.IsArray)
+			{
+
+			}
+
+			throw new ArgumentException($"No default converter has been registered for types <{tSource},{tTarget}>.");
 		}
 
 		/// <summary>
@@ -85,6 +96,13 @@ namespace Wires
 		/// </summary>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
 		public static IConverter<T, T> Identity<T>() => new RelayConverter<T, T>(x => x, x => x);
+
+
+		public static IConverter<TSource[], TTarget[]> ArrayToArray<TSource, TTarget>(IConverter<TSource, TTarget> elementConverter = null)
+		{
+			elementConverter = elementConverter ?? Default<TSource, TTarget>();
+			return new RelayConverter<TSource[], TTarget[]>((arg) => arg.Select(a => elementConverter.Convert(a)).ToArray(), (arg) => arg.Select(a => elementConverter.ConvertBack(a)).ToArray());
+		}
 
 		/// <summary>
 		/// Inverts the boolean value.

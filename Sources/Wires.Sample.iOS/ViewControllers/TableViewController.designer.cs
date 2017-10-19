@@ -13,6 +13,9 @@ namespace Wires.Sample.iOS
 	partial class TableViewController
 	{
 		[Outlet]
+		UIKit.UIActivityIndicatorView indicator { get; set; }
+
+		[Outlet]
 		UIKit.UISegmentedControl segmented { get; set; }
 
 		[Outlet]
@@ -20,6 +23,11 @@ namespace Wires.Sample.iOS
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (indicator != null) {
+				indicator.Dispose ();
+				indicator = null;
+			}
+
 			if (segmented != null) {
 				segmented.Dispose ();
 				segmented = null;

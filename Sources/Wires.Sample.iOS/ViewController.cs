@@ -30,7 +30,7 @@ namespace Wires.Sample.iOS
 			this.progressView.Bind(this.ViewModel).Progress(vm => vm.Amount);
 			this.activityIndicator.Bind(this.ViewModel).IsAnimating(vm => vm.IsLoading);
 			this.segmented.Bind(this.ViewModel).Titles(vm => vm.Sections);
-			this.button.Bind(this.ViewModel.LoadCommand).TouchUpInside();
+			this.button.Bind(this.ViewModel).TouchUpInside(vm => vm.LoadCommand);
 		}
 	}
 }

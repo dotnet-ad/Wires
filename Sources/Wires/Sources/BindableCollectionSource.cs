@@ -8,11 +8,11 @@
 	using System.Linq.Expressions;
 	using System.Windows.Input;
 
-	public class BindableCollectionSource<TOwner, TItem, TView, TCellView> : IDisposable
+	public class BindableCollectionSource<TOwner, TItem, TView, TCellView> : Binding<TOwner, TView>
 		where TOwner : class
 		where TView : class
 	{
-		public BindableCollectionSource(TOwner source, Expression<Func<TOwner,IEnumerable<TItem>>>sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, int, TCellView> prepareCell = null, ICommand selectCommand = null)
+		public BindableCollectionSource(TOwner source, Expression<Func<TOwner, IEnumerable<TItem>>> sourceProperty, TView view, Action<TView> triggerReloading, Action<TItem, int, TCellView> prepareCell = null, ICommand selectCommand = null) : base(source,view)
 		{
 			var sourceAccessors = sourceProperty.BuildAccessors();
 
@@ -22,8 +22,6 @@
 			}
 
 			this.SelectCommand = selectCommand;
-			this.view = new WeakReference<TView>(view);
-			this.owner = new WeakReference<TOwner>(source);
 			this.triggerReloading = triggerReloading;
 			this.prepareCell = prepareCell;
 			this.getter = sourceAccessors.Item1;
@@ -37,7 +35,7 @@
 		private void Reload()
 		{
 			TView view;
-			if (this.view.TryGetTarget(out view))
+			if (this.TryGetTarget(out view))
 			{
 				this.triggerReloading(view);
 			}
@@ -62,7 +60,7 @@
 			}
 
 			TOwner owner;
-			if (this.owner.TryGetTarget(out owner))
+			if (this.TryGetSource(out owner))
 			{
 				var items = getter(owner);
 
@@ -95,11 +93,7 @@
 
 		private string sourceProperty;
 
-		readonly WeakReference<TView> view;
-
 		readonly Action<TView> triggerReloading;
-
-		private readonly WeakReference<TOwner> owner;
 
 		private readonly Action<TItem, int, TCellView> prepareCell;
 
@@ -118,7 +112,7 @@
 			get
 			{
 				TView view;
-				if (this.view.TryGetTarget(out view))
+				if (this.TryGetTarget(out view))
 				{
 					return view;
 				}
@@ -132,7 +126,7 @@
 			get
 			{
 				TOwner owner;
-				if (this.owner.TryGetTarget(out owner))
+				if (this.TryGetSource(out owner))
 				{
 					return owner;
 				}
@@ -165,10 +159,11 @@
 				this.prepareCell(item, index, view);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			this.propertyChangedEvent.Unsubscribe();
 			this.collectionChangedEvent.Unsubscribe();
+			base.Dispose();
 		}
 	}
 }

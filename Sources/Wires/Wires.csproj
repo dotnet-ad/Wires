@@ -30,9 +30,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Events\WeakEventHandler.cs" />
-    <Compile Include="PropertyBindings\Binding.cs" />
+    <Compile Include="PropertyBindings\PropertyBinding.cs" />
     <Compile Include="PropertyBindings\OneWayBinding.cs" />
-    <Compile Include="PropertyBindings\TwoWayBinding.cs" />
     <Compile Include="CommandBindings\CommandBinding.cs" />
     <Compile Include="Conversions\IConverter.cs" />
     <Compile Include="Conversions\Converters.cs" />
@@ -49,7 +48,8 @@
     <Compile Include="PropertyBindings\AsyncOneWayBinding.cs" />
     <Compile Include="PropertyBindings\AsyncOneTimeBinding.cs" />
     <Compile Include="Sources\BindableGroupedCollectionSource.cs" />
-    <Compile Include="WeakPair.cs" />
+    <Compile Include="Binding.cs" />
+    <Compile Include="EventBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />

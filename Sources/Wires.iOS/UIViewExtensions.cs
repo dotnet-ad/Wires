@@ -2,6 +2,7 @@ namespace Wires
 {
 	using System;
 	using System.Linq.Expressions;
+	using CoreGraphics;
 	using UIKit;
 
 	public static partial class UIExtensions
@@ -49,6 +50,16 @@ namespace Wires
 			where TSource : class
 		{
 			return binder.Property(property, b => b.Alpha, converter);
+		}
+
+		#endregion
+
+		#region Frame property
+
+		public static Binder<TSource, UIView> Frame<TSource, TPropertyType>(this Binder<TSource, UIView> binder, Expression<Func<TSource, TPropertyType>> property, IConverter<TPropertyType, CGRect> converter = null)
+			where TSource : class
+		{
+			return binder.Property(property, b => b.Frame, converter);
 		}
 
 		#endregion

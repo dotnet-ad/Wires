@@ -16,18 +16,26 @@ namespace Wires.Sample.iOS
 		UIKit.UICollectionView collectionView { get; set; }
 
 		[Outlet]
+		UIKit.UIActivityIndicatorView indicator { get; set; }
+
+		[Outlet]
 		UIKit.UISegmentedControl segmented { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (segmented != null) {
-				segmented.Dispose ();
-				segmented = null;
+			if (indicator != null) {
+				indicator.Dispose ();
+				indicator = null;
 			}
 
 			if (collectionView != null) {
 				collectionView.Dispose ();
 				collectionView = null;
+			}
+
+			if (segmented != null) {
+				segmented.Dispose ();
+				segmented = null;
 			}
 		}
 	}

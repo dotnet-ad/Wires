@@ -20,7 +20,7 @@
 			this.cellIdentifier = typeof(TCellView).Name;
 			this.headerIdentifier = typeof(THeaderCellView).Name;
 
-			var view = this.source.View;
+			var view = this.source.Target;
 
 			if (fromNib)
 			{

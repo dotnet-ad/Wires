@@ -21,8 +21,8 @@ To bind data to components :
 ```csharp
 this.label.Bind(this.ViewModel).Text(vm => vm.Title);
 this.field.Bind(this.ViewModel).Text(vm => vm.Title);
-this.image.Bind(this.ViewModel).Image(vm => vm.Illustration);
-this.image.Bind(this.ViewModel).As<UIView>().Visible(vm => vm.IsActive);
+this.image.Bind(this.ViewModel).Image(vm => vm.Illustration)
+          .As<UIView>().Visible(vm => vm.IsActive);
 this.toggleSwitch.Bind(this.ViewModel).On(vm => vm.IsActive);
 this.slider.Bind(this.ViewModel).Value(vm => vm.Amount);
 this.datePicker.Bind(this.ViewModel).Date(vm => vm.Birthday);
@@ -91,7 +91,12 @@ this.label.Bind(this.ViewModel).TextColor(vm => vm.IsValid, x => x ? UIColor.Gre
 
 ### Basic APIs
 
-For more advanced options see : [./Sources/Wires/Bindings.cs](./Sources/Wires/Bindings.cs) or the provided extensions.
+**Wires** provides more basic APIs on which are based all the extensions.
+
+```csharp
+```
+
+For more advanced options see provided extensions to create your own ones.
 
 ## Built-in converters
 
@@ -129,7 +134,19 @@ Specific converter can be used when binding, a several common converters are ava
 
 ## Built-in sources
 
-TODO
+Wires provides also helpers for binding collection sources to `UITableView`*(iOS)*, `UICollectionView`*(iOS)* and `ListView`*(Android)*.
+
+```csharp
+this.tableView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostTableCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post, heightForItem: (c) => 88);
+this.tableView.Bind(this.ViewModel).Source<RedditViewModel,string, RedditViewModel.ItemViewModel,PostTableHeader, PostTableCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand, (headerIndex) => 68, (cellIndex) => 88);
+```
+
+```csharp
+this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, RedditViewModel.ItemViewModel, PostCollectionCell>(vm => vm.Simple, (post, index, cell) => cell.ViewModel = post);
+this.collectionView.Bind(this.ViewModel).Source<RedditViewModel, string, RedditViewModel.ItemViewModel, PostCollectionHeader, PostCollectionCell>(vm => vm.Grouped, (section, index, cell) => cell.ViewModel = section, (post, index, cell) => cell.ViewModel = post, selectItemCommand);
+```
+
+Take a look at samples to see it in action.
 
 ## Unbinding
 
@@ -147,9 +164,10 @@ this.viewmodel.Unbind(this.textfield, this.image, this.title)
 
 * Improve architecture
 * Improve tests
-* MORE extensions
+* Android extensions
 * Bindable adapters on Android
-* Grouped collection sources
+* Cleaner code
+* More documentation
 
 ### Contributions
 
