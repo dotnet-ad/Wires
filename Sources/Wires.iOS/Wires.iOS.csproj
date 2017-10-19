@@ -73,8 +73,6 @@
     <Compile Include="UIView.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sources\GroupedTableViewSourceBinding.cs" />
-    <Compile Include="Sources\GroupedCollectionViewSourceBinding.cs" />
     <Compile Include="Sources\NibLocator.cs" />
     <Compile Include="UISwitch.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
@@ -93,7 +91,6 @@
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>
     <Compile Include="Converters\DateConverters.cs" />
-    <Compile Include="Sources\IndexExtensions.cs" />
     <Compile Include="UISegmentedControl.cs">
       <DependentUpon>UIExtensions.cs</DependentUpon>
     </Compile>

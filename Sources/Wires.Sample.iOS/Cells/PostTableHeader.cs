@@ -5,7 +5,7 @@
 	using Foundation;
 	using UIKit;
 
-	public partial class PostTableHeader : UITableViewHeaderFooterView
+	public partial class PostTableHeader : UITableViewHeaderFooterView, IView
 	{
 		public static readonly NSString Key = new NSString("PostTableHeader");
 
@@ -36,6 +36,12 @@
 							.Text(vm => vm);
 				}
 			}
+		}
+
+		object IView.ViewModel
+		{
+			get { return this.ViewModel; }
+			set { this.ViewModel = value as string; }
 		}
 	}
 }

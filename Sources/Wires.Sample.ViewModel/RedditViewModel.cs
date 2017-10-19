@@ -32,11 +32,11 @@
 
 		#region Fields
 
-		private IEnumerable<ItemViewModel> simple;
+		private IEnumerable<ItemViewModel> items;
 
 		readonly RedditApi api;
 
-		private bool isUpdating;
+		private bool isUpdating, isGrouped;
 
 		#endregion
 
@@ -54,32 +54,36 @@
 			}
 		}
 
-		public IEnumerable<ItemViewModel> Simple
+		public bool IsGrouped
 		{
-			get { return simple; }
-			set 
+			get { return isGrouped; }
+			set
 			{
-				if (this.Set(ref simple, value))
+				if (this.Set(ref isGrouped, value))
 				{
-					this.RaiseProperty(nameof(Grouped));
+					this.RaiseProperty(nameof(Items));
 				}
 			}
 		}
 
-		public Collection<string,ItemViewModel> Grouped
+		public CollectionSource<RedditViewModel> Items
 		{
-			get
+			get 
 			{
-				var sections = this.Simple.GroupBy(p => p.Datetime.DayOfYear).OrderByDescending(a => a.Key);
+				var result = new CollectionSource<RedditViewModel>(this);
 
-				var result = new Collection<string, ItemViewModel>();
+				Func<RedditViewModel,IEnumerable<ItemViewModel>> getItems = vm => (IEnumerable<ItemViewModel>)vm.items?.OrderByDescending(a => a.Datetime) ?? new ItemViewModel[0];
 
-				foreach (var section in sections)
+				if (IsGrouped)
 				{
-					result.Add(new Collection<string, ItemViewModel>.Section($"Day n°{section.Key}", section.ToArray()));
+					result.WithSections("cell", "header", getItems, (p) => $"Day n°{p.Datetime.DayOfYear}", null);
+				}
+				else
+				{
+					result.WithSection().WithCells("cell", getItems);
 				}
 
-				return result;
+				return result; 
 			}
 		}
 
@@ -96,7 +100,8 @@
 			try
 			{
 				this.IsUpdating = true;
-				this.Simple = (await this.api.GetTopicAsync("earthporn")).Select(p => new ItemViewModel(p));
+				this.items = (await this.api.GetTopicAsync("earthporn")).Select(p => new ItemViewModel(p));
+				this.RaiseProperty(nameof(Items));
 			}
 			catch (System.Exception)
 			{
